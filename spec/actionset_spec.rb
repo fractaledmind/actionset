@@ -2,12 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.describe Actionset do
+RSpec.describe ActionSet do
   it 'has a version number' do
-    expect(Actionset::VERSION).not_to be nil
-  end
-
-  it 'does something useful' do
-    expect(false).to eq(true)
+    expect(ActionSet::VERSION).not_to be nil
   end
 end

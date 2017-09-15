@@ -27,4 +27,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.15'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rspec-rails', '~> 3.6'
+  spec.add_development_dependency 'database_cleaner', '~> 1.6.1'
+  spec.add_development_dependency 'combustion', '~> 0.7.0'
+  spec.add_development_dependency 'factory_girl', '~> 4.8.0'
+  spec.add_development_dependency 'faker', '~> 1.8.4'
+  spec.add_development_dependency 'simplecov', '~> 0.15.0'
+  spec.add_development_dependency 'simplecov-console', '~> 0.4.2'
 end
