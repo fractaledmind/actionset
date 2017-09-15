@@ -2,11 +2,11 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'actionset/version'
+require 'action_set/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'actionset'
-  spec.version       = Actionset::VERSION
+  spec.version       = ActionSet::VERSION
   spec.authors       = ['Stephen Margheim']
   spec.email         = ['margheim@mail.med.upenn.edu']
 
