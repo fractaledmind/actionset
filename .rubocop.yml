@@ -1,0 +1,25 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  Include:
+    - Rakefile
+  Exclude:
+    - bin/*
+    - db/**/*
+    - spec/*_helper.rb
+Metrics/LineLength:
+  Max: 120
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # contaning a URI to be longer than Max.
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+Style/Documentation:
+  Enabled: false
+Style/SignalException:
+  EnforcedStyle: semantic
+Metrics/BlockLength:
+  Exclude:
+    - 'actionset.gemspec'
+    - 'spec/**/*_spec.rb'
+    - '**/schema.rb'
