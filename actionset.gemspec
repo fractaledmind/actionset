@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'actionset'
   spec.version       = ActionSet::VERSION
   spec.authors       = ['Stephen Margheim']
-  spec.email         = ['margheim@mail.med.upenn.edu']
+  spec.email         = ['stephen.margheim@gmail.com']
 
   spec.summary       = 'A toolkit to wire-up ActiveSet collections with a Rails controller.'
   spec.description   = 'Easily filter, sort, and paginate enumerable sets via web requests.'
