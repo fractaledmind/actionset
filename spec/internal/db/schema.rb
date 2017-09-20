@@ -11,6 +11,7 @@ ActiveRecord::Schema.define do
     t.integer     :integer
     t.string      :string
     t.text        :text
+    t.time        :time
 
     t.references  :assoc,    null: false
     t.timestamps             null: false
@@ -26,6 +27,7 @@ ActiveRecord::Schema.define do
     t.integer     :integer
     t.string      :string
     t.text        :text
+    t.time        :time
 
     t.timestamps null: false
   end
