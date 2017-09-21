@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'GET /foos', type: :request do
+RSpec.describe 'GET /foos with FILTERING', type: :request do
   let!(:foo) { FactoryGirl.create(:foo) }
   let!(:others) { FactoryGirl.create_list(:foo, 2) }
   let(:results) { JSON.parse(response.body) }
@@ -12,43 +12,33 @@ RSpec.describe 'GET /foos', type: :request do
     get foos_path, params: params, headers: {}
   end
 
-  context 'with no params' do
-    let(:params) do
-      {}
-    end
-
-    it { expect(response).to have_http_status :ok }
-    it { expect(results_ids).to eq [1, 2, 3] }
-  end
-
-  context 'with filter params' do
-  end
-
-  context 'with sort params' do
+  context 'with a :boolean attribute type' do
     context 'on the base object' do
       let(:params) do
-        { sort: { string: :asc } }
+        { filter: { boolean: foo.boolean } }
       end
       let(:expected_ids) do
-        Foo.order(string: :asc)
+        Foo.where(boolean: foo.boolean)
            .pluck(:id)
       end
 
       it { expect(response).to have_http_status :ok }
+      it { expect(results.size).to be >= 1 }
       it { expect(results_ids).to eq expected_ids }
     end
 
     context 'on an associated object' do
       let(:params) do
-        { sort: { assoc: { string: :asc } } }
+        { filter: { assoc: { boolean: foo.assoc.boolean } } }
       end
       let(:expected_ids) do
         Foo.joins(:assoc)
-           .merge(Assoc.order(string: :asc))
+           .where(assocs: { boolean: foo.assoc.boolean })
            .pluck(:id)
       end
 
       it { expect(response).to have_http_status :ok }
+      it { expect(results.size).to be >= 1 }
       it { expect(results_ids).to eq expected_ids }
     end
   end

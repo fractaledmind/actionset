@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'GET /foos', type: :request do
+RSpec.describe 'GET /foos with FILTERING', type: :request do
   let!(:foo) { FactoryGirl.create(:foo) }
   let!(:others) { FactoryGirl.create_list(:foo, 2) }
   let(:results) { JSON.parse(response.body) }
@@ -12,43 +12,33 @@ RSpec.describe 'GET /foos', type: :request do
     get foos_path, params: params, headers: {}
   end
 
-  context 'with no params' do
-    let(:params) do
-      {}
-    end
-
-    it { expect(response).to have_http_status :ok }
-    it { expect(results_ids).to eq [1, 2, 3] }
-  end
-
-  context 'with filter params' do
-  end
-
-  context 'with sort params' do
+  context 'with a :binary attribute type' do
     context 'on the base object' do
       let(:params) do
-        { sort: { string: :asc } }
+        { filter: { binary: foo.binary } }
       end
       let(:expected_ids) do
-        Foo.order(string: :asc)
+        Foo.where(binary: foo.binary)
            .pluck(:id)
       end
 
       it { expect(response).to have_http_status :ok }
+      it { expect(results.size).to be >= 1 }
       it { expect(results_ids).to eq expected_ids }
     end
 
     context 'on an associated object' do
       let(:params) do
-        { sort: { assoc: { string: :asc } } }
+        { filter: { assoc: { binary: foo.assoc.binary } } }
       end
       let(:expected_ids) do
         Foo.joins(:assoc)
-           .merge(Assoc.order(string: :asc))
+           .where(assocs: { binary: foo.assoc.binary })
            .pluck(:id)
       end
 
       it { expect(response).to have_http_status :ok }
+      it { expect(results.size).to be >= 1 }
       it { expect(results_ids).to eq expected_ids }
     end
   end
