@@ -25,14 +25,13 @@ module ActionSet
     end
 
     def filter_structure
-      filter_params.flatten_keys.reduce({}) do |memo, (keypath, value)|
+      filter_params.flatten_keys.each_with_object({}) do |(keypath, value), memo|
         instruction = ActiveSet::Instructions::Entry.new(keypath, value)
         item_with_value = @set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
         typecast_value = ActionSet::Instructions::EntryValue.new(value)
                                                             .cast(to: item_value.class)
         memo[keypath] = typecast_value
-        memo
       end
     end
 
