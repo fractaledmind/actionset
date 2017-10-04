@@ -9,6 +9,9 @@ class FoosController < ActionController::Base
     # @foos = Foo.all
     # @foos = paginate(sort(filter(Foo.all)))
     @foos = process_set(Foo.all)
-    render json: @foos.to_json
+    respond_to do |format|
+      format.html
+      format.json { render json: @foos.to_json }
+    end
   end
 end
