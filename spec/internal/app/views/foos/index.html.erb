@@ -1,4 +1,19 @@
 <%= form_for(@filters, method: :get, url: foos_path) do |s| %>
-  <%= s.text_field(:calculated_bignum_field) %>
-  <%= s.text_field(:calculated_boolean_field) %>
+  <% ApplicationRecord::DB_FIELDS.each do |db_field| %>
+    <%= s.text_field(db_field) %>
+  <% end %>
+
+  <% ApplicationRecord::COMPUTED_FIELDS.each do |computed_field| %>
+    <%= s.text_field("computed_#{computed_field}_field") %>
+  <% end %>
+
+  <%= s.fields_for :assoc, s.object.assoc do |ss| %>
+    <% ApplicationRecord::DB_FIELDS.each do |db_field| %>
+      <%= ss.text_field(db_field) %>
+    <% end %>
+
+    <% ApplicationRecord::COMPUTED_FIELDS.each do |computed_field| %>
+      <%= ss.text_field("computed_#{computed_field}_field") %>
+    <% end %>
+  <% end %>
 <% end %>
