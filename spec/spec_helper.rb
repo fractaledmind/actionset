@@ -9,6 +9,7 @@ require 'bundler/setup'
 require 'active_set'
 require 'rspec/rails'
 require 'database_cleaner'
+require 'capybara/rspec'
 
 Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 

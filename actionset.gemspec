@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec-rails', '~> 3.6'
   spec.add_development_dependency 'database_cleaner', '~> 1.6.1'
+  spec.add_development_dependency 'capybara', '~> 2.15.1'
   spec.add_development_dependency 'combustion', '~> 0.7.0'
   spec.add_development_dependency 'factory_girl', '~> 4.8.0'
   spec.add_development_dependency 'faker', '~> 1.8.4'
