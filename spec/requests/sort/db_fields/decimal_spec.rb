@@ -9,7 +9,7 @@ RSpec.describe 'GET /foos with SORTING', type: :request do
   let(:results_ids) { results.map { |f| f['id'] } }
 
   before(:each) do
-    get foos_path, params: params, headers: {}
+    get foos_path(format: :json), params: params, headers: {}
   end
 
   context 'with a :decimal attribute type' do
