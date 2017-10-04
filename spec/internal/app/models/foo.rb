@@ -24,10 +24,6 @@ class Foo < ApplicationRecord
     string.to_sym
   end
 
-  def computed_nil_field
-    nil
-  end
-
   def computed_relationship
     assoc
   end

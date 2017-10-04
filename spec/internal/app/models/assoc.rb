@@ -23,8 +23,4 @@ class Assoc < ApplicationRecord
   def computed_symbol_field
     string.to_sym
   end
-
-  def computed_nil_field
-    nil
-  end
 end

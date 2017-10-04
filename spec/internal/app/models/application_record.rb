@@ -10,7 +10,6 @@ class ApplicationRecord < ActiveRecord::Base
     datetime
     float
     integer
-    nil
     string
     symbol
     time
