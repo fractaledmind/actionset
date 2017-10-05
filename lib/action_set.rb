@@ -9,11 +9,12 @@ require 'action_set/version'
 require_relative './action_set/instructions/entry_value'
 
 module ActionSet
-  class FilterKlass < OpenStruct
   class Railtie < ::Rails::Railtie
   end
+
+  class Filter < OpenStruct
     def model_name
-      OpenStruct.new(param_key: 'filters')
+      OpenStruct.new(param_key: 'filter')
     end
   end
 
@@ -24,7 +25,7 @@ module ActionSet
     def process_set(set)
       @set = set
       @filters = JSON.parse(filter_params.to_json,
-                            object_class: FilterKlass)
+                            object_class: Filter)
       active_set = ActiveSet.new(set)
       active_set = active_set.filter(filter_structure) if filter_params.any?
       active_set = active_set.sort(sort_params) if sort_params.any?
