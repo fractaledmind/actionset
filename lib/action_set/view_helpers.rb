@@ -26,7 +26,7 @@ module ActionSet
     end
 
     def sort_link_direction(column)
-      return 'asc' unless params[:sort].keys.include?(column.to_s)
+      return 'asc' unless params[:sort]&.keys&.include?(column.to_s)
 
       sort_direction_inverses = { 'asc' => 'desc', 'desc' => 'asc' }
       sort_direction_inverses[params.dig(:sort, column)]
