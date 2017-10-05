@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'action_set/version'
+require 'active_support/core_ext/object/blank'
 require 'active_set'
 
 require_relative './action_set/instructions/entry_value'
@@ -33,7 +34,7 @@ module ActionSet
     end
 
     def filter_structure
-      filter_params.flatten_keys.each_with_object({}) do |(keypath, value), memo|
+      filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
         instruction = ActiveSet::Instructions::Entry.new(keypath, value)
         item_with_value = @set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
