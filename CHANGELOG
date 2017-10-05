@@ -1,3 +1,5 @@
+v 0.1.1
+  - Fix bug in handling sort links when no sort params are present
 v 0.1.0
   - make ActionSet a Railtie
   - add a view helper method for building sort links (`sort_link`)
