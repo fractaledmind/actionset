@@ -5,7 +5,6 @@ require 'active_support/core_ext/object/blank'
 require 'active_set'
 
 require 'action_set/version'
-
 require_relative './action_set/instructions/entry_value'
 require_relative './action_set/view_helpers'
 

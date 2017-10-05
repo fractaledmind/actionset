@@ -1,0 +1,6 @@
+v 0.1.0
+  - make ActionSet a Railtie
+  - add a view helper method for building sort links (`sort_link`)
+  - typecast all params values before passing to ActiveSet
+  - reject any blank param values
+  - instantiate a `@filters` ivar for use in building the filters form
