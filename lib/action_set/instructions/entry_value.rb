@@ -55,7 +55,11 @@ module ActionSet
       end
 
       class ActiveModelAdapter
-        require 'active_model/type'
+        begin
+          require 'active_model/type'
+        rescue LoadError
+          require 'active_record/type'
+        end
 
         def initialize(raw, target)
           @raw = raw
@@ -74,11 +78,11 @@ module ActionSet
         end
 
         def possible_typecasters
-          @possible_typecasters ||= ActiveModel::Type.constants
-                                                     .map(&:to_s)
-                                                     .select { |t| can_typecast?(t) }
-                                                     .map { |t| init_typecaster(t) }
-                                                     .compact
+          @possible_typecasters ||= type_class.constants
+                                              .map(&:to_s)
+                                              .select { |t| can_typecast?(t) }
+                                              .map { |t| init_typecaster(t) }
+                                              .compact
         end
 
         def typecast(to_type, value)
@@ -87,15 +91,21 @@ module ActionSet
         end
 
         def can_typecast?(const_name)
-          typecasting_class = ActiveModel::Type.const_get(const_name)
+          typecasting_class = type_class.const_get(const_name)
           typecasting_class.instance_methods.include?(:cast) ||
             typecasting_class.instance_methods.include?(:type_cast)
         end
 
         def init_typecaster(const_name)
-          ActiveModel::Type.const_get(const_name).new
+          type_class.const_get(const_name).new
         rescue
           nil
+        end
+
+        def type_class
+          ActiveModel::Type
+        rescue NameError
+          ActiveRecord::Type
         end
       end
 
