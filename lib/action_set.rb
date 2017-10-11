@@ -3,6 +3,7 @@
 require 'rails/railtie'
 require 'active_support/core_ext/object/blank'
 require 'active_set'
+require 'ostruct'
 
 require 'action_set/version'
 require_relative './action_set/instructions/entry_value'
