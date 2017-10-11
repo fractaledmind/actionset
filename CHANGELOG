@@ -1,3 +1,8 @@
+v 0.1.3
+  - Ensure that the ActiveModelAdapter for the typcastor properly downgrades from using ActiveModel::Type to using ActiveRecord::Type
+  - Ensure that OpenStuct is explicly required
+  - Ensure that the internal dummy app has the actionpack infrastructure properly in place for view specs
+  - Fix the filter view specs
 v 0.1.2
   - Properly specify the version dependency on ActiveSupport
 v 0.1.1
