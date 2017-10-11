@@ -1,3 +1,5 @@
+v 0.1.2
+  - Properly specify the version dependency on ActiveSupport
 v 0.1.1
   - Fix bug in handling sort links when no sort params are present
 v 0.1.0
