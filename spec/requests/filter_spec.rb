@@ -102,7 +102,7 @@ RSpec.describe 'GET /foos with FILTERING', type: :request do
             let(:params) do
               { filter: { db_field => foo.send(db_field) } }
             end
-            let(:value_selector) { "#filters_#{db_field}[value=\"#{foo.send(db_field)}\"]" }
+            let(:value_selector) { "#filter_#{db_field}[value=\"#{foo.send(db_field)}\"]" }
 
             it { expect(response).to have_http_status :ok }
             it { expect(page).to have_css(value_selector) }
@@ -112,7 +112,7 @@ RSpec.describe 'GET /foos with FILTERING', type: :request do
             let(:params) do
               { filter: { assoc: { db_field => foo.assoc.send(db_field) } } }
             end
-            let(:value_selector) { "#filters_assoc_#{db_field}[value=\"#{foo.assoc.send(db_field)}\"]" }
+            let(:value_selector) { "#filter_assoc_#{db_field}[value=\"#{foo.assoc.send(db_field)}\"]" }
 
             it { expect(response).to have_http_status :ok }
             it { expect(page).to have_css(value_selector) }
@@ -130,7 +130,7 @@ RSpec.describe 'GET /foos with FILTERING', type: :request do
             let(:params) do
               { filter: { field => foo.send(field) } }
             end
-            let(:value_selector) { "#filters_#{field}[value=\"#{foo.send(field)}\"]" }
+            let(:value_selector) { "#filter_#{field}[value=\"#{foo.send(field)}\"]" }
 
             it { expect(response).to have_http_status :ok }
             it { expect(page).to have_css(value_selector) }
@@ -140,7 +140,7 @@ RSpec.describe 'GET /foos with FILTERING', type: :request do
             let(:params) do
               { filter: { assoc: { field => foo.assoc.send(field) } } }
             end
-            let(:value_selector) { "#filters_assoc_#{field}[value=\"#{foo.assoc.send(field)}\"]" }
+            let(:value_selector) { "#filter_assoc_#{field}[value=\"#{foo.assoc.send(field)}\"]" }
 
             it { expect(response).to have_http_status :ok }
             it { expect(page).to have_css(value_selector) }
