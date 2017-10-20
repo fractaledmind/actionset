@@ -12,6 +12,24 @@ class FoosController < ActionController::Base
     respond_to do |format|
       format.html
       format.json { render json: @foos.to_json }
+      format.csv { export_set(@foos) }
     end
+  end
+
+  private
+
+  def export_set_columns
+    [
+      { key: 'hello_world',
+        value: 'integer' }
+    ]
+  end
+
+  def proc_item_string
+    ->(item) { item.string }
+  end
+
+  def proc_item_assoc_integer
+    ->(item) { item.assoc.integer }
   end
 end
