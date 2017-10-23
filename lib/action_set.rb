@@ -30,10 +30,19 @@ module ActionSet
   module InstanceMethods
     def process_set(set)
       @set = set
+      sort_set(filter_set(ActiveSet.new(set)))
+    end
+
+    def filter_set(set)
       @filters = JSON.parse(filter_params.to_json,
                             object_class: Filter)
-      active_set = ActiveSet.new(set)
+      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
       active_set = active_set.filter(filter_structure) if filter_params.any?
+      active_set
+    end
+
+    def sort_set(set)
+      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
       active_set = active_set.sort(sort_params) if sort_params.any?
       active_set
     end
