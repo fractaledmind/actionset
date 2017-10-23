@@ -47,6 +47,13 @@ module ActionSet
       active_set
     end
 
+    def export_set(set)
+      return send_file(set, export_set_options(request.format)) if set.is_a?(String) && File.file?(set)
+      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      transformed_data = active_set.transform(transform_structure)
+      send_data(transformed_data, export_set_options(request.format))
+    end
+
     private
 
     def filter_params
@@ -64,8 +71,35 @@ module ActionSet
       end
     end
 
+    def transform_structure
+      {}.tap do |struct|
+        struct[:format] = transform_params[:format] || request.format.symbol
+        columns_params = transform_params[:columns]&.map do |column|
+          Hash[column&.map do |k, v|
+            is_literal_value = ->(key) { key.to_s == 'value*' }
+            key = is_literal_value.(k) ? 'value' : k
+            val = is_literal_value.(k) ? send(v) : v
+            [key, val]
+          end]
+        end
+        struct[:columns] = columns_params || send(:export_set_columns) || []
+      end
+    end
+
     def sort_params
       params.fetch(:sort, {}).to_unsafe_hash
+    end
+
+    def transform_params
+      params.fetch(:transform, {}).to_unsafe_hash
+    end
+
+    def export_set_options(format)
+      {}.tap do |opts|
+        opts[:type] = format.to_s
+        opts[:filename] = "#{Time.zone.now.strftime('%Y%m%d_%H:%M:%S')}.#{format.symbol}"
+        opts[:disposition] = :inline if %w[development test].include?(Rails.env.to_s)
+      end
     end
   end
 
