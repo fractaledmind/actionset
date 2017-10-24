@@ -1,3 +1,7 @@
+v 0.2.0
+  - Add a new `export_set` method
+      This allows datasets to be transformed into CSV and exported
+  - Create distinct controller methods for filtering and sorting, not just the one 'process_set' method
 v 0.1.3
   - Ensure that the ActiveModelAdapter for the typcastor properly downgrades from using ActiveModel::Type to using ActiveRecord::Type
   - Ensure that OpenStuct is explicly required
