@@ -1,3 +1,5 @@
+v 0.2.1
+  - Extract the `set_filters_ivar` method so that app controllers can use it in a before action for filter forms that are present on multiple actions
 v 0.2.0
   - Add a new `export_set` method
       This allows datasets to be transformed into CSV and exported
