@@ -34,8 +34,7 @@ module ActionSet
     end
 
     def filter_set(set)
-      @filters = JSON.parse(filter_params.to_json,
-                            object_class: Filter)
+      set_filters_ivar
       active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
       active_set = active_set.filter(filter_structure) if filter_params.any?
       active_set
@@ -52,6 +51,11 @@ module ActionSet
       active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
       transformed_data = active_set.transform(transform_structure)
       send_data(transformed_data, export_set_options(request.format))
+    end
+
+    def set_filters_ivar
+      @filters = JSON.parse(filter_params.to_json,
+                            object_class: Filter)
     end
 
     private
