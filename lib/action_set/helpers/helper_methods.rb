@@ -6,11 +6,11 @@ require_relative './paginator'
 module ActionSet
   module Helpers
     module HelperMethods
-      def sort_link(column, title)
+      def sort_link_for(column, title)
         Helpers::SortLinker.new(self).render(column, title)
       end
 
-      def paginate(set)
+      def pagination_links_for(set)
         Helpers::Paginator.new(self).render(set)
       end
     end
