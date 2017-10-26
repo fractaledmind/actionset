@@ -35,13 +35,13 @@ module ActionSet
 
     def filter_set(set)
       set_filters_ivar
-      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      active_set = ensure_active_set(set)
       active_set = active_set.filter(filter_structure) if filter_params.any?
       active_set
     end
 
     def sort_set(set)
-      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      active_set = ensure_active_set(set)
       active_set = active_set.sort(sort_params) if sort_params.any?
       active_set
     end
@@ -54,7 +54,7 @@ module ActionSet
 
     def export_set(set)
       return send_file(set, export_set_options(request.format)) if set.is_a?(String) && File.file?(set)
-      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      active_set = ensure_active_set(set)
       transformed_data = active_set.transform(transform_structure)
       send_data(transformed_data, export_set_options(request.format))
     end
@@ -65,10 +65,6 @@ module ActionSet
     end
 
     private
-
-    def filter_params
-      params.fetch(:filter, {}).to_unsafe_hash
-    end
 
     def filter_structure
       filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
@@ -100,6 +96,10 @@ module ActionSet
       end
     end
 
+    def filter_params
+      params.fetch(:filter, {}).to_unsafe_hash
+    end
+
     def sort_params
       params.fetch(:sort, {}).to_unsafe_hash
     end
@@ -118,6 +118,12 @@ module ActionSet
         opts[:filename] = "#{Time.zone.now.strftime('%Y%m%d_%H:%M:%S')}.#{format.symbol}"
         opts[:disposition] = :inline if %w[development test].include?(Rails.env.to_s)
       end
+    end
+
+    def ensure_active_set(set)
+      return set if set.is_a?(ActiveSet)
+
+      ActiveSet.new(set)
     end
   end
 
