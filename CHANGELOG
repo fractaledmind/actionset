@@ -1,3 +1,6 @@
+v 0.3.0
+  - Add a `paginate_set` method that is a part of the `process_set` chain now
+  - Add `paginate` view helper for rendering a pagination navigation
 v 0.2.1
   - Extract the `set_filters_ivar` method so that app controllers can use it in a before action for filter forms that are present on multiple actions
 v 0.2.0
