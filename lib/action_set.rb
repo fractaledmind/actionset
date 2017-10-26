@@ -7,13 +7,13 @@ require 'ostruct'
 
 require 'action_set/version'
 require_relative './action_set/instructions/entry_value'
-require_relative './action_set/view_helpers'
+require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
   class Railtie < ::Rails::Railtie
     initializer 'action_set.view_helpers' do
       ActiveSupport.on_load :action_view do
-        include ViewHelpers
+        include Helpers::HelperMethods
       end
     end
   end
