@@ -30,7 +30,7 @@ module ActionSet
   module InstanceMethods
     def process_set(set)
       @set = set
-      sort_set(filter_set(ActiveSet.new(set)))
+      paginate_set(sort_set(filter_set(ActiveSet.new(set))))
     end
 
     def filter_set(set)
@@ -43,6 +43,12 @@ module ActionSet
     def sort_set(set)
       active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
       active_set = active_set.sort(sort_params) if sort_params.any?
+      active_set
+    end
+
+    def paginate_set(set)
+      active_set = ensure_active_set(set)
+      active_set = active_set.paginate(paginate_structure) if paginate_params.any?
       active_set
     end
 
@@ -75,6 +81,10 @@ module ActionSet
       end
     end
 
+    def paginate_structure
+      paginate_params.transform_values(&:to_i)
+    end
+
     def transform_structure
       {}.tap do |struct|
         struct[:format] = transform_params[:format] || request.format.symbol
@@ -92,6 +102,10 @@ module ActionSet
 
     def sort_params
       params.fetch(:sort, {}).to_unsafe_hash
+    end
+
+    def paginate_params
+      params.fetch(:paginate, {}).to_unsafe_hash
     end
 
     def transform_params
