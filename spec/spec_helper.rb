@@ -6,6 +6,7 @@ Bundler.require :default, :development
 Combustion.initialize! :active_record, :action_controller, :action_view
 
 require 'bundler/setup'
+require 'action_set'
 require 'active_set'
 require 'rspec/rails'
 require 'database_cleaner'

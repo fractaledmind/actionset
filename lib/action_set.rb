@@ -7,13 +7,13 @@ require 'ostruct'
 
 require 'action_set/version'
 require_relative './action_set/instructions/entry_value'
-require_relative './action_set/view_helpers'
+require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
   class Railtie < ::Rails::Railtie
     initializer 'action_set.view_helpers' do
       ActiveSupport.on_load :action_view do
-        include ViewHelpers
+        include Helpers::HelperMethods
       end
     end
   end
@@ -30,25 +30,31 @@ module ActionSet
   module InstanceMethods
     def process_set(set)
       @set = set
-      sort_set(filter_set(ActiveSet.new(set)))
+      paginate_set(sort_set(filter_set(ActiveSet.new(set))))
     end
 
     def filter_set(set)
       set_filters_ivar
-      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      active_set = ensure_active_set(set)
       active_set = active_set.filter(filter_structure) if filter_params.any?
       active_set
     end
 
     def sort_set(set)
-      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      active_set = ensure_active_set(set)
       active_set = active_set.sort(sort_params) if sort_params.any?
+      active_set
+    end
+
+    def paginate_set(set)
+      active_set = ensure_active_set(set)
+      active_set = active_set.paginate(paginate_structure) if paginate_params.any?
       active_set
     end
 
     def export_set(set)
       return send_file(set, export_set_options(request.format)) if set.is_a?(String) && File.file?(set)
-      active_set = set.is_a?(ActiveSet) ? set : ActiveSet.new(set)
+      active_set = ensure_active_set(set)
       transformed_data = active_set.transform(transform_structure)
       send_data(transformed_data, export_set_options(request.format))
     end
@@ -60,10 +66,6 @@ module ActionSet
 
     private
 
-    def filter_params
-      params.fetch(:filter, {}).to_unsafe_hash
-    end
-
     def filter_structure
       filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
         instruction = ActiveSet::Instructions::Entry.new(keypath, value)
@@ -73,6 +75,10 @@ module ActionSet
                                                             .cast(to: item_value.class)
         memo[keypath] = typecast_value
       end
+    end
+
+    def paginate_structure
+      paginate_params.transform_values(&:to_i)
     end
 
     def transform_structure
@@ -90,8 +96,16 @@ module ActionSet
       end
     end
 
+    def filter_params
+      params.fetch(:filter, {}).to_unsafe_hash
+    end
+
     def sort_params
       params.fetch(:sort, {}).to_unsafe_hash
+    end
+
+    def paginate_params
+      params.fetch(:paginate, {}).to_unsafe_hash
     end
 
     def transform_params
@@ -104,6 +118,12 @@ module ActionSet
         opts[:filename] = "#{Time.zone.now.strftime('%Y%m%d_%H:%M:%S')}.#{format.symbol}"
         opts[:disposition] = :inline if %w[development test].include?(Rails.env.to_s)
       end
+    end
+
+    def ensure_active_set(set)
+      return set if set.is_a?(ActiveSet)
+
+      ActiveSet.new(set)
     end
   end
 
