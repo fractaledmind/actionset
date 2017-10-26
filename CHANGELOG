@@ -1,3 +1,6 @@
+v 0.3.1
+  - Change the name of the view helper method from `sort_link` to `sort_link_for`
+  - Change the name of the view helper method from `paginate` to `pagination_links_for`
 v 0.3.0
   - Add a `paginate_set` method that is a part of the `process_set` chain now
   - Add `paginate` view helper for rendering a pagination navigation
