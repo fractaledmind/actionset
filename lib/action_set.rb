@@ -48,7 +48,7 @@ module ActionSet
 
     def paginate_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.paginate(paginate_structure) if paginate_params.any?
+      active_set = active_set.paginate(paginate_structure)
       active_set
     end
 
