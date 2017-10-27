@@ -1,3 +1,5 @@
+v 0.3.2
+  - Ensure that we always call ActiveSet#paginate so that even default pagination instructions are inserted into the ActiveSet instace
 v 0.3.1
   - Change the name of the view helper method from `sort_link` to `sort_link_for`
   - Change the name of the view helper method from `paginate` to `pagination_links_for`
