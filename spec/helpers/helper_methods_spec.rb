@@ -8,8 +8,8 @@ RSpec.describe ActionSet::Helpers::HelperMethods, type: :helper do
     allow(controller).to receive(:params).and_return(ActionController::Parameters.new(params))
   end
 
-  describe '.sort_link' do
-    subject { helper.sort_link(column, title) }
+  describe '.sort_link_for' do
+    subject { helper.sort_link_for(column, title) }
     let(:column) { 'string' }
     let(:params) do
       {
@@ -76,8 +76,8 @@ RSpec.describe ActionSet::Helpers::HelperMethods, type: :helper do
     end
   end
 
-  describe '.paginate' do
-    subject { helper.paginate(active_set) }
+  describe '.pagination_links_for' do
+    subject { helper.pagination_links_for(active_set) }
     let(:params) { {} }
     let(:set) { [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] }
 
