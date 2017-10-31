@@ -1,3 +1,5 @@
+v 0.3.3
+  - Ensure the page link url uses a deep merge to retain any previously set paginate params
 v 0.3.2
   - Ensure that we always call ActiveSet#paginate so that even default pagination instructions are inserted into the ActiveSet instace
 v 0.3.1
