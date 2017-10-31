@@ -50,11 +50,11 @@ module ActionSet
 
       def page_link_url(page_number)
         request.query_parameters
-               .merge(controller: controller.controller_path,
-                      action: controller.action_name,
-                      paginate: {
-                        page: page_number
-                      })
+               .deep_merge(controller: controller.controller_path,
+                           action: controller.action_name,
+                           paginate: {
+                             page: page_number
+                           })
       end
 
       def link_to_prev_gap
