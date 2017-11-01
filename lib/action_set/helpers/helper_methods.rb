@@ -6,7 +6,7 @@ require_relative './paginator'
 module ActionSet
   module Helpers
     module HelperMethods
-      def sort_link_for(column, title)
+      def sort_link_for(column, title = nil)
         Helpers::SortLinker.new(self).render(column, title)
       end
 

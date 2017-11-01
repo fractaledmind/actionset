@@ -2,6 +2,7 @@
 
 require 'rails/railtie'
 require 'active_support/core_ext/object/blank'
+require 'active_support/lazy_load_hooks'
 require 'active_set'
 require 'ostruct'
 
@@ -10,12 +11,9 @@ require_relative './action_set/instructions/entry_value'
 require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
-  class Railtie < ::Rails::Railtie
-    initializer 'action_set.view_helpers' do
-      ActiveSupport.on_load :action_view do
-        include Helpers::HelperMethods
-      end
-    end
+  # Ensure that the HelperMethods are callable from the Rails view-layer
+  ActiveSupport.on_load :action_view do
+    ::ActionView::Base.send :include, Helpers::HelperMethods
   end
 
   class Filter < OpenStruct
