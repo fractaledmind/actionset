@@ -1,3 +1,6 @@
+v 0.3.4
+  - Ensure that the sort_link_for helper method make the title param optional
+  - Ensure that the view helpers are properly included into the ActionView context
 v 0.3.3
   - Ensure the page link url uses a deep merge to retain any previously set paginate params
 v 0.3.2
