@@ -1,3 +1,6 @@
+v 0.3.5
+  - Don't rely on an instance variable for the `filter_structure`
+  - Use the `ensure_active_set` method inside of `process_set`
 v 0.3.4
   - Ensure that the sort_link_for helper method make the title param optional
   - Ensure that the view helpers are properly included into the ActionView context
