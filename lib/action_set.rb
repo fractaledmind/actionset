@@ -27,7 +27,7 @@ module ActionSet
 
   module InstanceMethods
     def process_set(set)
-      paginate_set(sort_set(filter_set(ActiveSet.new(set))))
+      paginate_set(sort_set(filter_set(ensure_active_set(set))))
     end
 
     def filter_set(set)
