@@ -27,14 +27,13 @@ module ActionSet
 
   module InstanceMethods
     def process_set(set)
-      @set = set
       paginate_set(sort_set(filter_set(ActiveSet.new(set))))
     end
 
     def filter_set(set)
       set_filters_ivar
       active_set = ensure_active_set(set)
-      active_set = active_set.filter(filter_structure) if filter_params.any?
+      active_set = active_set.filter(filter_structure(set)) if filter_params.any?
       active_set
     end
 
@@ -64,10 +63,10 @@ module ActionSet
 
     private
 
-    def filter_structure
+    def filter_structure(set)
       filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
         instruction = ActiveSet::Instructions::Entry.new(keypath, value)
-        item_with_value = @set.find { |i| !instruction.value_for(item: i).nil? }
+        item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
         typecast_value = ActionSet::Instructions::EntryValue.new(value)
                                                             .cast(to: item_value.class)
