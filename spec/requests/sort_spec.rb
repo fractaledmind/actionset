@@ -100,10 +100,7 @@ RSpec.describe 'GET /foos with SORTING', type: :request do
                 context 'with default case-sensitive sort' do
                   let(:sort_param) { { field => direction } }
                   let(:expected_ids) do
-                    Foo.all
-                       .sort_by { |x| x.send(field).to_s }
-                       .map(&:id)
-                       .tap { |c| c.reverse! if direction == 'desc' }
+                    ActiveSet.new(Foo.all).sort(params[:sort]).map(&:id)
                   end
 
                   it { expect(response).to have_http_status :ok }
@@ -113,10 +110,7 @@ RSpec.describe 'GET /foos with SORTING', type: :request do
                 context 'with case-INsensitive sort' do
                   let(:sort_param) { { "#{field}(i)": direction } }
                   let(:expected_ids) do
-                    Foo.all
-                       .sort_by { |x| x.send(field).to_s.downcase }
-                       .map(&:id)
-                       .tap { |c| c.reverse! if direction == 'desc' }
+                    ActiveSet.new(Foo.all).sort(params[:sort]).map(&:id)
                   end
 
                   it { expect(response).to have_http_status :ok }
@@ -136,10 +130,7 @@ RSpec.describe 'GET /foos with SORTING', type: :request do
                 context 'with default case-sensitive sort' do
                   let(:sort_param) { { field => direction } }
                   let(:expected_ids) do
-                    Foo.all
-                       .sort_by { |x| x.assoc.send(field).to_s }
-                       .map(&:id)
-                       .tap { |c| c.reverse! if direction == 'desc' }
+                    ActiveSet.new(Foo.all.to_a).sort(params[:sort]).map(&:id)
                   end
 
                   it { expect(response).to have_http_status :ok }
@@ -149,10 +140,7 @@ RSpec.describe 'GET /foos with SORTING', type: :request do
                 context 'with case-INsensitive sort' do
                   let(:sort_param) { { "#{field}(i)": direction } }
                   let(:expected_ids) do
-                    Foo.all
-                       .sort_by { |x| x.assoc.send(field).to_s.downcase }
-                       .map(&:id)
-                       .tap { |c| c.reverse! if direction == 'desc' }
+                    ActiveSet.new(Foo.all.to_a).sort(params[:sort]).map(&:id)
                   end
 
                   it { expect(response).to have_http_status :ok }
