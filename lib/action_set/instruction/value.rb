@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module ActionSet
-  module Instructions
-    class EntryValue
+  module Instruction
+    class Value
       attr_reader :raw
 
       def initialize(value)
