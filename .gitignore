@@ -12,3 +12,4 @@
 .rspec_status
 *.gem
 *.sqlite
+.DS_Store
