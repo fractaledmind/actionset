@@ -1,3 +1,5 @@
+v 0.4.2
+  - Ensure that the sort_link_for helper method can work with symbol attributes
 v 0.4.1
   - Fix the helper methods to work properly with the new version of ActiveSet
 v 0.4.0
