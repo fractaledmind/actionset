@@ -81,6 +81,7 @@ module ActionSet
           @possible_typecasters ||= type_class.constants
                                               .map(&:to_s)
                                               .select { |t| can_typecast?(t) }
+                                              .reject { |t| t == 'Time' }
                                               .map { |t| init_typecaster(t) }
                                               .compact
         end
@@ -142,6 +143,7 @@ module ActionSet
           return if @raw.is_a? @target
           return unless @target.eql?(ActiveSupport::TimeWithZone)
           time_value = ActiveModelAdapter.new(@raw, Time).process
+
           return unless time_value.is_a?(Time)
           return time_value unless time_value.respond_to?(:in_time_zone)
           time_value.in_time_zone
