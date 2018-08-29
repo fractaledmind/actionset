@@ -1,18 +1,24 @@
 # frozen_string_literal: true
 
-require_relative './sort_linker'
-require_relative './paginator'
+require_relative './sort/current_direction_for_helper'
+require_relative './sort/description_for_helper'
+require_relative './sort/link_for_helper'
+require_relative './sort/next_direction_for_helper'
+require_relative './sort/path_for_helper'
+require_relative './pagination/links_for_helper'
+require_relative './pagination/path_for_helper'
 
 module ActionSet
   module Helpers
     module HelperMethods
-      def sort_link_for(column, title = nil)
-        Helpers::SortLinker.new(self).render(column, title)
-      end
+      include Sort::CurrentDirectionForHelper
+      include Sort::DescriptionForHelper
+      include Sort::LinkForHelper
+      include Sort::NextDirectionForHelper
+      include Sort::PathForHelper
 
-      def pagination_links_for(set)
-        Helpers::Paginator.new(self).render(set)
-      end
+      include Pagination::PathForHelper
+      include Pagination::LinksForHelper
     end
   end
 end
