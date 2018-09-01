@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
+require_relative '../params/current_helper'
+
 module Pagination
   module PathForHelper
-    def paginate_path_for(page)
+    def pagination_path_for(page)
       page ||= 1
       url_for paginate_params_for(page)
     end
@@ -8,9 +12,10 @@ module Pagination
     private
 
     def paginate_params_for(page)
-      current_params.merge(paginate: {
-        page: page
-      })
+      current_params
+        .deep_merge(paginate: {
+                      page: page
+                    })
     end
   end
 end
