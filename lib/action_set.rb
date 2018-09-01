@@ -4,7 +4,6 @@ require 'rails/railtie'
 require 'active_support/core_ext/object/blank'
 require 'active_support/lazy_load_hooks'
 require 'active_set'
-require 'ostruct'
 
 require 'action_set/version'
 require_relative './action_set/instruction/value'
@@ -16,12 +15,6 @@ module ActionSet
     ::ActionView::Base.send :include, Helpers::HelperMethods
   end
 
-  class Filter < OpenStruct
-    def model_name
-      OpenStruct.new(param_key: 'filter')
-    end
-  end
-
   module ClassMethods
   end
 
@@ -31,7 +24,6 @@ module ActionSet
     end
 
     def filter_set(set)
-      set_filters_ivar
       active_set = ensure_active_set(set)
       active_set = active_set.filter(filter_structure(set)) if filter_params.any?
       active_set
@@ -54,11 +46,6 @@ module ActionSet
       active_set = ensure_active_set(set)
       transformed_data = active_set.transform(transform_structure)
       send_data(transformed_data, export_set_options(request.format))
-    end
-
-    def set_filters_ivar
-      @filters = JSON.parse(filter_params.to_json,
-                            object_class: Filter)
     end
 
     private

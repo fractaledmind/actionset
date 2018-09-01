@@ -1,4 +1,4 @@
-<%= form_for(@filters, method: :get, url: foos_path) do |s| %>
+<%= form_for(form_for_object_from_param(:filter), method: :get, url: foos_path) do |s| %>
   <% ApplicationRecord::DB_FIELDS.each do |db_field| %>
     <%= s.text_field(db_field) %>
   <% end %>
