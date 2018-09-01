@@ -1,3 +1,7 @@
+v 0.5.0
+  - Replace the use of `@filters` with the helper method `form_for_object_from_param(:filter)`
+  - Fix the pagination and sorting path helper methods to ensure they don't remove pre-existing params
+  - Rearrange the pagination helpers into a loose collection of micro-helpers
 v 0.4.2
   - Ensure that the sort_link_for helper method can work with symbol attributes
 v 0.4.1
