@@ -10,8 +10,8 @@ RSpec.describe Pagination::PathForHelper, type: :helper do
     {}
   end
 
-  describe '.paginate_path_for' do
-    subject { helper.paginate_path_for(page) }
+  describe '.pagination_path_for' do
+    subject { helper.pagination_path_for(page) }
 
     context 'when page is nil' do
       let(:page) { nil }
