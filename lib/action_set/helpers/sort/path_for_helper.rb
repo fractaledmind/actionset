@@ -16,10 +16,10 @@ module Sort
 
     def sort_params_for(attribute)
       current_params
-        .deep_merge(only_path: true,
-                    sort: {
-                      attribute => next_sort_direction_for(attribute)
-                    })
+        .merge(only_path: true,
+               sort: {
+                 attribute => next_sort_direction_for(attribute)
+               })
     end
   end
 end
