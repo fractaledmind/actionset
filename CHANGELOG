@@ -1,3 +1,7 @@
+v 0.5.1
+  - Fix the sorting path helper to only ever allow single-vector sorting
+  - Fix the pagination description helper to have proper HTML spacing
+  - Add an `export_path_for(format)` helper for generating a path
 v 0.5.0
   - Replace the use of `@filters` with the helper method `form_for_object_from_param(:filter)`
   - Fix the pagination and sorting path helper methods to ensure they don't remove pre-existing params
