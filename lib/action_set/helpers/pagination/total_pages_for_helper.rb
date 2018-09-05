@@ -8,6 +8,7 @@ module Pagination
 
     def pagination_total_pages_for(set)
       total_set_size = set.set.count
+      return 1 if total_set_size == 0
 
       (total_set_size.to_f / pagination_page_size_for(set)).ceil
     end
