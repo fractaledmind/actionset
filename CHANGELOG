@@ -1,3 +1,5 @@
+v 0.5.2
+  - Fix the pagination total_pages_for helper to properly handle the case when the set has no members
 v 0.5.1
   - Fix the sorting path helper to only ever allow single-vector sorting
   - Fix the pagination description helper to have proper HTML spacing
