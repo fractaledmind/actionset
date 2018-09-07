@@ -8,10 +8,12 @@ module Sort
     include Sort::PathForHelper
     include Sort::DescriptionForHelper
 
-    def sort_link_for(attribute, name = nil)
+    def sort_link_for(attribute, name = nil, **attributes)
       link_to(name || attribute.to_s.titleize,
               sort_path_for(attribute),
-              'aria-label': sort_description_for(attribute))
+              **attributes.merge(
+                'aria-label': sort_description_for(attribute)
+              ))
     end
   end
 end

@@ -14,8 +14,12 @@ module Pagination
     include Pagination::NextPageLinkForHelper
     include Pagination::LastPageLinkForHelper
 
-    def pagination_links_for(set)
-      content_tag(:nav, class: 'pagination', 'aria-label': 'Page navigation') do
+    def pagination_links_for(set, **attributes)
+      content_tag(:nav,
+                  **attributes.merge(
+                    class: 'pagination',
+                    'aria-label': 'Page navigation'
+                  )) do
         safe_join([
           pagination_first_page_link_for(set),
           pagination_prev_page_link_for(set),
