@@ -1,3 +1,5 @@
+v 0.5.4
+  - Allow the `form_for_object_from_param` helper to accept defaults hash
 v 0.5.3
   - allow attributes to be passed to the `sort_link_for` and `pagination_links_for` helper methods
 v 0.5.2
