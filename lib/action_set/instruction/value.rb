@@ -10,10 +10,10 @@ module ActionSet
       end
 
       def cast(to:)
-        adapters.map do |adapter|
-          value = adapter.new(@raw, to).process
-          return value unless value.nil?
-        end.compact.first || @raw
+        adapters.each do |adapter|
+          maybe_value_or_nil = adapter.new(@raw, to).process
+          break(maybe_value_or_nil) unless maybe_value_or_nil.nil?
+        end
       end
 
       private
