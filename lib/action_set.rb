@@ -52,10 +52,10 @@ module ActionSet
 
     def filter_structure(set)
       filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
-        instruction = ActiveSet::Instruction.new(keypath, value)
+        instruction = ActiveSet::AttributeInstruction.new(keypath, value)
         item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
-        typecast_value = Instruction::Value.new(value)
+        typecast_value = ActionSet::AttributeInstruction::Value.new(value)
                                            .cast(to: item_value.class)
 
         memo[keypath] = typecast_value

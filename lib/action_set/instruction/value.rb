@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ActionSet
-  module Instruction
+  module AttributeInstruction
     class Value
       attr_reader :raw
 
