@@ -44,8 +44,8 @@ module ActionSet
     def export_set(set)
       return send_file(set, export_set_options(request.format)) if set.is_a?(String) && File.file?(set)
       active_set = ensure_active_set(set)
-      transformed_data = active_set.transform(transform_structure)
-      send_data(transformed_data, export_set_options(request.format))
+      exported_data = active_set.export(export_structure)
+      send_data(exported_data, export_set_options(request.format))
     end
 
     private
@@ -66,10 +66,10 @@ module ActionSet
       paginate_params.transform_values(&:to_i)
     end
 
-    def transform_structure
+    def export_structure
       {}.tap do |struct|
-        struct[:format] = transform_params[:format] || request.format.symbol
-        columns_params = transform_params[:columns]&.map do |column|
+        struct[:format] = export_params[:format] || request.format.symbol
+        columns_params = export_params[:columns]&.map do |column|
           Hash[column&.map do |k, v|
             is_literal_value = ->(key) { key.to_s == 'value*' }
             key = is_literal_value.(k) ? 'value' : k
@@ -93,8 +93,8 @@ module ActionSet
       params.fetch(:paginate, {}).to_unsafe_hash
     end
 
-    def transform_params
-      params.fetch(:transform, {}).to_unsafe_hash
+    def export_params
+      params.fetch(:export, {}).to_unsafe_hash
     end
 
     def export_set_options(format)
