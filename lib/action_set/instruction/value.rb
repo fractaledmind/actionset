@@ -10,10 +10,13 @@ module ActionSet
       end
 
       def cast(to:)
-        adapters.find do |adapter|
+        maybe_value_or_adapters = adapters.each do |adapter|
           maybe_value_or_nil = adapter.new(@raw, to).process
           break(maybe_value_or_nil) unless maybe_value_or_nil.nil?
         end
+
+        return nil if maybe_value_or_adapters == adapters
+        maybe_value_or_adapters
       end
 
       private
