@@ -10,7 +10,7 @@ module ActionSet
       end
 
       def cast(to:)
-        adapters.each do |adapter|
+        adapters.find do |adapter|
           maybe_value_or_nil = adapter.new(@raw, to).process
           break(maybe_value_or_nil) unless maybe_value_or_nil.nil?
         end
@@ -43,7 +43,7 @@ module ActionSet
         def possible_typecasters
           @possible_typecasters ||= String.instance_methods
                                           .map(&:to_s)
-                                          .select { |m| m.starts_with? 'to_' }
+                                          .select { |m| m.start_with? 'to_' }
                                           .reject { |m| %[to_v8].include? m }
         end
 
