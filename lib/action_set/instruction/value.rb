@@ -15,7 +15,7 @@ module ActionSet
           break(maybe_value_or_nil) unless maybe_value_or_nil.nil?
         end
 
-        return nil if maybe_value_or_adapters == adapters
+        return @raw if maybe_value_or_adapters == adapters
         maybe_value_or_adapters
       end
 
