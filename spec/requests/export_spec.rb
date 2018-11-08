@@ -16,7 +16,7 @@ RSpec.describe 'GET /foos with EXPORTING', type: :request do
 
     let(:params) do
       {
-        transform: {
+        export: {
           columns: columns
         }
       }
