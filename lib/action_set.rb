@@ -5,7 +5,7 @@ require 'active_support/core_ext/object/blank'
 require 'active_support/lazy_load_hooks'
 require 'active_set'
 
-require_relative './action_set/instruction/value'
+require_relative './action_set/attribute_value'
 require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
@@ -54,7 +54,7 @@ module ActionSet
         instruction = ActiveSet::AttributeInstruction.new(keypath, value)
         item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
-        typecast_value = ActionSet::AttributeInstruction::Value.new(value)
+        typecast_value = ActionSet::AttributeValue.new(value)
                            .cast(to: item_value.class)
 
         memo[keypath] = typecast_value
