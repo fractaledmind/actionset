@@ -55,7 +55,7 @@ module ActionSet
         item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
         typecast_value = ActionSet::AttributeInstruction::Value.new(value)
-                                           .cast(to: item_value.class)
+                           .cast(to: item_value.class)
 
         memo[keypath] = typecast_value
       end
