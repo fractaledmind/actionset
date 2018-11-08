@@ -5,7 +5,6 @@ require 'active_support/core_ext/object/blank'
 require 'active_support/lazy_load_hooks'
 require 'active_set'
 
-require 'action_set/version'
 require_relative './action_set/instruction/value'
 require_relative './action_set/helpers/helper_methods'
 
