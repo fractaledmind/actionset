@@ -1,3 +1,6 @@
+v 0.6.0
+  - Refactor to work with versions 0.7.x of ActiveSet
+  - Move and rename the typecasting class for attribute values
 v 0.5.4
   - Allow the `form_for_object_from_param` helper to accept defaults hash
 v 0.5.3
