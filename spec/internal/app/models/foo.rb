@@ -3,28 +3,15 @@
 class Foo < ApplicationRecord
   belongs_to :assoc
 
-  def method_missing(method_name, *args, &block)
-    return super unless method_name.to_s.start_with?('computed')
-    return super unless method_name.to_s.ends_with?('field')
-    field_method = method_name.to_s.remove 'computed_', '_field'
-    send(field_method, *args, &block)
+  scope :string_starts_with, (lambda do |substr|
+    where(Arel::Table.new(table_name)[:string].matches("#{substr}%"))
+  end)
+
+  def self.string_ends_with(substr)
+    where(Arel::Table.new(table_name)[:string].matches("%#{substr}"))
   end
 
-  def respond_to_missing?(method_name, include_private = false)
-    return super unless method_name.to_s.start_with?('computed')
-    return super unless method_name.to_s.ends_with?('field')
-    true
-  end
-
-  def computed_bignum_field
-    id**64
-  end
-
-  def computed_symbol_field
-    string.to_sym
-  end
-
-  def computed_relationship
+  def computed_assoc
     assoc
   end
 end
