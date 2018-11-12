@@ -2,149 +2,390 @@
 
 require 'spec_helper'
 
-RSpec.describe 'GET /foos with FILTERING', type: :request do
-  let!(:foo) { FactoryGirl.create(:foo) }
-  let!(:others) { FactoryGirl.create_list(:foo, 2) }
+RSpec.shared_examples 'a successful filter' do
+  it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+end
 
-  context 'JSON request' do
-    let(:results) { JSON.parse(response.body) }
-    let(:results_ids) { results.map { |f| f['id'] } }
-
-    before(:each) do
-      get foos_path(format: :json), params: params, headers: {}
-    end
-
-    context 'db fields' do
-      ApplicationRecord::DB_FIELDS.each do |db_field|
-        context "with a :#{db_field} attribute type" do
-          context 'on the base object' do
-            let(:params) do
-              { filter: { db_field => foo.send(db_field) } }
-            end
-            let(:expected_ids) do
-              Foo.where(db_field => foo.send(db_field))
-                 .pluck(:id)
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results.size).to be >= 1 }
-            it { expect(results_ids).to eq expected_ids }
-          end
-
-          context 'on an associated object' do
-            let(:params) do
-              { filter: { assoc: { db_field => foo.assoc.send(db_field) } } }
-            end
-            let(:expected_ids) do
-              Foo.joins(:assoc)
-                 .where(assocs: { db_field => foo.assoc.send(db_field) })
-                 .pluck(:id)
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results.size).to be >= 1 }
-            it { expect(results_ids).to eq expected_ids }
-          end
-        end
-      end
-    end
-
-    context 'computed fields' do
-      ApplicationRecord::COMPUTED_FIELDS.each do |computed_field|
-        context "with a :#{computed_field} attribute" do
-          let(:field) { "computed_#{computed_field}_field" }
-
-          context 'on the base object' do
-            let(:params) do
-              { filter: { field => foo.send(field) } }
-            end
-            let(:expected_ids) do
-              Foo.all
-                 .select { |x| x.send(field) == foo.send(field) }
-                 .map(&:id)
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results.size).to be >= 1 }
-            it { expect(results_ids).to eq expected_ids }
-          end
-
-          context 'on an associated object' do
-            let(:params) do
-              { filter: { assoc: { field => foo.assoc.send(field) } } }
-            end
-            let(:expected_ids) do
-              Foo.all
-                 .select { |x| x.assoc.send(field) == foo.assoc.send(field) }
-                 .map(&:id)
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results.size).to be >= 1 }
-            it { expect(results_ids).to eq expected_ids }
-          end
-        end
-      end
-    end
+RSpec.describe 'GET /foos?filter', type: :request do
+  before(:all) do
+    @foo_1 = FactoryBot.create(:foo, assoc: FactoryBot.create(:assoc))
+    @foo_2 = FactoryBot.create(:foo, assoc: FactoryBot.create(:assoc))
+    @active_set = ActiveSet.new(Foo.all)
   end
+  after(:all) { Foo.delete_all }
 
-  context 'HTML request' do
-    let(:page) { Capybara.string(response.body) }
+  context '.json' do
+    let(:results) { JSON.parse(response.body) }
 
     before(:each) do
-      get foos_path(format: :html), params: params, headers: {}
+      get foos_path(format: :json), params: { filter: instructions }, headers: {}
     end
 
-    context 'db fields' do
-      ApplicationRecord::DB_FIELDS.each do |db_field|
-        context "with a :#{db_field} attribute type" do
-          context 'on the base object' do
-            let(:params) do
-              { filter: { db_field => foo.send(db_field) } }
+    ApplicationRecord::FIELD_TYPES.each do |type|
+      context "with #{type.upcase} type" do
+        [1, 2].each do |foo_id|
+          context "matching @foo_#{foo_id}" do
+            let(:matching_item) { instance_variable_get("@foo_#{foo_id}") }
+
+            %W[
+              #{type}
+              computed_#{type}
+              assoc.#{type}
+              assoc.computed_#{type}
+              computed_assoc.#{type}
+              computed_assoc.computed_#{type}
+            ].each do |path|
+              context "{ #{path}: }" do
+                let(:instructions) do
+                  {
+                    path => path.split('.').reduce(matching_item) { |obj, m| obj.send(m) }
+                  }
+                end
+
+                it_behaves_like 'a successful filter'
+              end
             end
-            let(:value_selector) { "#filter_#{db_field}[value=\"#{foo.send(db_field)}\"]" }
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(page).to have_css(value_selector) }
-          end
-
-          context 'on an associated object' do
-            let(:params) do
-              { filter: { assoc: { db_field => foo.assoc.send(db_field) } } }
-            end
-            let(:value_selector) { "#filter_assoc_#{db_field}[value=\"#{foo.assoc.send(db_field)}\"]" }
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(page).to have_css(value_selector) }
           end
         end
       end
     end
 
-    context 'computed fields' do
-      ApplicationRecord::COMPUTED_FIELDS.each do |computed_field|
-        context "with a :#{computed_field} attribute type" do
-          let(:field) { "computed_#{computed_field}_field" }
+    ApplicationRecord::FIELD_TYPES.combination(2).each do |type_1, type_2|
+      context "with #{type_1.upcase} and #{type_2.upcase} types" do
+        [1, 2].each do |foo_id|
+          context "matching @foo_#{foo_id}" do
+            let(:matching_item) { instance_variable_get("@foo_#{foo_id}") }
 
-          context 'on the base object' do
-            let(:params) do
-              { filter: { field => foo.send(field) } }
+            %W[
+              #{type_1}
+              #{type_2}
+              computed_#{type_1}
+              computed_#{type_2}
+              assoc.#{type_1}
+              assoc.#{type_2}
+              assoc.computed_#{type_1}
+              assoc.computed_#{type_2}
+              computed_assoc.#{type_1}
+              computed_assoc.#{type_2}
+              computed_assoc.computed_#{type_1}
+              computed_assoc.computed_#{type_2}
+            ].combination(2).each do |path_1, path_2|
+              context "{ #{path_1}:, #{path_2} }" do
+                let(:instructions) do
+                  {
+                    path_1 => path_1.split('.').reduce(matching_item) { |obj, m| obj.send(m) },
+                    path_2 => path_2.split('.').reduce(matching_item) { |obj, m| obj.send(m) }
+                  }
+                end
+
+                it_behaves_like 'a successful filter'
+              end
             end
-            let(:value_selector) { "#filter_#{field}[value=\"#{foo.send(field)}\"]" }
+          end
+        end
+      end
+    end
 
-            it { expect(response).to have_http_status :ok }
-            it { expect(page).to have_css(value_selector) }
+    context 'on a SCOPE' do
+      context 'matching @foo_1' do
+        let(:matching_item) { @foo_1 }
+
+        context '{ string_starts_with: }' do
+          let(:instructions) do
+            {
+              'string_starts_with': matching_item.string[0..3]
+            }
           end
 
-          context 'on an associated object' do
-            let(:params) do
-              { filter: { assoc: { field => foo.assoc.send(field) } } }
-            end
-            let(:value_selector) { "#filter_assoc_#{field}[value=\"#{foo.assoc.send(field)}\"]" }
+          it_behaves_like 'a successful filter'
+        end
 
-            it { expect(response).to have_http_status :ok }
-            it { expect(page).to have_css(value_selector) }
+        context '{ string_ends_with: }' do
+          let(:instructions) do
+            {
+              'string_ends_with': matching_item.string[-3..-1]
+            }
           end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_starts_with: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_starts_with': matching_item.assoc.string[0..3]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_ends_with: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_ends_with': matching_item.assoc.string[-3..-1]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_starts_with: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_starts_with': matching_item.computed_assoc.string[0..3]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_ends_with: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_ends_with': matching_item.computed_assoc.string[-3..-1]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+      end
+
+      context 'matching @foo_2' do
+        let(:matching_item) { @foo_2 }
+
+        context '{ string_starts_with: }' do
+          let(:instructions) do
+            {
+              'string_starts_with': matching_item.string[0..3]
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ string_ends_with: }' do
+          let(:instructions) do
+            {
+              'string_ends_with': matching_item.string[-3..-1]
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_starts_with: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_starts_with': matching_item.assoc.string[0..3]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_ends_with: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_ends_with': matching_item.assoc.string[-3..-1]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_starts_with: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_starts_with': matching_item.computed_assoc.string[0..3]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_ends_with: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_ends_with': matching_item.computed_assoc.string[-3..-1]
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+      end
+    end
+
+    context 'on a SCOPE and with STRING type' do
+      context 'matching @foo_1' do
+        let(:matching_item) { @foo_1 }
+
+        context '{ string_starts_with:, string: }' do
+          let(:instructions) do
+            {
+              'string_starts_with': matching_item.string[0..3],
+              string: matching_item.string
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ string_ends_with:, string: }' do
+          let(:instructions) do
+            {
+              'string_ends_with': matching_item.string[-3..-1],
+              string: matching_item.string
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_starts_with:, string: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_starts_with': matching_item.assoc.string[0..3],
+                string: matching_item.assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_ends_with:, string: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_ends_with': matching_item.assoc.string[-3..-1],
+                string: matching_item.assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_starts_with:, string: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_starts_with': matching_item.computed_assoc.string[0..3],
+                string: matching_item.computed_assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_ends_with:, string: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_ends_with': matching_item.computed_assoc.string[-3..-1],
+                string: matching_item.computed_assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+      end
+
+      context 'matching @foo_2' do
+        let(:matching_item) { @foo_2 }
+
+        context '{ string_starts_with:, string: }' do
+          let(:instructions) do
+            {
+              'string_starts_with': matching_item.string[0..3],
+              string: matching_item.string
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ string_ends_with:, string: }' do
+          let(:instructions) do
+            {
+              'string_ends_with': matching_item.string[-3..-1],
+              string: matching_item.string
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_starts_with:, string: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_starts_with': matching_item.assoc.string[0..3],
+                string: matching_item.assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ assoc: { string_ends_with:, string: } }' do
+          let(:instructions) do
+            {
+              assoc: {
+                'string_ends_with': matching_item.assoc.string[-3..-1],
+                string: matching_item.assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_starts_with:, string: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_starts_with': matching_item.computed_assoc.string[0..3],
+                string: matching_item.computed_assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
+        end
+
+        context '{ computed_assoc: { string_ends_with:, string: } }' do
+          let(:instructions) do
+            {
+              computed_assoc: {
+                'string_ends_with': matching_item.computed_assoc.string[-3..-1],
+                string: matching_item.computed_assoc.string
+              }
+            }
+          end
+
+          it_behaves_like 'a successful filter'
         end
       end
     end
