@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
   sequence :string do |n|
     [Faker::RickAndMorty.character, n].join('-')
   end
@@ -8,6 +7,7 @@ FactoryGirl.define do
     [Faker::RickAndMorty.quote, n].join('-')
   end
 
+FactoryBot.define do
   factory :foo do
     binary        { Base64.encode64 Faker::Crypto.sha256 }
     boolean       { [true, false].sample }

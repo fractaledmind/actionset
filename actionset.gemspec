@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'database_cleaner'
   spec.add_development_dependency 'capybara'
   spec.add_development_dependency 'combustion'
-  spec.add_development_dependency 'factory_girl'
+  spec.add_development_dependency 'factory_bot'
   spec.add_development_dependency 'faker'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'simplecov-console'

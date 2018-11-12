@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :assoc do
     binary        { Base64.encode64 Faker::Crypto.sha256 }
     boolean       { [true, false].sample }
