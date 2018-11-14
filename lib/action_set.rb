@@ -24,7 +24,7 @@ module ActionSet
 
     def filter_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.filter(filter_structure(set)) if filter_params.any?
+      active_set = active_set.filter(filter_instructions_for(set)) if filter_params.any?
       active_set
     end
 
@@ -34,45 +34,48 @@ module ActionSet
       active_set
     end
 
+    # TODO: should we move the default value setting to this layer,
+    # and have ActiveSet require instructions for pagination?
     def paginate_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.paginate(paginate_structure)
+      active_set = active_set.paginate(paginate_instructions)
       active_set
     end
 
     def export_set(set)
       return send_file(set, export_set_options(request.format)) if set.is_a?(String) && File.file?(set)
+
       active_set = ensure_active_set(set)
-      exported_data = active_set.export(export_structure)
+      exported_data = active_set.export(export_instructions)
       send_data(exported_data, export_set_options(request.format))
     end
 
     private
 
-    def filter_structure(set)
+    def filter_instructions_for(set)
       filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
         instruction = ActiveSet::AttributeInstruction.new(keypath, value)
         item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
         item_value = instruction.value_for(item: item_with_value)
         typecast_value = ActionSet::AttributeValue.new(value)
-                           .cast(to: item_value.class)
+                                                  .cast(to: item_value.class)
 
         memo[keypath] = typecast_value
       end
     end
 
-    def paginate_structure
+    def paginate_instructions
       paginate_params.transform_values(&:to_i)
     end
 
-    def export_structure
+    def export_instructions
       {}.tap do |struct|
         struct[:format] = export_params[:format] || request.format.symbol
         columns_params = export_params[:columns]&.map do |column|
           Hash[column&.map do |k, v|
             is_literal_value = ->(key) { key.to_s == 'value*' }
-            key = is_literal_value.(k) ? 'value' : k
-            val = is_literal_value.(k) ? send(v) : v
+            key = is_literal_value.call(k) ? 'value' : k
+            val = is_literal_value.call(k) ? send(v) : v
             [key, val]
           end]
         end
