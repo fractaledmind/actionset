@@ -100,6 +100,46 @@ For pagination, like filtering, we don't enforce any view-layer specifics. You s
     <a rel="next" class="page-link page-next" href="/foos?paginate%5Bpage%5D=3">Next ›</a>
     <a class="page-link page-last" href="/foos?paginate%5Bpage%5D=3">Last »</a>
 </nav>
+<style>
+.pagination {
+  display: flex;
+  align-items: stretch;
+}
+.pagination .page-link {
+  display: flex;
+  align-items: center;
+  border: 1px solid lightgrey;
+  padding: 0.5rem;
+}
+.pagination .page-link:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination .page-link:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pagination .page-link.disabled {
+  color: grey;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.pagination .page-current {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+}
+.pagination .page-current .page-input {
+  display: inline-block;
+  width: 4rem;
+  height: 2rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+</style>
+
 ```html
 <nav class="pagination" aria-label="Page navigation">
     <a class="page-link page-first" href="/foos?paginate%5Bpage%5D=1">« First</a>
