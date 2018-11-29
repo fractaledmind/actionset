@@ -93,52 +93,34 @@ We tell the `form_for` helper to make a `GET` request back to our `index` action
 
 For pagination, like filtering, we don't enforce any view-layer specifics. You simply need to pass request parameters under the `paginate` param, specifically the `page` and `size` params. However, **`ActionSet`** does provide a simple default pagination UI component via the `pagination_links_for` view helper. You simply pass your processed set to this view helper, and it will render HTML in this structure:
 
-<nav class="pagination" aria-label="Page navigation">
-    <a class="page-link page-first" href="/foos?paginate%5Bpage%5D=1">« First</a>
-    <a rel="prev" class="page-link page-prev" href="/foos?paginate%5Bpage%5D=1">‹ Prev</a>
-    <span class="page-current">Page&nbsp;<strong>2</strong>&nbsp;of&nbsp;<strong>3</strong></span>
-    <a rel="next" class="page-link page-next" href="/foos?paginate%5Bpage%5D=3">Next ›</a>
-    <a class="page-link page-last" href="/foos?paginate%5Bpage%5D=3">Last »</a>
+<nav class="pagination" aria-label="Page navigation" style="display: flex;align-items: stretch;">
+    <a href="/foos?paginate%5Bpage%5D=1"
+       class="page-link page-first"
+       style="display: flex;align-items: center;border: 1px solid lightgrey;padding: 0.5rem;border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+        « First
+    </a>
+    <a href="/foos?paginate%5Bpage%5D=1"
+       rel="prev"
+       class="page-link page-prev"
+       style="display: flex;align-items: center;border: 1px solid lightgrey;padding: 0.5rem;">
+        ‹ Prev
+    </a>
+    <span class="page-current"
+          style="display: flex;align-items: center;padding: 0.25rem 0.5rem;border-top: 1px solid lightgrey;border-bottom: 1px solid lightgrey;">
+        Page&nbsp;<strong>2</strong>&nbsp;of&nbsp;<strong>3</strong>
+    </span>
+    <a href="/foos?paginate%5Bpage%5D=3"
+       rel="next"
+       class="page-link page-next"
+       style="display: flex;align-items: center;border: 1px solid lightgrey;padding: 0.5rem;">
+        Next ›
+    </a>
+    <a href="/foos?paginate%5Bpage%5D=3"
+       class="page-link page-last"
+       style="display: flex;align-items: center;border: 1px solid lightgrey;padding: 0.5rem;border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+        Last »
+    </a>
 </nav>
-<style>
-.pagination {
-  display: flex;
-  align-items: stretch;
-}
-.pagination .page-link {
-  display: flex;
-  align-items: center;
-  border: 1px solid lightgrey;
-  padding: 0.5rem;
-}
-.pagination .page-link:first-child {
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
-.pagination .page-link:last-child {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-.pagination .page-link.disabled {
-  color: grey;
-  pointer-events: none;
-  cursor: not-allowed;
-}
-.pagination .page-current {
-  display: flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-top: 1px solid lightgrey;
-  border-bottom: 1px solid lightgrey;
-}
-.pagination .page-current .page-input {
-  display: inline-block;
-  width: 4rem;
-  height: 2rem;
-  padding: 0.5rem;
-  text-align: center;
-}
-</style>
 
 ```html
 <nav class="pagination" aria-label="Page navigation">
