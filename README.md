@@ -93,13 +93,8 @@ We tell the `form_for` helper to make a `GET` request back to our `index` action
 
 For pagination, like filtering, we don't enforce any view-layer specifics. You simply need to pass request parameters under the `paginate` param, specifically the `page` and `size` params. However, **`ActionSet`** does provide a simple default pagination UI component via the `pagination_links_for` view helper. You simply pass your processed set to this view helper, and it will render HTML in this structure:
 
-<nav class="pagination" aria-label="Page navigation">
-    <a class="page-link page-first" href="/foos?paginate%5Bpage%5D=1">« First</a>
-    <a rel="prev" class="page-link page-prev" href="/foos?paginate%5Bpage%5D=1">‹ Prev</a>
-    <span class="page-current">Page&nbsp;<strong>2</strong>&nbsp;of&nbsp;<strong>3</strong></span>
-    <a rel="next" class="page-link page-next" href="/foos?paginate%5Bpage%5D=3">Next ›</a>
-    <a class="page-link page-last" href="/foos?paginate%5Bpage%5D=3">Last »</a>
-</nav>
+![alt text](https://raw.githubusercontent.com/fractaledmind/actionset/master/pagination.png)
+
 ```html
 <nav class="pagination" aria-label="Page navigation">
     <a class="page-link page-first" href="/foos?paginate%5Bpage%5D=1">« First</a>
