@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activeset', '>= 0.7.1'
+  spec.add_dependency 'activeset', '>= 0.8.0'
   spec.add_dependency 'activesupport', '>= 4.0.2'
   spec.add_dependency 'railties'
 
@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'faker'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'simplecov-console'
+  spec.add_development_dependency 'ransack'
 end
