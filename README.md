@@ -1,5 +1,8 @@
 # ActionSet
 
+[![Build Status](https://travis-ci.com/fractaledmind/actionset.svg?branch=master)](https://travis-ci.com/fractaledmind/actionset)
+[![codecov](https://codecov.io/gh/fractaledmind/actionset/branch/master/graph/badge.svg)](https://codecov.io/gh/fractaledmind/actionset)
+
 ## Installation
 
 Add this line to your application's Gemfile:
