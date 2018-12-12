@@ -3,7 +3,7 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  FIELD_TYPES = %w[
+  FIELD_TYPES = %i[
     bignum
     binary
     boolean
