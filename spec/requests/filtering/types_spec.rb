@@ -12,6 +12,7 @@ RSpec.describe 'GET /things?filter', type: :request do
 
   context '.json' do
     let(:results) { JSON.parse(response.body) }
+    let(:result_ids) { results.map { |f| f['id'] } }
 
     before(:each) do
       get things_path(format: :json),
@@ -39,7 +40,7 @@ RSpec.describe 'GET /things?filter', type: :request do
                   }
                 end
 
-                it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+                it { expect(result_ids).to eq [matching_item.id] }
               end
             end
           end
@@ -75,7 +76,7 @@ RSpec.describe 'GET /things?filter', type: :request do
                   }
                 end
 
-                it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+                it { expect(result_ids).to eq [matching_item.id] }
               end
             end
           end

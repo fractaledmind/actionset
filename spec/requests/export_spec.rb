@@ -3,232 +3,203 @@
 require 'spec_helper'
 
 RSpec.describe 'GET /foos with EXPORTING', type: :request do
-  let!(:foo) { FactoryGirl.create(:foo) }
-  let!(:others) { FactoryGirl.create_list(:foo, 2) }
-  let(:set) { Foo.all }
-  let(:results) { CSV.parse(response.body) }
-  let(:results_ids) { results.map { |f| f['id'] } }
+  before(:all) do
+    @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_3 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+  end
+  after(:all) { Thing.delete_all }
 
-  context 'CSV request' do
+  context '.csv' do
+    let(:result) { response.body }
+
     before(:each) do
-      get foos_path(format: :csv), params: params, headers: {}
+      get things_path(format: :csv),
+          params: { export: instructions },
+          as: :json
     end
 
-    let(:params) do
-      {
-        export: {
-          columns: columns
-        }
-      }
-    end
+    context 'with ActiveRecord collection' do
+      before(:all) { @active_set = ActiveSet.new(Thing.all) }
 
-    context 'when columns passed as params' do
-      context 'when value is nil' do
-        context 'when key present' do
-          context 'when one column' do
-            let(:columns) do
-              [
-                { key: 'Name' }
-              ]
+      context '{ columns: [{}] }' do
+        let(:instructions) do
+          {
+            columns: [
+              {}
+            ]
+          }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << ['']
+            @active_set.each do |_|
+              output << %w[—]
             end
-
-            let(:expected_csv) do
-              [['Name'], ['—'], ['—'], ['—']]
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
-          end
-
-          context 'when multiple columns' do
-            let(:columns) do
-              [
-                { key: 'Name' },
-                { key: 'Assoc' }
-              ]
-            end
-
-            let(:expected_csv) do
-              [['Name', 'Assoc'], ['—', '—'], ['—', '—'], ['—', '—']]
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
           end
         end
 
-        context 'when key is not present' do
-          context 'when one column' do
-            let(:columns) do
-              [
-                {}
-              ]
-            end
-
-            let(:expected_csv) do
-              [[''], ['—'], ['—'], ['—']]
-            end
-
-            it { expect(response).to have_http_status :ok }
-            # it { expect(results).to eq expected_csv }
-          end
-
-          context 'when multiple columns' do
-            let(:columns) do
-              [
-                {},
-                {}
-              ]
-            end
-
-            let(:expected_csv) do
-              [['', ''], ['—', '—'], ['—', '—'], ['—', '—']]
-            end
-
-            it { expect(response).to have_http_status :ok }
-            # it { expect(results).to eq expected_csv }
-          end
-        end
+        it { expect(result).to eq expected_csv }
       end
 
-      context 'when value is keypath' do
-        context 'when key present' do
-          context 'when one column' do
-            let(:columns) do
-              [
-                { key: 'Attribute',
-                  value: 'string' }
-              ]
+      context '{ columns: [{}, {}] }' do
+        let(:instructions) do
+          {
+            columns: [
+              {},
+              {}
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << ['', '']
+            @active_set.each do |_|
+              output << %w[— —]
             end
-
-            let(:expected_csv) do
-              [].tap do |a|
-                a << ['Attribute']
-                set.each { |f| a << [f.string] }
-              end
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
-          end
-
-          context 'when multiple columns' do
-            let(:columns) do
-              [
-                { key: 'Attribute',
-                  value: 'string' },
-                { key: 'Association',
-                  value: 'assoc.integer' }
-              ]
-            end
-
-            let(:expected_csv) do
-              [].tap do |a|
-                a << ['Attribute', 'Association']
-                set.each { |f| a << [f.string, f.assoc.integer.to_s] }
-              end
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
           end
         end
 
-        context 'when key is not present' do
-          context 'when one column' do
-            let(:columns) do
-              [
-                { value: 'boolean' }
-              ]
-            end
-
-            let(:expected_csv) do
-              [].tap do |a|
-                a << ['Boolean']
-                set.each { |f| a << [f.boolean.to_s] }
-              end
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
-          end
-
-          context 'when multiple columns' do
-            let(:columns) do
-              [
-                { value: 'boolean' },
-                { value: 'assoc.float' }
-              ]
-            end
-
-            let(:expected_csv) do
-              [].tap do |a|
-                a << ['Boolean', 'Float']
-                set.each { |f| a << [f.boolean.to_s, f.assoc.float.to_s] }
-              end
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
-          end
-        end
+        it { expect(result).to eq expected_csv }
       end
 
-      context 'when value is method' do
-        context 'when key present' do
-          context 'when one column' do
-            let(:columns) do
-              [
-                { key: 'Attribute',
-                  'value*': 'proc_item_string' }
-              ]
+      context "{ columns: [{key: 'ID'}] }" do
+        let(:instructions) do
+          {
+            columns: [
+              { key: 'ID' }
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[ID]
+            @active_set.each do |_|
+              output << %w[—]
             end
-
-            let(:expected_csv) do
-              [].tap do |a|
-                a << ['Attribute']
-                set.each { |f| a << [f.string] }
-              end
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
-          end
-
-          context 'when multiple columns' do
-            let(:columns) do
-              [
-                { key: 'Attribute',
-                  'value*': 'proc_item_string' },
-                { key: 'Association',
-                  'value*': 'proc_item_assoc_integer' }
-              ]
-            end
-
-            let(:expected_csv) do
-              [].tap do |a|
-                a << ['Attribute', 'Association']
-                set.each { |f| a << [f.string, f.assoc.integer.to_s] }
-              end
-            end
-
-            it { expect(response).to have_http_status :ok }
-            it { expect(results).to eq expected_csv }
           end
         end
 
-        # DON'T DO THIS.
-        # THIS WILL BLOW THINGS UP.
-        # IF VALUE IF PROC, SUPPLY THE KEY
-        # context 'when key is not present' do
-        # end
+        it { expect(result).to eq expected_csv }
+      end
+
+      context "{ columns: [{key: 'ID'}, {key: 'Assoc'}] }" do
+        let(:instructions) do
+          {
+            columns: [
+              { key: 'ID' },
+              { key: 'Assoc' }
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[ID Assoc]
+            @active_set.each do |_|
+              output << %w[— —]
+            end
+          end
+        end
+
+        it { expect(result).to eq expected_csv }
+      end
+
+      context "{ columns: [{value: 'id'}] }" do
+        let(:instructions) do
+          {
+            columns: [
+              { value: 'id' }
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[Id]
+            @active_set.each do |item|
+              output << [item.id]
+            end
+          end
+        end
+
+        it { expect(result).to eq expected_csv }
+      end
+
+      context "{ columns: [{value: 'id'}, {value: 'only.string'}] }" do
+        let(:instructions) do
+          {
+            columns: [
+              { value: 'id' },
+              { value: 'only.string' }
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[Id String]
+            @active_set.each do |item|
+              output << [item.id, item.only.string]
+            end
+          end
+        end
+
+        it { expect(result).to eq expected_csv }
+      end
+
+      context "{ columns: [{key: 'ID', value: 'id'}] }" do
+        let(:instructions) do
+          {
+            columns: [
+              { key: 'ID',
+                value: 'id' }
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[ID]
+            @active_set.each do |item|
+              output << [item.id]
+            end
+          end
+        end
+
+        it { expect(result).to eq expected_csv }
+      end
+
+      context "{ columns: [{key: 'ID', value: 'id'}, {key: 'Assoc', value: 'only.string'}] }" do
+        let(:instructions) do
+          {
+            columns: [
+              { key: 'ID',
+                value: 'id' },
+              { key: 'Assoc',
+                value: 'only.string' }
+            ] }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[ID Assoc]
+            @active_set.each do |item|
+              output << [item.id, item.only.string]
+            end
+          end
+        end
+
+        it { expect(result).to eq expected_csv }
+      end
+
+      context "{  }" do
+        let(:instructions) do
+          { }
+        end
+        let(:expected_csv) do
+          ::CSV.generate do |output|
+            output << %w[hello_world]
+            @active_set.each do |item|
+              output << [item.integer]
+            end
+          end
+        end
+
+        it { expect(result).to eq expected_csv }
       end
     end
 
-    context 'when columns defined in controller' do
-    end
-
-    context 'when no columns' do
+    context 'with Enumerable collection' do
     end
   end
 end

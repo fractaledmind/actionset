@@ -12,6 +12,7 @@ RSpec.describe 'GET /things?filter', type: :request do
 
   context '.json' do
     let(:results) { JSON.parse(response.body) }
+    let(:result_ids) { results.map { |f| f['id'] } }
 
     before(:each) do
       get things_path(format: :json),
@@ -29,7 +30,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ string_ends_with: }' do
@@ -39,7 +40,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_starts_with: } }' do
@@ -51,7 +52,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_ends_with: } }' do
@@ -63,7 +64,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_starts_with: } }' do
@@ -75,7 +76,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_ends_with: } }' do
@@ -87,7 +88,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
       end
 
@@ -101,7 +102,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ string_ends_with: }' do
@@ -111,7 +112,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_starts_with: } }' do
@@ -123,7 +124,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_ends_with: } }' do
@@ -135,7 +136,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_starts_with: } }' do
@@ -147,7 +148,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_ends_with: } }' do
@@ -159,7 +160,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
       end
     end
@@ -176,7 +177,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ string_ends_with:, string: }' do
@@ -187,7 +188,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_starts_with:, string: } }' do
@@ -200,7 +201,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_ends_with:, string: } }' do
@@ -213,7 +214,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_starts_with:, string: } }' do
@@ -226,7 +227,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_ends_with:, string: } }' do
@@ -239,7 +240,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
       end
 
@@ -254,7 +255,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ string_ends_with:, string: }' do
@@ -265,7 +266,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_starts_with:, string: } }' do
@@ -278,7 +279,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ only: { string_ends_with:, string: } }' do
@@ -291,7 +292,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_starts_with:, string: } }' do
@@ -304,7 +305,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
 
         context '{ computed_only: { string_ends_with:, string: } }' do
@@ -317,7 +318,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             }
           end
 
-          it { expect(results.map { |f| f['id'] }).to eq [matching_item.id] }
+          it { expect(result_ids).to eq [matching_item.id] }
         end
       end
     end

@@ -2,153 +2,148 @@
 
 require 'spec_helper'
 
-RSpec.describe 'GET /foos with PAGINATING', type: :request do
-  let!(:foo) { FactoryGirl.create(:foo) }
-  let!(:others) { FactoryGirl.create_list(:foo, 2) }
-  let(:set) { Foo.all }
-  let(:results) { JSON.parse(response.body) }
-  let(:results_ids) { results.map { |f| f['id'] } }
+RSpec.describe 'GET /things?paginate', type: :request do
+  before(:all) do
+    @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_3 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+  end
+  after(:all) { Thing.delete_all }
 
-  context 'JSON request' do
+  context '.json' do
+    let(:results) { JSON.parse(response.body) }
+    let(:result_ids) { results.map { |f| f['id'] } }
+
     before(:each) do
-      get foos_path(format: :json), params: params, headers: {}
+      get things_path(format: :json),
+          params: { paginate: instructions }
     end
 
-    let(:params) do
-      {
-        paginate: {
-          page: page,
-          size: size
-        }
-      }
-    end
+    context 'with ActiveRecord collection' do
+      before(:all) { @active_set = ActiveSet.new(Thing.all) }
 
-    context 'when page size is smaller than set size' do
-      context 'when set is divisible by page size' do
-        let(:size) { 1 }
+      context '{ page: 1, size: 1 }' do
+        let(:instructions) { { page: 1, size: 1 } }
 
-        context 'when on first page' do
-          let(:page) { 1 }
-          let(:expected_ids) do
-            Foo.where(id: 1)
-               .pluck(:id)
-          end
-
-          it { expect(response).to have_http_status :ok }
-          it { expect(results_ids).to eq expected_ids }
-        end
-
-        context 'when on last page' do
-          let(:page) { 3 }
-          let(:expected_ids) do
-            Foo.where(id: 3)
-               .pluck(:id)
-          end
-
-          it { expect(response).to have_http_status :ok }
-          it { expect(results_ids).to eq expected_ids }
-        end
-
-        context 'when on irrational page' do
-          let(:page) { 10 }
-          let(:expected_ids) do
-            Foo.none
-               .pluck(:id)
-          end
-
-          it { expect(response).to have_http_status :ok }
-          it { expect(results_ids).to eq expected_ids }
-        end
+        it { expect(result_ids).to eq [@thing_1.id] }
       end
 
-      context 'when set is not divisible by page size' do
-        let(:size) { 2 }
+      context '{ page: 2, size: 1 }' do
+        let(:instructions) { { page: 2, size: 1 } }
 
-        context 'when on first page' do
-          let(:page) { 1 }
-          let(:expected_ids) do
-            Foo.where(id: [1, 2])
-               .pluck(:id)
-          end
+        it { expect(result_ids).to eq [@thing_2.id] }
+      end
 
-          it { expect(response).to have_http_status :ok }
-          it { expect(results_ids).to eq expected_ids }
-        end
+      context '{ page: 10, size: 1 }' do
+        let(:instructions) { { page: 10, size: 1 } }
 
-        context 'when on last page' do
-          let(:page) { 2 }
-          let(:expected_ids) do
-            Foo.where(id: 3)
-               .pluck(:id)
-          end
+        it { expect(result_ids).to eq [] }
+      end
 
-          it { expect(response).to have_http_status :ok }
-          it { expect(results_ids).to eq expected_ids }
-        end
+      context '{ page: 1, size: 2 }' do
+        let(:instructions) { { page: 1, size: 2 } }
 
-        context 'when on irrational page' do
-          let(:page) { 10 }
-          let(:expected_ids) do
-            Foo.none
-               .pluck(:id)
-          end
+        it { expect(result_ids).to eq [@thing_1.id, @thing_2.id] }
+      end
 
-          it { expect(response).to have_http_status :ok }
-          it { expect(results_ids).to eq expected_ids }
-        end
+      context '{ page: 2, size: 2 }' do
+        let(:instructions) { { page: 2, size: 2 } }
+
+        it { expect(result_ids).to eq [@thing_3.id] }
+      end
+
+      context '{ page: 10, size: 2 }' do
+        let(:instructions) { { page: 10, size: 2 } }
+
+        it { expect(result_ids).to eq [] }
+      end
+
+      context '{ page: 1, size: 3 }' do
+        let(:instructions) { { page: 1, size: 3 } }
+
+        it { expect(result_ids).to eq [@thing_1.id, @thing_2.id, @thing_3.id] }
+      end
+
+      context '{ page: 10, size: 3 }' do
+        let(:instructions) { { page: 10, size: 3 } }
+
+        it { expect(result_ids).to eq [] }
+      end
+
+      context '{ page: 1, size: 5 }' do
+        let(:instructions) { { page: 1, size: 5 } }
+
+        it { expect(result_ids).to eq [@thing_1.id, @thing_2.id, @thing_3.id] }
+      end
+
+      context '{ page: 10, size: 5 }' do
+        let(:instructions) { { page: 10, size: 5 } }
+
+        it { expect(result_ids).to eq [] }
       end
     end
 
-    context 'when page size is equal to set size' do
-      let(:size) { set.count }
+    context 'with Enumerable collection' do
+      before(:all) { @active_set = ActiveSet.new(Thing.all.to_a) }
 
-      context 'when on only page' do
-        let(:page) { 1 }
-        let(:expected_ids) do
-          Foo.all
-             .pluck(:id)
-        end
+      context '{ page: 1, size: 1 }' do
+        let(:instructions) { { page: 1, size: 1 } }
 
-        it { expect(response).to have_http_status :ok }
-        it { expect(results_ids).to eq expected_ids }
+        it { expect(result_ids).to eq [@thing_1.id] }
       end
 
-      context 'when on irrational page' do
-        let(:paginate_structure) { { page: 10, size: size } }
-        let(:page) { 10 }
-        let(:expected_ids) do
-          Foo.none
-             .pluck(:id)
-        end
+      context '{ page: 2, size: 1 }' do
+        let(:instructions) { { page: 2, size: 1 } }
 
-        it { expect(response).to have_http_status :ok }
-        it { expect(results_ids).to eq expected_ids }
-      end
-    end
-
-    context 'when page size is greater than set size' do
-      let(:size) { set.count + 1 }
-
-      context 'when on only page' do
-        let(:page) { 1 }
-        let(:expected_ids) do
-          Foo.all
-             .pluck(:id)
-        end
-
-        it { expect(response).to have_http_status :ok }
-        it { expect(results_ids).to eq expected_ids }
+        it { expect(result_ids).to eq [@thing_2.id] }
       end
 
-      context 'when on irrational page' do
-        let(:page) { 10 }
-        let(:expected_ids) do
-          Foo.none
-             .pluck(:id)
-        end
+      context '{ page: 10, size: 1 }' do
+        let(:instructions) { { page: 10, size: 1 } }
 
-        it { expect(response).to have_http_status :ok }
-        it { expect(results_ids).to eq expected_ids }
+        it { expect(result_ids).to eq [] }
+      end
+
+      context '{ page: 1, size: 2 }' do
+        let(:instructions) { { page: 1, size: 2 } }
+
+        it { expect(result_ids).to eq [@thing_1.id, @thing_2.id] }
+      end
+
+      context '{ page: 2, size: 2 }' do
+        let(:instructions) { { page: 2, size: 2 } }
+
+        it { expect(result_ids).to eq [@thing_3.id] }
+      end
+
+      context '{ page: 10, size: 2 }' do
+        let(:instructions) { { page: 10, size: 2 } }
+
+        it { expect(result_ids).to eq [] }
+      end
+
+      context '{ page: 1, size: 3 }' do
+        let(:instructions) { { page: 1, size: 3 } }
+
+        it { expect(result_ids).to eq [@thing_1.id, @thing_2.id, @thing_3.id] }
+      end
+
+      context '{ page: 10, size: 3 }' do
+        let(:instructions) { { page: 10, size: 3 } }
+
+        it { expect(result_ids).to eq [] }
+      end
+
+      context '{ page: 1, size: 5 }' do
+        let(:instructions) { { page: 1, size: 5 } }
+
+        it { expect(result_ids).to eq [@thing_1.id, @thing_2.id, @thing_3.id] }
+      end
+
+      context '{ page: 10, size: 5 }' do
+        let(:instructions) { { page: 10, size: 5 } }
+
+        it { expect(result_ids).to eq [] }
       end
     end
   end
