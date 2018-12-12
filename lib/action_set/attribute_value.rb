@@ -46,7 +46,7 @@ module ActionSet
         @possible_typecasters ||= String.instance_methods
                                         .map(&:to_s)
                                         .select { |m| m.start_with? 'to_' }
-                                        .reject { |m| %[to_v8].include? m }
+                                        .reject { |m| %[to_v8 to_onum].include? m }
       end
 
       def typecast(method_name)
