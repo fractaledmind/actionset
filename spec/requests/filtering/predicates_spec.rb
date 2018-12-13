@@ -34,6 +34,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             only.#{type}(#{operator})
           ].each do |path|
             context "{ #{path}: }" do
+              let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
                 ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item)
               end
@@ -60,6 +61,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             only.#{type}(#{operator})
           ].each do |path|
             context "{ #{path}: }" do
+              let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
                 ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item)
               end
