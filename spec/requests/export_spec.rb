@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'GET /foos with EXPORTING', type: :request do
+RSpec.describe 'GET /things with EXPORTING', type: :request do
   before(:all) do
     @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
