@@ -87,7 +87,14 @@ module ActionSet
             [key, val]
           end]
         end
-        struct[:columns] = columns_params || send(:export_set_columns) || []
+
+        struct[:columns] = if columns_params&.any?
+                             columns_params
+                           elsif respond_to?(:export_set_columns, true)
+                             send(:export_set_columns)
+                           else
+                             [{}]
+                           end
       end
     end
 
