@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Sort::LinkForHelper, type: :helper do
   before(:each) do
-    allow(helper).to receive(:params).and_return(params.merge(_recall: { controller: 'foos', action: 'index' }))
+    allow(helper).to receive(:params).and_return(params.merge(_recall: { controller: 'things', action: 'index' }))
   end
   let(:params) do
     {
@@ -25,7 +25,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { nil }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -33,7 +33,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'ASC' }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -41,7 +41,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'ASCENDING' }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -49,7 +49,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'asc' }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -57,7 +57,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'ascending' }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -65,7 +65,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :DESC }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -73,7 +73,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :DESCENDING }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -81,7 +81,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :desc }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -89,7 +89,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :descending }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -97,7 +97,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'non-valid' }
 
         it { should have_selector('a', text: attribute.titleize) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
     end
@@ -109,7 +109,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { nil }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -117,7 +117,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'ASC' }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -125,7 +125,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'ASCENDING' }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -133,7 +133,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'asc' }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -141,7 +141,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'ascending' }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=desc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=desc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in descending order"]]) }
       end
 
@@ -149,7 +149,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :DESC }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -157,7 +157,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :DESCENDING }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -165,7 +165,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :desc }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -173,7 +173,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { :descending }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
 
@@ -181,7 +181,7 @@ RSpec.describe Sort::LinkForHelper, type: :helper do
         let(:direction) { 'non-valid' }
 
         it { should have_selector('a', text: name) }
-        it { should have_selector('[href="/foos?sort%5Battribute%5D=asc"]') }
+        it { should have_selector('[href="/things?sort%5Battribute%5D=asc"]') }
         it { should have_selector(%q[[aria-label="sort by 'attribute' in ascending order"]]) }
       end
     end

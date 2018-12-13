@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Pagination::PathForHelper, type: :helper do
   before(:each) do
-    allow(helper).to receive(:params).and_return(params.merge(_recall: { controller: 'foos', action: 'index' }))
+    allow(helper).to receive(:params).and_return(params.merge(_recall: { controller: 'things', action: 'index' }))
   end
   let(:params) do
     {}
@@ -16,25 +16,25 @@ RSpec.describe Pagination::PathForHelper, type: :helper do
     context 'when page is nil' do
       let(:page) { nil }
 
-      it { should eq '/foos?paginate%5Bpage%5D=1' }
+      it { should eq '/things?paginate%5Bpage%5D=1' }
     end
 
     context 'when page is a number' do
       let(:page) { 2 }
 
-      it { should eq "/foos?paginate%5Bpage%5D=#{page}" }
+      it { should eq "/things?paginate%5Bpage%5D=#{page}" }
     end
 
     context 'when page is a string' do
       let(:page) { '2' }
 
-      it { should eq "/foos?paginate%5Bpage%5D=#{page}" }
+      it { should eq "/things?paginate%5Bpage%5D=#{page}" }
     end
 
     context 'when page is a symbol' do
       let(:page) { :'2' }
 
-      it { should eq "/foos?paginate%5Bpage%5D=#{page}" }
+      it { should eq "/things?paginate%5Bpage%5D=#{page}" }
     end
   end
 end

@@ -53,15 +53,23 @@ module ActionSet
     private
 
     def filter_instructions_for(set)
-      filter_params.flatten_keys.reject { |_, v| v.blank? }.each_with_object({}) do |(keypath, value), memo|
-        instruction = ActiveSet::AttributeInstruction.new(keypath, value)
-        item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
-        item_value = instruction.value_for(item: item_with_value)
-        typecast_value = ActionSet::AttributeValue.new(value)
-                                                  .cast(to: item_value.class)
+      filter_params.flatten_keys.reject { |_, v| v.try(:empty?) }.each_with_object({}) do |(keypath, value), memo|
+        typecast_value = if value.respond_to?(:each)
+                           value.map { |v| filter_typecasted_value_for(keypath, v, set) }
+                         else
+                           filter_typecasted_value_for(keypath, value, set)
+                         end
 
         memo[keypath] = typecast_value
       end
+    end
+
+    def filter_typecasted_value_for(keypath, value, set)
+      instruction = ActiveSet::AttributeInstruction.new(keypath, value)
+      item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
+      item_value = instruction.value_for(item: item_with_value)
+      ActionSet::AttributeValue.new(value)
+                               .cast(to: item_value.class)
     end
 
     def paginate_instructions
@@ -79,7 +87,14 @@ module ActionSet
             [key, val]
           end]
         end
-        struct[:columns] = columns_params || send(:export_set_columns) || []
+
+        struct[:columns] = if columns_params&.any?
+                             columns_params
+                           elsif respond_to?(:export_set_columns, true)
+                             send(:export_set_columns)
+                           else
+                             [{}]
+                           end
       end
     end
 
