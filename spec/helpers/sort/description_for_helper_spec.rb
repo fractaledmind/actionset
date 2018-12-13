@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Sort::DescriptionForHelper, type: :helper do
   before(:each) do
-    allow(helper).to receive(:params).and_return(params.merge(_recall: { controller: 'foos', action: 'index' }))
+    allow(helper).to receive(:params).and_return(params.merge(_recall: { controller: 'things', action: 'index' }))
   end
   let(:params) do
     {
