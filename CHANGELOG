@@ -1,3 +1,13 @@
+v 0.7.0
+  - overhaul the specs
+    + update the data model to be more extensive and expressive
+    + update to the new FactoryBot gem
+    + write programmatic specs for extensive coverage
+    + ensure factories don't have duplicate attributes
+    + add specs for ARel operators in filtering
+  - update the README
+  - add another exception to the Ruby typcaster (`to_onum`)
+  - update dependency on ActiveSet to 0.8.x
 v 0.6.0
   - Refactor to work with versions 0.7.x of ActiveSet
   - Move and rename the typecasting class for attribute values
