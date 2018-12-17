@@ -20,7 +20,7 @@ RSpec.describe 'GET /things?filter', type: :request do
           params: { filter: instructions }
     end
 
-    (ApplicationRecord::FIELD_TYPES - %i[symbol bignum]).each do |type|
+    ApplicationRecord::DB_FIELD_TYPES.each do |type|
       [1, 2].each do |id|
         # single value inclusive operators
         %i[

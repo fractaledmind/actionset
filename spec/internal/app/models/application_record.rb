@@ -3,8 +3,7 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  FIELD_TYPES = %i[
-    bignum
+  DB_FIELD_TYPES = %w[
     binary
     boolean
     date
@@ -13,10 +12,14 @@ class ApplicationRecord < ActiveRecord::Base
     float
     integer
     string
-    symbol
     text
     time
   ].freeze
+
+  FIELD_TYPES = (%w[
+    bignum
+    symbol
+  ] + DB_FIELD_TYPES).freeze
 
   def method_missing(method_name, *args, &block)
     return super unless method_name.to_s.start_with?('computed')
