@@ -1,10 +1,24 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
+ENV['RAILS_ENV'] ||= 'test'
+
+require 'bundler'
+require 'simplecov'
+require 'combustion'
+
+Combustion.initialize! :active_record, :action_controller, :action_view
+Bundler.require :default, :development
 
 require 'bundler/setup'
-require 'action_set'
+require 'active_set'
+require 'ostruct'
 
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
+begin
+  FactoryBot.find_definitions
+rescue FactoryBot::DuplicateDefinitionError
+  nil
+end
 
 # (If you use this, don't forget to add pry to your Gemfile!)
 # require "pry"

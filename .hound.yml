@@ -1,0 +1,32 @@
+rubocop:
+  config_file: .rubocop.yml
+
+reek:
+  enabled: true
+
+coffeescript:
+  enabled: false
+credo:
+  enabled: false
+css:
+  enabled: false
+eslint:
+  enabled: false
+flake8:
+  enabled: false
+golint:
+  enabled: false
+haml:
+  enabled: false
+jshint:
+  enabled: false
+sass-lint:
+  enabled: false
+scss:
+  enabled: false
+shellcheck:
+  enabled: false
+swiftlint:
+  enabled: false
+tslint:
+  enabled: false
