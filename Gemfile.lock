@@ -2,11 +2,8 @@ PATH
   remote: .
   specs:
     actionset (0.7.0)
-      activeset (>= 0.8.0)
       activesupport (>= 4.0.2)
       railties
-    activeset (0.8.1)
-      activesupport (>= 4.0.2)
 
 GEM
   remote: https://rubygems.org/
@@ -204,22 +201,21 @@ DEPENDENCIES
   actionpack
   actionset!
   activerecord
-  activeset!
   bundler (~> 1.15)
   capybara
   codecov
-  combustion (~> 0.7.0)
-  database_cleaner (~> 1.6.1)
-  factory_bot (~> 4.8.0)
-  faker (~> 1.8.4)
+  combustion
+  database_cleaner
+  factory_bot
+  faker
   rails (~> 5.1.0)
-  rake (~> 10.0)
+  rake
   ransack
-  rspec (~> 3.0)
+  rspec
   rspec-rails
   rubocop
-  simplecov (~> 0.15.0)
-  simplecov-console (~> 0.4.2)
+  simplecov
+  simplecov-console
   sqlite3
 
 BUNDLED WITH
