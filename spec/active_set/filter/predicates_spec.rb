@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe ActiveSet do
   before(:all) do
-    @thing_1 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
-    @thing_2 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
+    @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @active_set = ActiveSet.new(Thing.all)
   end
   after(:all) { Thing.delete_all }
@@ -25,7 +25,7 @@ RSpec.describe ActiveSet do
         ].each do |operator|
           %W[
             #{type}(#{operator})
-            one.#{type}(#{operator})
+            only.#{type}(#{operator})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
@@ -52,7 +52,7 @@ RSpec.describe ActiveSet do
         ].each do |operator|
           %W[
             #{type}(#{operator})
-            one.#{type}(#{operator})
+            only.#{type}(#{operator})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
@@ -84,15 +84,15 @@ RSpec.describe ActiveSet do
         ].each do |operator|
           %W[
             #{type}(#{operator})
-            one.#{type}(#{operator})
+            only.#{type}(#{operator})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
                 FactoryBot.build(:thing,
                                  boolean: !matching_item.boolean,
-                                 one: FactoryBot.build(:one,
-                                                        boolean: !matching_item.one.boolean))
+                                 only: FactoryBot.build(:only,
+                                                        boolean: !matching_item.only.boolean))
               end
               let(:instruction_multi_value) do
                 [
@@ -125,15 +125,15 @@ RSpec.describe ActiveSet do
         ].each do |operator|
           %W[
             #{type}(#{operator})
-            one.#{type}(#{operator})
+            only.#{type}(#{operator})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
                 FactoryBot.build(:thing,
                                  boolean: !matching_item.boolean,
-                                 one: FactoryBot.build(:one,
-                                                        boolean: !matching_item.one.boolean))
+                                 only: FactoryBot.build(:only,
+                                                        boolean: !matching_item.only.boolean))
               end
               let(:instruction_multi_value) do
                 [
@@ -161,15 +161,15 @@ RSpec.describe ActiveSet do
         # ].each do |operator|
         #   %W[
         #     #{type}(#{operator})
-        #     one.#{type}(#{operator})
+        #     only.#{type}(#{operator})
         #   ].each do |path|
         #     context "{ #{path}: }" do
         #       let(:matching_item) { instance_variable_get("@thing_#{id}") }
         #       let(:other_thing) do
         #         FactoryBot.build(:thing,
         #                          boolean: !matching_item.boolean,
-        #                          one: FactoryBot.build(:one,
-        #                                                 boolean: !matching_item.one.boolean))
+        #                          only: FactoryBot.build(:only,
+        #                                                 boolean: !matching_item.only.boolean))
         #       end
         #       let(:instruction_multi_value) do
         #         [

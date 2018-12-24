@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe ActiveSet do
   before(:all) do
-    @thing_1 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
-    @thing_2 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
+    @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @active_set = ActiveSet.new(Thing.all)
   end
   after(:all) { Thing.delete_all }
@@ -22,10 +22,10 @@ RSpec.describe ActiveSet do
             %W[
               #{type}
               computed_#{type}
-              one.#{type}
-              one.computed_#{type}
-              computed_one.#{type}
-              computed_one.computed_#{type}
+              only.#{type}
+              only.computed_#{type}
+              computed_only.#{type}
+              computed_only.computed_#{type}
             ].each do |path|
               context "{ #{path}: }" do
                 let(:instructions) do
@@ -53,14 +53,14 @@ RSpec.describe ActiveSet do
               #{type_2}
               computed_#{type_1}
               computed_#{type_2}
-              one.#{type_1}
-              one.#{type_2}
-              one.computed_#{type_1}
-              one.computed_#{type_2}
-              computed_one.#{type_1}
-              computed_one.#{type_2}
-              computed_one.computed_#{type_1}
-              computed_one.computed_#{type_2}
+              only.#{type_1}
+              only.#{type_2}
+              only.computed_#{type_1}
+              only.computed_#{type_2}
+              computed_only.#{type_1}
+              computed_only.#{type_2}
+              computed_only.computed_#{type_1}
+              computed_only.computed_#{type_2}
             ].combination(2).each do |path_1, path_2|
               context "{ #{path_1}:, #{path_2} }" do
                 let(:instructions) do

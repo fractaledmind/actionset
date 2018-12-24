@@ -4,9 +4,9 @@ require 'spec_helper'
 
 RSpec.describe ActiveSet do
   before(:all) do
-    @thing_1 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
-    @thing_2 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
-    @thing_3 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
+    @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_3 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
   end
   after(:all) { Thing.delete_all }
 

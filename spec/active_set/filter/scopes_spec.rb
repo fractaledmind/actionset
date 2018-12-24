@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe ActiveSet do
   before(:all) do
-    @thing_1 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
-    @thing_2 = FactoryBot.create(:thing, one: FactoryBot.create(:one))
+    @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
+    @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @active_set = ActiveSet.new(Thing.all)
   end
   after(:all) { Thing.delete_all }
@@ -37,11 +37,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_starts_with: } }' do
+        context '{ only: { string_starts_with: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_starts_with': matching_item.one.string[0..3]
+              only: {
+                'string_starts_with': matching_item.only.string[0..3]
               }
             }
           end
@@ -49,11 +49,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_ends_with: } }' do
+        context '{ only: { string_ends_with: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_ends_with': matching_item.one.string[-3..-1]
+              only: {
+                'string_ends_with': matching_item.only.string[-3..-1]
               }
             }
           end
@@ -61,11 +61,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_starts_with: } }' do
+        context '{ computed_only: { string_starts_with: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_starts_with': matching_item.computed_one.string[0..3]
+              computed_only: {
+                'string_starts_with': matching_item.computed_only.string[0..3]
               }
             }
           end
@@ -73,11 +73,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_ends_with: } }' do
+        context '{ computed_only: { string_ends_with: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_ends_with': matching_item.computed_one.string[-3..-1]
+              computed_only: {
+                'string_ends_with': matching_item.computed_only.string[-3..-1]
               }
             }
           end
@@ -109,11 +109,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_starts_with: } }' do
+        context '{ only: { string_starts_with: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_starts_with': matching_item.one.string[0..3]
+              only: {
+                'string_starts_with': matching_item.only.string[0..3]
               }
             }
           end
@@ -121,11 +121,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_ends_with: } }' do
+        context '{ only: { string_ends_with: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_ends_with': matching_item.one.string[-3..-1]
+              only: {
+                'string_ends_with': matching_item.only.string[-3..-1]
               }
             }
           end
@@ -133,11 +133,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_starts_with: } }' do
+        context '{ computed_only: { string_starts_with: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_starts_with': matching_item.computed_one.string[0..3]
+              computed_only: {
+                'string_starts_with': matching_item.computed_only.string[0..3]
               }
             }
           end
@@ -145,11 +145,11 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_ends_with: } }' do
+        context '{ computed_only: { string_ends_with: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_ends_with': matching_item.computed_one.string[-3..-1]
+              computed_only: {
+                'string_ends_with': matching_item.computed_only.string[-3..-1]
               }
             }
           end
@@ -185,12 +185,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_starts_with:, string: } }' do
+        context '{ only: { string_starts_with:, string: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_starts_with': matching_item.one.string[0..3],
-                string: matching_item.one.string
+              only: {
+                'string_starts_with': matching_item.only.string[0..3],
+                string: matching_item.only.string
               }
             }
           end
@@ -198,12 +198,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_ends_with:, string: } }' do
+        context '{ only: { string_ends_with:, string: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_ends_with': matching_item.one.string[-3..-1],
-                string: matching_item.one.string
+              only: {
+                'string_ends_with': matching_item.only.string[-3..-1],
+                string: matching_item.only.string
               }
             }
           end
@@ -211,12 +211,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_starts_with:, string: } }' do
+        context '{ computed_only: { string_starts_with:, string: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_starts_with': matching_item.computed_one.string[0..3],
-                string: matching_item.computed_one.string
+              computed_only: {
+                'string_starts_with': matching_item.computed_only.string[0..3],
+                string: matching_item.computed_only.string
               }
             }
           end
@@ -224,12 +224,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_ends_with:, string: } }' do
+        context '{ computed_only: { string_ends_with:, string: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_ends_with': matching_item.computed_one.string[-3..-1],
-                string: matching_item.computed_one.string
+              computed_only: {
+                'string_ends_with': matching_item.computed_only.string[-3..-1],
+                string: matching_item.computed_only.string
               }
             }
           end
@@ -263,12 +263,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_starts_with:, string: } }' do
+        context '{ only: { string_starts_with:, string: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_starts_with': matching_item.one.string[0..3],
-                string: matching_item.one.string
+              only: {
+                'string_starts_with': matching_item.only.string[0..3],
+                string: matching_item.only.string
               }
             }
           end
@@ -276,12 +276,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ one: { string_ends_with:, string: } }' do
+        context '{ only: { string_ends_with:, string: } }' do
           let(:instructions) do
             {
-              one: {
-                'string_ends_with': matching_item.one.string[-3..-1],
-                string: matching_item.one.string
+              only: {
+                'string_ends_with': matching_item.only.string[-3..-1],
+                string: matching_item.only.string
               }
             }
           end
@@ -289,12 +289,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_starts_with:, string: } }' do
+        context '{ computed_only: { string_starts_with:, string: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_starts_with': matching_item.computed_one.string[0..3],
-                string: matching_item.computed_one.string
+              computed_only: {
+                'string_starts_with': matching_item.computed_only.string[0..3],
+                string: matching_item.computed_only.string
               }
             }
           end
@@ -302,12 +302,12 @@ RSpec.describe ActiveSet do
           it { expect(result.map(&:id)).to eq [matching_item.id] }
         end
 
-        context '{ computed_one: { string_ends_with:, string: } }' do
+        context '{ computed_only: { string_ends_with:, string: } }' do
           let(:instructions) do
             {
-              computed_one: {
-                'string_ends_with': matching_item.computed_one.string[-3..-1],
-                string: matching_item.computed_one.string
+              computed_only: {
+                'string_ends_with': matching_item.computed_only.string[-3..-1],
+                string: matching_item.computed_only.string
               }
             }
           end
