@@ -17,17 +17,17 @@ class ActiveSet
       @processed
     end
 
-    def predicate?
+    def case_insensitive?
       attribute = @keypath.last
-      return false unless attribute&.match predicator_regex
+      return false unless attribute&.match options_regex
 
-      attribute[predicator_regex, 1] == 'p'
+      attribute[options_regex, 1] == 'i'
     end
 
     def attribute
       attribute = @keypath.last
       attribute = attribute.sub(operator_regex, '') if attribute&.match operator_regex
-      attribute = attribute.sub(predicator_regex, '') if attribute&.match predicator_regex
+      attribute = attribute.sub(options_regex, '') if attribute&.match options_regex
 
       attribute
     end
@@ -79,7 +79,7 @@ class ActiveSet
       %r{\((.*?)\)}
     end
 
-    def predicator_regex
+    def options_regex
       %r{\/(.*?)\/}
     end
   end
