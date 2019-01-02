@@ -11,7 +11,7 @@ class ActiveSet
       def execute
         return false unless @set.respond_to? :to_sql
 
-        executable_instructions.reduce(set_with_eager_loaded_associations) do |set, attribute_instruction|
+        executable_instructions.reduce(initial_relation) do |set, attribute_instruction|
           statement = set.merge(order_operation_for(attribute_instruction))
 
           return false if throws?(ActiveRecord::StatementInvalid) { statement.load }
@@ -36,8 +36,10 @@ class ActiveSet
 
       private
 
-      def set_with_eager_loaded_associations
+      def initial_relation
         associations_hash = @attribute_instructions.reduce({}) { |h, i| h.merge(i.associations_hash) }
+        return @set if associations_hash.empty?
+
         @set.eager_load(associations_hash)
       end
 
