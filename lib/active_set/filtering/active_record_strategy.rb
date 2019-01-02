@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative './constants'
+
 class ActiveSet
   module Filtering
     class ActiveRecordStrategy
+      include ActiveSet::Filtering::Constants
+
       def initialize(set, attribute_instruction)
         @set = set
         @attribute_instruction = attribute_instruction
@@ -46,7 +50,7 @@ class ActiveSet
         initial_relation
           .where(
             arel_column.send(
-              @attribute_instruction.operator(default: 'eq'),
+              arel_operator,
               arel_value
             )
           )
@@ -84,6 +88,7 @@ class ActiveSet
       end
 
       def arel_value
+        return OPERATORS[instruction_operator][:value_transformer].call(@attribute_instruction.value) if abstract_operator? && OPERATORS[instruction_operator].key?(:value_transformer)
         return @attribute_instruction.value unless @attribute_instruction.case_insensitive?
         return @attribute_instruction.value.downcase if @attribute_instruction.value.respond_to?(:downcase)
         return @attribute_instruction.value unless @attribute_instruction.value.is_a?(Array)
@@ -93,6 +98,22 @@ class ActiveSet
 
           v.downcase
         end
+      end
+
+      def arel_operator
+        return OPERATORS[instruction_operator][:arel_operator] if abstract_operator?
+
+        instruction_operator
+      end
+
+      def abstract_operator?
+        OPERATORS.key?(instruction_operator)
+      end
+
+      def instruction_operator
+        return @attribute_instruction.value.to_sym if @attribute_instruction.predicate?
+
+        @attribute_instruction.operator(default: 'eq').to_sym
       end
 
       def attribute_model
