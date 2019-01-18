@@ -50,10 +50,12 @@ class ActiveSet
         end
 
         def arel_operator
-          instruction_operator = @attribute_instruction.operator
+          instruction_operator = @attribute_instruction.operator&.to_sym
+
+          return :eq unless instruction_operator
           return OPERATORS[instruction_operator][:operator] if OPERATORS.key?(instruction_operator)
 
-          instruction_operator || :eq
+          instruction_operator
         end
 
         def arel_value
