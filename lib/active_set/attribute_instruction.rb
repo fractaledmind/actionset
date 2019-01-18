@@ -39,11 +39,10 @@ class ActiveSet
       attribute
     end
 
-    def operator(default: '==')
-      attribute = @keypath.last
-      return attribute[operator_regex, 1] if attribute&.match operator_regex
+    def operator
+      return @value if predicate?
 
-      default
+      @keypath.last[operator_regex, 1]
     end
 
     def associations_array
