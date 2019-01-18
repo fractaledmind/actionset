@@ -24,6 +24,13 @@ class ActiveSet
       attribute[options_regex, 1] == 'i'
     end
 
+    def predicate?
+      attribute = @keypath.last
+      return false unless attribute&.match options_regex
+
+      attribute[options_regex, 1] == 'p'
+    end
+
     def attribute
       attribute = @keypath.last
       attribute = attribute.sub(operator_regex, '') if attribute&.match operator_regex
@@ -32,11 +39,10 @@ class ActiveSet
       attribute
     end
 
-    def operator(default: '==')
-      attribute = @keypath.last
-      return attribute[operator_regex, 1] if attribute&.match operator_regex
+    def operator
+      return @value if predicate?
 
-      default
+      @keypath.last[operator_regex, 1]
     end
 
     def associations_array
