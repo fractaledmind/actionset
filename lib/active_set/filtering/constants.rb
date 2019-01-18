@@ -9,41 +9,6 @@ class ActiveSet
     module Constants
       BLANK_VALUES = [nil, ''].freeze
 
-      OPERATORS = {
-        eq: EQ,
-        eq_any: EQ_ANY,
-        eq_all: EQ_ALL,
-        not_eq: NOT_EQ,
-        not_eq_any: NOT_EQ_ANY,
-        not_eq_all: NOT_EQ_ALL,
-        in: IN,
-        in_any: IN_ANY,
-        in_all: IN_ALL,
-        not_in: NOT_IN,
-        not_in_any: NOT_IN_ANY,
-        not_in_all: NOT_IN_ALL,
-        matches: MATCHES,
-        matches_any: MATCHES_ANY,
-        matches_all: MATCHES_ALL,
-        does_not_match: DOES_NOT_MATCH,
-        does_not_match_any: DOES_NOT_MATCH_ANY,
-        does_not_match_all: DOES_NOT_MATCH_ALL,
-        lt: LT,
-        lt_any: LT_ANY,
-        lt_all: LT_ALL,
-        lteq: LTEQ,
-        lteq_any: LTEQ_ANY,
-        lteq_all: LTEQ_ALL,
-        gt: GT,
-        gt_any: GT_ANY,
-        gt_all: GT_ALL,
-        gteq: GTEQ,
-        gteq_any: GTEQ_ANY,
-        gteq_all: GTEQ_ALL,
-        between: BETWEEN,
-        not_between: NOT_BETWEEN,
-      }.freeze
-    end
       EQ = {
         type: :binary,
         arel_operator: :eq,
