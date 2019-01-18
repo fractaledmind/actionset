@@ -1,0 +1,68 @@
+TODO
+
+- [x] make ActiveSet and ActionSet a monorepo
+- [x] add ActiveRecord filtering support for filtering predicates (/p/)
+- [x] add ActiveRecord filtering support for case-insensitive filtering (/i/)
+- [x] add ActiveRecord filtering support for  high-level existence predicates
+  + is_true
+  + not_true
+  + is_false
+  + not_false
+  + is_null
+  + not_null
+  + is_present
+  + not_present
+  + is_blank
+  + not_blank
+- [x] add ActiveRecord filtering support for  symbolic aliases for operators
+  + '==': 'eq'
+  + 'E==': 'eq_any'
+  + 'A==': 'eq_all'
+  + '!=': 'not_eq'
+  + 'E!=': 'not_eq_any'
+  + 'A!=': 'not_eq_all'
+  + '<<': 'in'
+  + 'E<<': 'in_any'
+  + 'A<<': 'in_all'
+  + '!<': 'not_in'
+  + 'E!<': 'not_in_any'
+  + 'A!<': 'not_in_all'
+  + '=~': 'matches'
+  + 'E=~': 'matches_any'
+  + 'A=~': 'matches_all'
+  + '!~': 'does_not_match'
+  + 'E!~': 'does_not_match_any'
+  + 'A!~': 'does_not_match_all'
+  + '<': 'lt'
+  + 'E<': 'lt_any'
+  + 'A<': 'lt_all'
+  + '<=': 'lteq'
+  + 'E<=': 'lteq_any'
+  + 'A<=': 'lteq_all'
+  + '>': 'gt'
+  + 'E>': 'gt_any'
+  + 'A>': 'gt_all'
+  + '>=': 'gteq'
+  + 'E>=': 'gteq_any'
+  + 'A>=': 'gteq_all'
+  + '..': 'between'
+  + '!.': 'not_between'
+
+Filtering
+- [ ] add Enumerable filtering support for filtering operators
+- [ ] add Enumerable filtering support for filtering predicates (/p/)
+- [ ] add Enumerable filtering support for case-insensitive filtering (/i/)
+- [ ] add Enumerable filtering support for high-level existence predicates
+- [ ] add ActiveRecord filtering support for high-level string matching operators (start, end, contain)
+- [ ] add ActiveRecord filtering support for high-level date range operators
+- [ ] add Enumerable filtering support for high-level string matching operators (start, end, contain)
+- [ ] add Enumerable filtering support for high-level date range operators
+
+Requests
+- [ ] support nil as a meaningful request param value
+- [ ] allow host applications to hook up their own
+  + operators
+  + predicates
+  + param transformers
+  + type casters
+- [ ] allow host application controllers to define filter param schemas
