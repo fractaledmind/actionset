@@ -47,13 +47,13 @@ TODO
   + 'A>=': 'gteq_all'
   + '..': 'between'
   + '!.': 'not_between'
+- [x] add ActiveRecord filtering support for high-level string matching operators (start, end, contain)
 
 Filtering
 - [ ] add Enumerable filtering support for filtering operators
 - [ ] add Enumerable filtering support for filtering predicates (/p/)
 - [ ] add Enumerable filtering support for case-insensitive filtering (/i/)
 - [ ] add Enumerable filtering support for high-level existence predicates
-- [ ] add ActiveRecord filtering support for high-level string matching operators (start, end, contain)
 - [ ] add ActiveRecord filtering support for high-level date range operators
 - [ ] add Enumerable filtering support for high-level string matching operators (start, end, contain)
 - [ ] add Enumerable filtering support for high-level date range operators
