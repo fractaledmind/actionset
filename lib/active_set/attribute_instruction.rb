@@ -17,26 +17,32 @@ class ActiveSet
       @processed
     end
 
+    def case_insensitive?
+      attribute = @keypath.last
+      return false unless attribute&.match options_regex
+
+      attribute[options_regex, 1] == 'i'
+    end
+
     def predicate?
       attribute = @keypath.last
-      return false unless attribute&.match predicator_regex
+      return false unless attribute&.match options_regex
 
-      attribute[predicator_regex, 1] == 'p'
+      attribute[options_regex, 1] == 'p'
     end
 
     def attribute
       attribute = @keypath.last
       attribute = attribute.sub(operator_regex, '') if attribute&.match operator_regex
-      attribute = attribute.sub(predicator_regex, '') if attribute&.match predicator_regex
+      attribute = attribute.sub(options_regex, '') if attribute&.match options_regex
 
       attribute
     end
 
-    def operator(default: '==')
-      attribute = @keypath.last
-      return attribute[operator_regex, 1] if attribute&.match operator_regex
+    def operator
+      return @value if predicate?
 
-      default
+      @keypath.last[operator_regex, 1]
     end
 
     def associations_array
@@ -79,7 +85,7 @@ class ActiveSet
       %r{\((.*?)\)}
     end
 
-    def predicator_regex
+    def options_regex
       %r{\/(.*?)\/}
     end
   end
