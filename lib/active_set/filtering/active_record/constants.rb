@@ -5,6 +5,21 @@ class ActiveSet
     module ActiveRecord
       module Constants
         BLANK_VALUES = [nil, ''].freeze
+        START_MATCHER_VALUE_TRANSFORMER = proc do |string_or_strings|
+          return string_or_strings.map { |str| str + '%' } if string_or_strings.is_a?(Array)
+
+          string_or_strings + '%'
+        end
+        END_MATCHER_VALUE_TRANSFORMER = proc do |string_or_strings|
+          return string_or_strings.map { |str| '%' + str } if string_or_strings.is_a?(Array)
+
+          '%' + string_or_strings
+        end
+        CONTAIN_MATCHER_VALUE_TRANSFORMER = proc do |string_or_strings|
+          return string_or_strings.map { |str| '%' + str + '%' } if string_or_strings.is_a?(Array)
+
+          '%' + string_or_strings + '%'
+        end
 
         EQ = {
           type: :binary,
@@ -211,6 +226,117 @@ class ActiveSet
           value_transformer: proc { |_| BLANK_VALUES }
         }.freeze
 
+        MATCH_START = {
+          type: :binary,
+          operator: :matches,
+          compound: false,
+          value_transformer: START_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_START_ANY = {
+          type: :binary,
+          operator: :matches_any,
+          compound: true,
+          value_transformer: START_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_START_ALL = {
+          type: :binary,
+          operator: :matches_all,
+          compound: true,
+          value_transformer: START_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_START = {
+          type: :binary,
+          operator: :does_not_match,
+          compound: false,
+          value_transformer: START_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_START_ANY = {
+          type: :binary,
+          operator: :does_not_match_any,
+          compound: true,
+          value_transformer: START_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_START_ALL = {
+          type: :binary,
+          operator: :does_not_match_all,
+          compound: true,
+          value_transformer: START_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+
+        MATCH_END = {
+          type: :binary,
+          operator: :matches,
+          compound: false,
+          value_transformer: END_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_END_ANY = {
+          type: :binary,
+          operator: :matches_any,
+          compound: true,
+          value_transformer: END_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_END_ALL = {
+          type: :binary,
+          operator: :matches_all,
+          compound: true,
+          value_transformer: END_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_END = {
+          type: :binary,
+          operator: :does_not_match,
+          compound: false,
+          value_transformer: END_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_END_ANY = {
+          type: :binary,
+          operator: :does_not_match_any,
+          compound: true,
+          value_transformer: END_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_END_ALL = {
+          type: :binary,
+          operator: :does_not_match_all,
+          compound: true,
+          value_transformer: END_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+
+        MATCH_CONTAIN = {
+          type: :binary,
+          operator: :matches,
+          compound: false,
+          value_transformer: CONTAIN_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_CONTAIN_ANY = {
+          type: :binary,
+          operator: :matches_any,
+          compound: true,
+          value_transformer: CONTAIN_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_CONTAIN_ALL = {
+          type: :binary,
+          operator: :matches_all,
+          compound: true,
+          value_transformer: CONTAIN_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_CONTAIN = {
+          type: :binary,
+          operator: :does_not_match,
+          compound: false,
+          value_transformer: CONTAIN_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_CONTAIN_ANY = {
+          type: :binary,
+          operator: :does_not_match_any,
+          compound: true,
+          value_transformer: CONTAIN_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+        MATCH_NOT_CONTAIN_ALL = {
+          type: :binary,
+          operator: :does_not_match_all,
+          compound: true,
+          value_transformer: CONTAIN_MATCHER_VALUE_TRANSFORMER
+        }.freeze
+
 
         OPERATORS = {
           eq: EQ,
@@ -286,7 +412,43 @@ class ActiveSet
           is_present: IS_PRESENT,
           not_present: IS_BLANK,
           is_blank: IS_BLANK,
-          not_blank: IS_PRESENT
+          not_blank: IS_PRESENT,
+          start: MATCH_START,
+          '~^': MATCH_START,
+          start_any: MATCH_START_ANY,
+          'E~^': MATCH_START_ANY,
+          start_all: MATCH_START_ALL,
+          'A~^': MATCH_START_ALL,
+          not_start: MATCH_NOT_START,
+          '!^': MATCH_NOT_START,
+          not_start_any: MATCH_NOT_START_ANY,
+          'E!^': MATCH_NOT_START_ANY,
+          not_start_all: MATCH_NOT_START_ALL,
+          'A!^': MATCH_NOT_START_ALL,
+          end: MATCH_END,
+          '~$': MATCH_END,
+          end_any: MATCH_END_ANY,
+          'E~$': MATCH_END_ANY,
+          end_all: MATCH_END_ALL,
+          'A~$': MATCH_END_ALL,
+          not_end: MATCH_NOT_END,
+          '!$': MATCH_NOT_END,
+          not_end_any: MATCH_NOT_END_ANY,
+          'E!$': MATCH_NOT_END_ANY,
+          not_end_all: MATCH_NOT_END_ALL,
+          'A!$': MATCH_NOT_END_ALL,
+          contain: MATCH_CONTAIN,
+          '~*': MATCH_CONTAIN,
+          contain_any: MATCH_CONTAIN_ANY,
+          'E~*': MATCH_CONTAIN_ANY,
+          contain_all: MATCH_CONTAIN_ALL,
+          'A~*': MATCH_CONTAIN_ALL,
+          not_contain: MATCH_NOT_CONTAIN,
+          '!*': MATCH_NOT_CONTAIN,
+          not_contain_any: MATCH_NOT_CONTAIN_ANY,
+          'E!*': MATCH_NOT_CONTAIN_ANY,
+          not_contain_all: MATCH_NOT_CONTAIN_ALL,
+          'A!*': MATCH_NOT_CONTAIN_ALL
         }.freeze
       end
     end
