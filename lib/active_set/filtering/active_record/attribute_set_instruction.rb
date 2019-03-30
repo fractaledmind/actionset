@@ -44,7 +44,7 @@ class ActiveSet
 
         def arel_column
           _arel_column = arel_table[@attribute_instruction.attribute]
-          return _arel_column.lower if @attribute_instruction.case_insensitive?
+          return _arel_column.lower if @attribute_instruction.case_insensitive? && arel_type.presence_in(%i[string text])
 
           _arel_column
         end
@@ -54,6 +54,9 @@ class ActiveSet
 
           return :eq unless instruction_operator
           return OPERATORS[instruction_operator][:operator] if OPERATORS.key?(instruction_operator)
+
+          aliased_operator = OPERATORS.find { |_, schema| schema[:alias].to_s == instruction_operator.to_s }&.last
+          return aliased_operator[:operator] if aliased_operator
 
           instruction_operator
         end

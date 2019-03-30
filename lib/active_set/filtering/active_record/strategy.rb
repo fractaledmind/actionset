@@ -8,10 +8,13 @@ class ActiveSet
   module Filtering
     module ActiveRecord
       class Strategy
+        include Constants
+
         delegate :attribute_model,
                  :arel_column,
                  :arel_operator,
                  :arel_value,
+                 :arel_type,
           to: :@attribute_set_instruction
 
         def initialize(set, attribute_instruction)
@@ -29,8 +32,6 @@ class ActiveSet
           else
             return false
           end
-
-          return false if throws?(::ActiveRecord::StatementInvalid) { statement.load }
 
           statement
         end
