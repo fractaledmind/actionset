@@ -18,17 +18,15 @@ class ActiveSet
     end
 
     def case_insensitive?
-      attribute = @keypath.last
-      return false unless attribute&.match options_regex
+      return false unless options
 
-      attribute[options_regex, 1] == 'i'
+      options.include? 'i'
     end
 
     def predicate?
-      attribute = @keypath.last
-      return false unless attribute&.match options_regex
+      return false unless options
 
-      attribute[options_regex, 1] == 'p'
+      options.include? 'p'
     end
 
     def attribute
@@ -43,6 +41,10 @@ class ActiveSet
       return @value if predicate?
 
       @keypath.last[operator_regex, 1]
+    end
+
+    def options
+      @keypath.last[options_regex, 1]&.split('')
     end
 
     def associations_array
