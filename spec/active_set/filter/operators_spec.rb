@@ -2,6 +2,23 @@
 
 require 'spec_helper'
 
+INCLUSIVE_NONCOMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
+  .select { |k,v| v[:type] == :binary }
+  .select { |k,v| v[:compound] == false }
+  .select { |k,v| v[:identity] == :inclusive }
+EXCLUSIVE_NONCOMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
+  .select { |k,v| v[:type] == :binary }
+  .select { |k,v| v[:compound] == false }
+  .select { |k,v| v[:identity] == :exclusive }
+INCLUSIVE_COMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
+  .select { |k,v| v[:type] == :binary }
+  .select { |k,v| v[:compound] == true }
+  .select { |k,v| v[:identity] == :inclusive }
+EXCLUSIVE_COMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
+  .select { |k,v| v[:type] == :binary }
+  .select { |k,v| v[:compound] == true }
+  .select { |k,v| v[:identity] == :exclusive }
+
 RSpec.describe ActiveSet do
   before(:all) do
     @thing_1 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
@@ -16,16 +33,12 @@ RSpec.describe ActiveSet do
 
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
       [1, 2].each do |id|
-        # single value inclusive operators
-        %i[
-          eq
-          lteq
-          gteq
-          matches
-        ].each do |operator|
+        INCLUSIVE_NONCOMPOUND_BINARY_OPERATORS.each do |operator, schema|
           %W[
             #{type}(#{operator})
+            #{type}(#{schema[:alias]})
             only.#{type}(#{operator})
+            only.#{type}(#{schema[:alias]})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
@@ -43,16 +56,12 @@ RSpec.describe ActiveSet do
           end
         end
 
-        # single value exlusive operators
-        %i[
-          not_eq
-          lt
-          gt
-          does_not_match
-        ].each do |operator|
+        EXCLUSIVE_NONCOMPOUND_BINARY_OPERATORS.each do |operator, schema|
           %W[
             #{type}(#{operator})
+            #{type}(#{schema[:alias]})
             only.#{type}(#{operator})
+            only.#{type}(#{schema[:alias]})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
@@ -70,21 +79,12 @@ RSpec.describe ActiveSet do
           end
         end
 
-        # multi value inclusive operators
-        %i[
-          eq_any
-          not_eq_any
-          in
-          in_any
-          not_in_any
-          lteq_any
-          gteq_any
-          matches_any
-          does_not_match_any
-        ].each do |operator|
+        INCLUSIVE_COMPOUND_BINARY_OPERATORS.each do |operator, schema|
           %W[
             #{type}(#{operator})
+            #{type}(#{schema[:alias]})
             only.#{type}(#{operator})
+            only.#{type}(#{schema[:alias]})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
@@ -111,21 +111,12 @@ RSpec.describe ActiveSet do
           end
         end
 
-        # multi value exclusive operators
-        %i[
-          eq_all
-          not_eq_all
-          not_in
-          in_all
-          not_in_all
-          lt_all
-          gt_all
-          matches_all
-          does_not_match_all
-        ].each do |operator|
+        EXCLUSIVE_COMPOUND_BINARY_OPERATORS.each do |operator, schema|
           %W[
             #{type}(#{operator})
+            #{type}(#{schema[:alias]})
             only.#{type}(#{operator})
+            only.#{type}(#{schema[:alias]})
           ].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
