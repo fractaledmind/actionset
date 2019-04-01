@@ -48,13 +48,13 @@ TODO
   + '..': 'between'
   + '!.': 'not_between'
 - [x] add ActiveRecord filtering support for high-level string matching operators (start, end, contain)
+- [ ] add ActiveRecord filtering support for high-level date range operators
 
 Filtering
 - [ ] add Enumerable filtering support for filtering operators
 - [ ] add Enumerable filtering support for filtering predicates (/p/)
 - [ ] add Enumerable filtering support for case-insensitive filtering (/i/)
 - [ ] add Enumerable filtering support for high-level existence predicates
-- [ ] add ActiveRecord filtering support for high-level date range operators
 - [ ] add Enumerable filtering support for high-level string matching operators (start, end, contain)
 - [ ] add Enumerable filtering support for high-level date range operators
 
@@ -66,3 +66,247 @@ Requests
   + param transformers
   + type casters
 - [ ] allow host application controllers to define filter param schemas
+
+- - -
+
+NOTES
+
+1 . 1
+  attribute(operator): value
+  path.to.attribute(operator): value
+1 . n
+  attribute(operator){reducer}: [value, value]
+  path.to.attribute(operator){reducer}: [value, value]
+n . 1
+  association[reducer](operator): value
+  association[reducer]path.to.attribute(operator): value
+n . n
+  association[reducer](operator){reducer}: [value, value]
+  association[reducer]path.to.attribute(operator){reducer}: [value, value]
+
+
+1 un
+  attribute/p/: predicate
+  path.to.attribute/p/: predicate
+n un
+  association[reducer]/p/: predicate
+  association[reducer]path.to.attribute/p/: value
+
+
+module EnumerableConstants
+  EQ = {
+    type: :binary,
+    operator: :'==',
+    compound: false
+  }.freeze
+  EQ_ANY = {
+    type: :binary,
+    operator: :'==',
+    compound: true,
+    value_predicator: :any?
+  }.freeze
+  EQ_ALL = {
+    type: :binary,
+    operator: :'==',
+    compound: true,
+    value_predicator: :all?
+  }.freeze
+  NOT_EQ = {
+    type: :binary,
+    operator: :'!=',
+    compound: false
+  }.freeze
+  NOT_EQ_ANY = {
+    type: :binary,
+    operator: :'!=',
+    compound: true,
+    value_predicator: :any?
+  }.freeze
+  NOT_EQ_ALL = {
+    type: :binary,
+    operator: :'!=',
+    compound: true,
+    value_predicator: :all?
+  }.freeze
+
+  IN = {
+    type: :binary,
+    operator: :presence_in,
+    compound: true
+  }.freeze
+  IN_ANY = {
+    type: :binary,
+    operator: :presence_in,
+    compound: true,
+    value_predicator: :any?
+  }.freeze
+  IN_ALL = {
+    type: :binary,
+    operator: :presence_in,
+    compound: true,
+    value_predicator: :all?
+  }.freeze
+  NOT_IN = {
+    type: :binary,
+    operator: :presence_in,
+    result_transformer: :!,
+    compound: true
+  }.freeze
+  NOT_IN_ANY = {
+    type: :binary,
+    operator: :presence_in,
+    result_transformer: :!,
+    compound: true,
+    value_predicator: :any?
+  }.freeze
+  NOT_IN_ALL = {
+    type: :binary,
+    operator: :presence_in,
+    result_transformer: :!,
+    compound: true,
+    value_predicator: :all?
+  }.freeze
+
+  MATCHES = {
+    type: :binary,
+    operator: :matches,
+    compound: false
+  }.freeze
+  MATCHES_ANY = {
+    type: :binary,
+    operator: :matches_any,
+    compound: true
+  }.freeze
+  MATCHES_ALL = {
+    type: :binary,
+    operator: :matches_all,
+    compound: true
+  }.freeze
+  DOES_NOT_MATCH = {
+    type: :binary,
+    operator: :does_not_match,
+    compound: false
+  }.freeze
+  DOES_NOT_MATCH_ANY = {
+    type: :binary,
+    operator: :does_not_match_any,
+    compound: true
+  }.freeze
+  DOES_NOT_MATCH_ALL = {
+    type: :binary,
+    operator: :does_not_match_all,
+    compound: true
+  }.freeze
+
+  LT = {
+    type: :binary,
+    operator: :lt,
+    compound: false
+  }.freeze
+  LT_ANY = {
+    type: :binary,
+    operator: :lt_any,
+    compound: true
+  }.freeze
+  LT_ALL = {
+    type: :binary,
+    operator: :lt_all,
+    compound: true
+  }.freeze
+  LTEQ = {
+    type: :binary,
+    operator: :lteq,
+    compound: false
+  }.freeze
+  LTEQ_ANY = {
+    type: :binary,
+    operator: :lteq_any,
+    compound: true
+  }.freeze
+  LTEQ_ALL = {
+    type: :binary,
+    operator: :lteq_all,
+    compound: true
+  }.freeze
+
+  GT = {
+    type: :binary,
+    operator: :gt,
+    compound: false
+  }.freeze
+  GT_ANY = {
+    type: :binary,
+    operator: :gt_any,
+    compound: true
+  }.freeze
+  GT_ALL = {
+    type: :binary,
+    operator: :gt_all,
+    compound: true
+  }.freeze
+  GTEQ = {
+    type: :binary,
+    operator: :gteq,
+    compound: false
+  }.freeze
+  GTEQ_ANY = {
+    type: :binary,
+    operator: :gteq_any,
+    compound: true
+  }.freeze
+  GTEQ_ALL = {
+    type: :binary,
+    operator: :gteq_all,
+    compound: true
+  }.freeze
+
+  BETWEEN = {
+    type: :binary,
+    operator: :between,
+    compound: true
+  }.freeze
+  NOT_BETWEEN = {
+    type: :binary,
+    operator: :not_between,
+    compound: true
+  }.freeze
+
+  IS_TRUE = {
+    type: :unary,
+    operator: :eq,
+    compound: false,
+    value_transformer: proc { |_| true }
+  }.freeze
+  IS_FALSE = {
+    type: :unary,
+    operator: :eq,
+    compound: false,
+    value_transformer: proc { |_| false }
+  }.freeze
+
+  IS_NULL = {
+    type: :unary,
+    operator: :eq,
+    compound: false,
+    value_transformer: proc { |_| nil }
+  }.freeze
+  NOT_NULL = {
+    type: :unary,
+    operator: :not_eq,
+    compound: false,
+    value_transformer: proc { |_| nil }
+  }.freeze
+
+  IS_PRESENT = {
+    type: :unary,
+    operator: :not_eq_all,
+    compound: false,
+    value_transformer: proc { |_| BLANK_VALUES }
+  }.freeze
+  IS_BLANK = {
+    type: :unary,
+    operator: :eq_any,
+    compound: false,
+    value_transformer: proc { |_| BLANK_VALUES }
+  }.freeze
+end
