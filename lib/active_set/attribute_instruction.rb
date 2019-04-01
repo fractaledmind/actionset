@@ -31,8 +31,9 @@ class ActiveSet
 
     def attribute
       attribute = @keypath.last
-      attribute = attribute.sub(operator_regex, '')
-      attribute = attribute.sub(options_regex, '')
+      attribute = attribute&.sub(operator_regex, '')
+      attribute = attribute&.sub(options_regex, '')
+      attribute = attribute&.sub(enumerator_regex, '')
 
       attribute
     end
