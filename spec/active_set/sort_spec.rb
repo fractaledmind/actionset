@@ -228,4 +228,40 @@ RSpec.describe ActiveSet do
       end
     end
   end
+
+  describe '#sort on a computed field with nil values in the set' do
+    before(:each) do
+      @a = OpenStruct.new(bar: 7)
+      @b = OpenStruct.new(bar: nil)
+      @c = OpenStruct.new(bar: 8)
+
+      @active_set = ActiveSet.new([@a, @b, @c])
+    end
+
+    let(:result) { @active_set.sort(instructions) }
+
+    context 'sorting ascending' do
+      let(:instructions) do
+        { 'bar': :asc }
+      end
+
+      it do
+        expect(result.first).to eq @a
+        expect(result.second).to eq @c
+        expect(result.last).to eq @b
+      end
+    end
+
+    context 'sorting desending' do
+      let(:instructions) do
+        { 'bar': :desc }
+      end
+
+      it do
+        expect(result.first).to eq @b
+        expect(result.second).to eq @c
+        expect(result.last).to eq @a
+      end
+    end
+  end
 end

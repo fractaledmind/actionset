@@ -14,7 +14,12 @@ class ActiveSet
         # http://brandon.dimcheff.com/2009/11/18/rubys-sort-vs-sort-by/
         @set.sort_by do |item|
           @attribute_instructions.map do |instruction|
-            sortable_numeric_for(instruction, item) * direction_multiplier(instruction.value)
+            value_for_comparison = sortable_numeric_for(instruction, item)
+            if value_for_comparison.nil?
+              [direction_multiplier(instruction.value), 0]
+            else
+              [0, value_for_comparison * direction_multiplier(instruction.value)]
+            end
           end
         end
       end
