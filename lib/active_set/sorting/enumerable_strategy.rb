@@ -15,10 +15,17 @@ class ActiveSet
         @set.sort_by do |item|
           @attribute_instructions.map do |instruction|
             value_for_comparison = sortable_numeric_for(instruction, item)
+            direction_multiplier = direction_multiplier(instruction.value)
+
+            # in an ASC sort, nils float to the end of the list. In a DESC
+            # sort, nils float to the start of the list. This is achieved by
+            # wrapping each value_for_comparison in a tuple with 0 as the first
+            # element, and wrapping nil values with either 1 or -1 as the first
+            # element
             if value_for_comparison.nil?
-              [direction_multiplier(instruction.value), 0]
+              [direction_multiplier, 0]
             else
-              [0, value_for_comparison * direction_multiplier(instruction.value)]
+              [0, value_for_comparison * direction_multiplier]
             end
           end
         end
