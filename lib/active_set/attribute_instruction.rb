@@ -20,13 +20,13 @@ class ActiveSet
     def case_insensitive?
       return false unless options
 
-      options.include? 'i'
+      options.include? :i
     end
 
     def predicate?
       return false unless options
 
-      options.include? 'p'
+      options.include? :p
     end
 
     def attribute
@@ -35,17 +35,21 @@ class ActiveSet
       attribute = attribute&.sub(options_regex, '')
       attribute = attribute&.sub(enumerator_regex, '')
 
-      attribute
+      attribute&.to_s
     end
 
     def operator
-      return @value if predicate?
+      return @value.to_sym if predicate?
 
-      @keypath.last[operator_regex, 1]
+      @keypath.last[operator_regex, 1]&.to_sym
+    end
+
+    def enumerator
+      @keypath.last[enumerator_regex, 1]
     end
 
     def options
-      @keypath.last[options_regex, 1]&.split('')
+      @keypath.last[options_regex, 1]&.split('')&.map(&:to_sym)
     end
 
     def associations_array
@@ -86,6 +90,10 @@ class ActiveSet
 
     def operator_regex
       %r{\((.*?)\)}
+    end
+
+    def enumerator_regex
+      %r{\[(.*?)\]}
     end
 
     def options_regex

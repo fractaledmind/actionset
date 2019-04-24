@@ -2,24 +2,31 @@
 
 require 'spec_helper'
 
-MATCHING_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:operator].to_s.include? 'match' }
+MATCHING_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::MATCHING_OPERATORS
 INCLUSIVE_NONCOMPOUND_MATCHING_OPERATORS = MATCHING_OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == false }
-  .select { |k,v| v[:identity] == :inclusive }
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == false &&
+    o[:matching_behavior] == :inclusive
+  end
 EXCLUSIVE_NONCOMPOUND_MATCHING_OPERATORS = MATCHING_OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == false }
-  .select { |k,v| v[:identity] == :exclusive }
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == false &&
+    o[:matching_behavior] == :exclusive
+  end
 INCLUSIVE_COMPOUND_MATCHING_OPERATORS = MATCHING_OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == true }
-  .select { |k,v| v[:identity] == :inclusive }
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == true &&
+    o[:matching_behavior] == :inclusive
+  end
 EXCLUSIVE_COMPOUND_MATCHING_OPERATORS = MATCHING_OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == true }
-  .select { |k,v| v[:identity] == :exclusive }
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == true &&
+    o[:matching_behavior] == :exclusive
+  end
 
 RSpec.describe ActiveSet do
   before(:all) do
@@ -30,18 +37,18 @@ RSpec.describe ActiveSet do
   after(:all) { Thing.delete_all }
 
   describe '#filter' do
-    ApplicationRecord::DB_FIELD_TYPES.each do |type|
+    %i[string text binary].each do |type|
       [1, 2].each do |id|
-        INCLUSIVE_NONCOMPOUND_MATCHING_OPERATORS.each do |operator, schema|
+        INCLUSIVE_NONCOMPOUND_MATCHING_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{operator})/i/
-            #{type}(#{schema[:alias]})
-            #{type}(#{schema[:alias]})/i/
-            only.#{type}(#{operator})
-            only.#{type}(#{operator})/i/
-            only.#{type}(#{schema[:alias]})
-            only.#{type}(#{schema[:alias]})/i/
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:name]})/i/
+            #{type}(#{schema[:shorthand]})
+            #{type}(#{schema[:shorthand]})/i/
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:name]})/i/
+            only.#{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:shorthand]})/i/
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")
@@ -59,16 +66,16 @@ RSpec.describe ActiveSet do
           end
         end
 
-        EXCLUSIVE_NONCOMPOUND_MATCHING_OPERATORS.each do |operator, schema|
+        EXCLUSIVE_NONCOMPOUND_MATCHING_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{operator})/i/
-            #{type}(#{schema[:alias]})
-            #{type}(#{schema[:alias]})/i/
-            only.#{type}(#{operator})
-            only.#{type}(#{operator})/i/
-            only.#{type}(#{schema[:alias]})
-            only.#{type}(#{schema[:alias]})/i/
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:name]})/i/
+            #{type}(#{schema[:shorthand]})
+            #{type}(#{schema[:shorthand]})/i/
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:name]})/i/
+            only.#{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:shorthand]})/i/
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")
@@ -86,16 +93,16 @@ RSpec.describe ActiveSet do
           end
         end
 
-        INCLUSIVE_COMPOUND_MATCHING_OPERATORS.each do |operator, schema|
+        INCLUSIVE_COMPOUND_MATCHING_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{operator})/i/
-            #{type}(#{schema[:alias]})
-            #{type}(#{schema[:alias]})/i/
-            only.#{type}(#{operator})
-            only.#{type}(#{operator})/i/
-            only.#{type}(#{schema[:alias]})
-            only.#{type}(#{schema[:alias]})/i/
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:name]})/i/
+            #{type}(#{schema[:shorthand]})
+            #{type}(#{schema[:shorthand]})/i/
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:name]})/i/
+            only.#{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:shorthand]})/i/
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")
@@ -118,16 +125,16 @@ RSpec.describe ActiveSet do
           end
         end
 
-        EXCLUSIVE_COMPOUND_MATCHING_OPERATORS.each do |operator, schema|
+        EXCLUSIVE_COMPOUND_MATCHING_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{operator})/i/
-            #{type}(#{schema[:alias]})
-            #{type}(#{schema[:alias]})/i/
-            only.#{type}(#{operator})
-            only.#{type}(#{operator})/i/
-            only.#{type}(#{schema[:alias]})
-            only.#{type}(#{schema[:alias]})/i/
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:name]})/i/
+            #{type}(#{schema[:shorthand]})
+            #{type}(#{schema[:shorthand]})/i/
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:name]})/i/
+            only.#{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:shorthand]})/i/
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")

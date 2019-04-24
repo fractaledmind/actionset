@@ -11,6 +11,12 @@ class ActiveSet
         def initialize(attribute_instruction, set)
           @attribute_instruction = attribute_instruction
           @set = set
+          @operators ||= {}.tap do |_operators|
+            AREL_OPERATORS.each { |op| _operators[op[:name]] = op }
+            PREDICATE_OPERATORS.each { |op| _operators[op[:name]] = op }
+            MATCHING_OPERATORS.each { |op| _operators[op[:name]] = op }
+            TIME_OPERATORS.each { |op| _operators[op[:name]] = op }
+          end
           super(@attribute_instruction)
         end
 
@@ -50,19 +56,15 @@ class ActiveSet
         end
 
         def arel_operator
-          instruction_operator = @attribute_instruction.operator&.to_sym
+          return :eq if operator_schema.nil?
+          return operator_schema[:operator] if operator_schema
 
-          return :eq unless instruction_operator
-          return OPERATORS[instruction_operator][:operator] if OPERATORS.key?(instruction_operator)
-
-          aliased_operator = OPERATORS.find { |_, schema| schema[:alias].to_s == instruction_operator.to_s }&.last
-          return aliased_operator[:operator] if aliased_operator
-
-          instruction_operator
+          @attribute_instruction.operator
         end
 
         def arel_value
-          return OPERATORS[@attribute_instruction.operator][:value_transformer].call(@attribute_instruction.value) if OPERATORS.key?(@attribute_instruction.operator) && OPERATORS[@attribute_instruction.operator].key?(:value_transformer)
+p operator_schema
+          return operator_schema[:transformer].call(@attribute_instruction.value) if operator_schema&.key?(:transformer)
           return @attribute_instruction.value unless @attribute_instruction.case_insensitive?
           return @attribute_instruction.value.downcase if @attribute_instruction.value.respond_to?(:downcase)
           return @attribute_instruction.value unless @attribute_instruction.value.is_a?(Array)
@@ -72,6 +74,14 @@ class ActiveSet
 
             v.downcase
           end
+        end
+
+        def operator_schema
+          instruction_operator = @attribute_instruction.operator
+          return @operators[instruction_operator] if @operators.key?(instruction_operator)
+
+p instruction_operator
+          @operators.find { |_, schema| schema[:shorthand] == instruction_operator }&.last
         end
       end
     end

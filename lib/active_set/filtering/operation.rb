@@ -23,6 +23,8 @@ class ActiveSet
 
         return activerecord_filtered_set if attribute_instructions.all?(&:processed?)
 
+p ['@@@', activerecord_filtered_set.to_sql]
+
         attribute_instructions.reject(&:processed?).reduce(activerecord_filtered_set) do |set, attribute_instruction|
           process_attribute_instruction_with_strategy(
             set,

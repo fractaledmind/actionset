@@ -70,7 +70,7 @@ RSpec.describe ActiveSet do
                   }
                 end
 
-                it { expect(result.map(&:id)).to eq [matching_item.id] }
+                it { p result; p matching_item; p matching_item.computed_only.computed_string; expect(result.map(&:id)).to eq [matching_item.id] }
               end
             end
           end

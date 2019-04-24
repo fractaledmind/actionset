@@ -2,15 +2,22 @@
 
 require 'spec_helper'
 
-INCLUSIVE_UNARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :unary }
-  .select { |k,v| v[:identity] == :inclusive }
-EXCLUSIVE_UNARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :unary }
-  .select { |k,v| v[:identity] == :exclusive }
-INCONCLUSIVE_UNARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :unary }
-  .select { |k,v| v[:identity] == :inconclusive }
+PREDICATE_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::PREDICATE_OPERATORS
+INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
+  .select do |o|
+    o[:type] == :unary &&
+    o[:matching_behavior] == :inclusive
+  end
+EXCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
+  .select do |o|
+    o[:type] == :unary &&
+    o[:matching_behavior] == :exclusive
+  end
+INCONCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
+  .select do |o|
+    o[:type] == :unary &&
+    o[:matching_behavior] == :inconclusive
+  end
 
 RSpec.describe ActiveSet do
   before(:all) do
@@ -23,15 +30,15 @@ RSpec.describe ActiveSet do
   describe '#filter' do
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
       [1, 2].each do |id|
-        INCLUSIVE_UNARY_OPERATORS.each do |operator, schema|
+        INCLUSIVE_UNARY_OPERATORS.each do |schema|
           %W[
             #{type}/p/
             only.#{type}/p/
           ].each do |path|
-            it "{ #{path}: #{operator} }" do
+            it "{ #{path}: #{schema[:name]} }" do
               matching_item = instance_variable_get("@thing_#{id}")
               instructions = {
-                path => operator
+                path => schema[:name]
               }
               results = @active_set.filter(instructions)
               result_ids = results.map(&:id)
@@ -47,15 +54,15 @@ RSpec.describe ActiveSet do
           end
         end
 
-        EXCLUSIVE_UNARY_OPERATORS.each do |operator, schema|
+        EXCLUSIVE_UNARY_OPERATORS.each do |schema|
           %W[
             #{type}/p/
             only.#{type}/p/
           ].each do |path|
-            it "{ #{path}: #{operator} }" do
+            it "{ #{path}: #{schema[:name]} }" do
               matching_item = instance_variable_get("@thing_#{id}")
               instructions = {
-                path => operator
+                path => schema[:name]
               }
               results = @active_set.filter(instructions)
               result_ids = results.map(&:id)
@@ -72,19 +79,19 @@ RSpec.describe ActiveSet do
           end
         end
 
-        INCONCLUSIVE_UNARY_OPERATORS.each do |operator, schema|
+        INCONCLUSIVE_UNARY_OPERATORS.each do |schema|
           %W[
             #{type}/p/
             only.#{type}/p/
           ].each do |path|
-            it "{ #{path}: #{operator} }" do
+            it "{ #{path}: #{schema[:name]} }" do
               matching_item = instance_variable_get("@thing_#{id}")
               instructions = {
-                path => operator
+                path => schema[:name]
               }
               results = @active_set.filter(instructions)
               result_values = results.map { |item| ActiveSet::AttributeInstruction.new(path, nil).value_for(item: item) }
-              expected_boolean = %i[is_true not_false].include? operator
+              expected_boolean = %i[IS_TRUE NOT_FALSE].include? schema[:name]
 
               if !schema.key?(:allowed_for)
                 expect(result_values).to all(be expected_boolean)

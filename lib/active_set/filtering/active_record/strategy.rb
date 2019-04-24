@@ -2,14 +2,11 @@
 
 require_relative './attribute_set_instruction'
 require 'active_support/core_ext/module/delegation'
-require 'active_record/errors'
 
 class ActiveSet
   module Filtering
     module ActiveRecord
       class Strategy
-        include Constants
-
         delegate :attribute_model,
                  :arel_column,
                  :arel_operator,
@@ -55,6 +52,7 @@ class ActiveSet
         end
 
         def where_operation
+p ['!!!', arel_value]
           initial_relation
             .where(
               arel_column.send(

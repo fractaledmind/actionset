@@ -2,22 +2,31 @@
 
 require 'spec_helper'
 
-INCLUSIVE_NONCOMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == false }
-  .select { |k,v| v[:identity] == :inclusive }
-EXCLUSIVE_NONCOMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == false }
-  .select { |k,v| v[:identity] == :exclusive }
-INCLUSIVE_COMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == true }
-  .select { |k,v| v[:identity] == :inclusive }
-EXCLUSIVE_COMPOUND_BINARY_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::OPERATORS
-  .select { |k,v| v[:type] == :binary }
-  .select { |k,v| v[:compound] == true }
-  .select { |k,v| v[:identity] == :exclusive }
+AREL_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::AREL_OPERATORS
+INCLUSIVE_NONCOMPOUND_BINARY_OPERATORS = AREL_OPERATORS
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == false &&
+    o[:matching_behavior] == :inclusive
+  end
+EXCLUSIVE_NONCOMPOUND_BINARY_OPERATORS = AREL_OPERATORS
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == false &&
+    o[:matching_behavior] == :exclusive
+  end
+INCLUSIVE_COMPOUND_BINARY_OPERATORS = AREL_OPERATORS
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == true &&
+    o[:matching_behavior] == :inclusive
+  end
+EXCLUSIVE_COMPOUND_BINARY_OPERATORS = AREL_OPERATORS
+  .select do |o|
+    o[:type] == :binary &&
+    o[:compound] == true &&
+    o[:matching_behavior] == :exclusive
+  end
 
 RSpec.describe ActiveSet do
   before(:all) do
@@ -30,12 +39,12 @@ RSpec.describe ActiveSet do
   describe '#filter' do
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
       [1, 2].each do |id|
-        INCLUSIVE_NONCOMPOUND_BINARY_OPERATORS.each do |operator, schema|
+        INCLUSIVE_NONCOMPOUND_BINARY_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{schema[:alias]})
-            only.#{type}(#{operator})
-            only.#{type}(#{schema[:alias]})
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:shorthand]})
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")
@@ -52,12 +61,12 @@ RSpec.describe ActiveSet do
           end
         end
 
-        EXCLUSIVE_NONCOMPOUND_BINARY_OPERATORS.each do |operator, schema|
+        EXCLUSIVE_NONCOMPOUND_BINARY_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{schema[:alias]})
-            only.#{type}(#{operator})
-            only.#{type}(#{schema[:alias]})
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:shorthand]})
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")
@@ -74,12 +83,12 @@ RSpec.describe ActiveSet do
           end
         end
 
-        INCLUSIVE_COMPOUND_BINARY_OPERATORS.each do |operator, schema|
+        INCLUSIVE_COMPOUND_BINARY_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{schema[:alias]})
-            only.#{type}(#{operator})
-            only.#{type}(#{schema[:alias]})
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:shorthand]})
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")
@@ -102,12 +111,12 @@ RSpec.describe ActiveSet do
           end
         end
 
-        EXCLUSIVE_COMPOUND_BINARY_OPERATORS.each do |operator, schema|
+        EXCLUSIVE_COMPOUND_BINARY_OPERATORS.each do |schema|
           %W[
-            #{type}(#{operator})
-            #{type}(#{schema[:alias]})
-            only.#{type}(#{operator})
-            only.#{type}(#{schema[:alias]})
+            #{type}(#{schema[:name]})
+            #{type}(#{schema[:shorthand]})
+            only.#{type}(#{schema[:name]})
+            only.#{type}(#{schema[:shorthand]})
           ].each do |path|
             it "{ #{path}: }" do
               matching_item = instance_variable_get("@thing_#{id}")

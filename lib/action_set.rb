@@ -6,6 +6,7 @@ require 'active_support/lazy_load_hooks'
 require 'active_set'
 
 require_relative './action_set/attribute_value'
+require_relative './action_set/configuration'
 require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
