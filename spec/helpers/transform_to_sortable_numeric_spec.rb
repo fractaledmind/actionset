@@ -57,7 +57,7 @@ RSpec.describe '#transform_to_sortable_numeric' do
     context 'Date' do
       let(:value) { Date.new(2000, 12, 25) }
 
-      it { expect(result).to eq 977_698_800_000 }
+      it { expect(result).to eq 977_702_400_000 }
     end
 
     context 'Time' do
