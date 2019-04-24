@@ -57,18 +57,18 @@ RSpec.describe '#transform_to_sortable_numeric' do
     context 'Date' do
       let(:value) { Date.new(2000, 12, 25) }
 
-      it { expect(result).to eq 977_720_400_000 }
+      it { expect(result).to eq 977_698_800_000 }
     end
 
     context 'Time' do
-      let(:value) { Time.new(2000, 12, 25, 11, 30) }
+      let(:value) { Time.new(2000, 12, 25, 11, 30, 00) }
 
-      it { expect(result).to eq 977_761_800_000 }
+      it { expect(result).to eq 977_740_200_000 }
     end
 
     # rubocop:disable Style/DateTime
     context 'DateTime' do
-      let(:value) { DateTime.new(2000, 12, 25, 11, 30) }
+      let(:value) { DateTime.new(2000, 12, 25, 11, 30, 00) }
 
       it { expect(result).to eq 977_743_800_000 }
     end

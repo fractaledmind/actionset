@@ -33,7 +33,7 @@ def transform_to_sortable_numeric(value)
                  .to_r                                         # (24266512014313/250000000000)
              elsif key.respond_to?(:to_time)
                # https://stackoverflow.com/a/30604935/2884386
-               (key.to_time.to_f * 1000).round
+               (key.to_time.utc.to_f * 1000).round
              else
                key
              end
