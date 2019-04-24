@@ -39,7 +39,7 @@ RSpec.describe 'GET /things?sort', type: :request do
     @active_set = ActiveSet.new(Thing.all)
     @all_things = Thing.all.to_a
   end
-  after(:all) { Thing.delete_all }
+  after(:all) { Thing.delete_all; Only.delete_all }
 
   def value_for(path:, object:)
     value = path.split('.').reduce(object) { |obj, m| obj&.send('fetch', m.gsub('(i)', '')) }

@@ -9,7 +9,7 @@ RSpec.describe 'GET /things?filter', type: :request do
     @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @active_set = ActiveSet.new(Thing.all)
   end
-  after(:all) { Thing.delete_all }
+  after(:all) { Thing.delete_all; Only.delete_all }
 
   context '.json' do
     let(:results) { JSON.parse(response.body) }
