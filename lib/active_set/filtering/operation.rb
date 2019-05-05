@@ -30,7 +30,10 @@ class ActiveSet
 
         attribute_instructions.reject(&:processed?).reduce(activerecord_filtered_set) do |set, attribute_instruction|
           maybe_set_or_false = EnumerableStrategy.new(set, attribute_instruction).execute
-          maybe_set_or_false.presence || set
+          next set unless maybe_set_or_false
+
+          attribute_instruction.processed = true
+          maybe_set_or_false
         end
       end
       # rubocop:enable Metrics/MethodLength

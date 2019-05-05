@@ -24,11 +24,11 @@ def transform_to_sortable_numeric(value)
              elsif key == false
                0
              elsif key.is_a?(String) || key.is_a?(Symbol)
-              string_to_sortable_numeric(key.to_s)
+               string_to_sortable_numeric(key.to_s)
              elsif key.is_a?(Date)
-              time_to_sortable_numeric(Time.new(key.year, key.month, key.day, 00, 00, 00, 0))
+               time_to_sortable_numeric(Time.new(key.year, key.month, key.day, 0o0, 0o0, 0o0, 0))
              elsif key.respond_to?(:to_time)
-              time_to_sortable_numeric(key.to_time)
+               time_to_sortable_numeric(key.to_time)
              else
                key
              end
@@ -49,5 +49,5 @@ end
 
 def time_to_sortable_numeric(time)
   # https://stackoverflow.com/a/30604935/2884386
- (time.utc.to_f * 1000).round
+  (time.utc.to_f * 1000).round
 end

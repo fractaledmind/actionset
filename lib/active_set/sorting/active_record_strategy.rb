@@ -41,15 +41,19 @@ class ActiveSet
         @set.eager_load(associations_hash)
       end
 
+      # https://stackoverflow.com/a/44912964/2884386
+      # Force null values to be sorted as if larger than any non-null value
+      # ASC => [-2, -1, 1, 2, nil]
+      # DESC => [nil, 2, 1, -1, -2]
       def order_operation_for(attribute_instruction)
         attribute_model = attribute_model_for(attribute_instruction)
 
         arel_column = Arel::Table.new(attribute_model.table_name)[attribute_instruction.attribute]
         arel_column = case_insensitive?(attribute_instruction) ? arel_column.lower : arel_column
-
         arel_direction = direction_operator(attribute_instruction.value)
+        nil_sorter = arel_column.send(arel_direction == :asc ? :eq : :not_eq, nil)
 
-        attribute_model.order(arel_column.send(arel_direction))
+        attribute_model.order(nil_sorter).order(arel_column.send(arel_direction))
       end
 
       def attribute_model_for(attribute_instruction)

@@ -15,7 +15,7 @@ class ActiveSet
           next attribute_matches_for?(item) if can_match_attribute_for?(item)
           next class_method_matches_for?(item) if can_match_class_method_for?(item)
 
-          next false
+          false
         end
       end
 
@@ -64,7 +64,7 @@ class ActiveSet
         elsif maybe_item_or_collection_or_nil.respond_to?(:each)
           maybe_item_or_collection_or_nil.include? attribute_item_for(item)
         else
-          maybe_item_or_collection_or_nil.present?
+          maybe_item_or_collection_or_nil == attribute_item_for(item)
         end
       end
       # rubocop:enable Metrics/MethodLength

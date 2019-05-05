@@ -14,12 +14,14 @@ class ActiveSet
         if execute_where_operation?
           statement = where_operation
         elsif execute_merge_operation?
-          statement = merge_operation
+          begin
+            statement = merge_operation
+          rescue ArgumentError # thrown if merging a non-ActiveRecord::Relation
+            return false
+          end
         else
           return false
         end
-
-        return false if throws?(ActiveRecord::StatementInvalid) { statement.load }
 
         statement
       end
@@ -42,15 +44,6 @@ class ActiveSet
         true
       end
 
-      def execute_predicate_operation?
-        @attribute_instruction.predicate?
-        return false unless attribute_model
-        return false unless attribute_model.respond_to?(:attribute_names)
-        return false unless attribute_model.attribute_names.include?(@attribute_instruction.attribute)
-
-        true
-      end
-
       def where_operation
         initial_relation
           .where(
@@ -66,16 +59,6 @@ class ActiveSet
           .merge(
             attribute_model.public_send(
               @attribute_instruction.attribute,
-              @attribute_instruction.value
-            )
-          )
-      end
-
-      def predicate_operation
-        initial_relation
-          .where(
-            arel_column.send(
-              @attribute_instruction.operator(default: 'eq'),
               @attribute_instruction.value
             )
           )

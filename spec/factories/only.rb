@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :only do
-    generic
+    _generic
+    trait(:all_nil) { _all_nil }
   end
 end

@@ -17,17 +17,9 @@ class ActiveSet
       @processed
     end
 
-    def predicate?
-      attribute = @keypath.last
-      return false unless attribute&.match predicator_regex
-
-      attribute[predicator_regex, 1] == 'p'
-    end
-
     def attribute
       attribute = @keypath.last
-      attribute = attribute.sub(operator_regex, '') if attribute&.match operator_regex
-      attribute = attribute.sub(predicator_regex, '') if attribute&.match predicator_regex
+      return attribute.sub(operator_regex, '') if attribute&.match operator_regex
 
       attribute
     end
@@ -76,11 +68,7 @@ class ActiveSet
     private
 
     def operator_regex
-      %r{\((.*?)\)}
-    end
-
-    def predicator_regex
-      %r{\/(.*?)\/}
+      /\((.*?)\)/
     end
   end
 end
