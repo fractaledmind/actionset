@@ -9,7 +9,6 @@ RSpec.describe 'GET /things?filter', type: :request do
     @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @active_set = ActiveSet.new(Thing.all)
   end
-  after(:all) { Thing.delete_all }
 
   context '.json' do
     let(:results) { JSON.parse(response.body) }
@@ -21,18 +20,18 @@ RSpec.describe 'GET /things?filter', type: :request do
     end
 
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
-      [1, 2].each do |id|
+      [[1, 2].sample].each do |id|
         # single value inclusive operators
-        %i[
+        [%i[
           eq
           lteq
           gteq
           matches
-        ].each do |operator|
+        ].sample].each do |operator|
           %W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].each do |path|
+          ].sample do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
@@ -50,16 +49,16 @@ RSpec.describe 'GET /things?filter', type: :request do
         end
 
         # single value exlusive operators
-        %i[
+        [%i[
           not_eq
           lt
           gt
           does_not_match
-        ].each do |operator|
+        ].sample].each do |operator|
           %W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].each do |path|
+          ].sample do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
@@ -77,7 +76,7 @@ RSpec.describe 'GET /things?filter', type: :request do
         end
 
         # multi value inclusive operators
-        %i[
+        [%i[
           eq_any
           not_eq_any
           in
@@ -87,11 +86,11 @@ RSpec.describe 'GET /things?filter', type: :request do
           gteq_any
           matches_any
           does_not_match_any
-        ].each do |operator|
+        ].sample].each do |operator|
           %W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].each do |path|
+          ].sample do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
@@ -118,7 +117,7 @@ RSpec.describe 'GET /things?filter', type: :request do
         end
 
         # multi value exclusive operators
-        %i[
+        [%i[
           eq_all
           not_eq_all
           not_in
@@ -128,11 +127,11 @@ RSpec.describe 'GET /things?filter', type: :request do
           gt_all
           matches_all
           does_not_match_all
-        ].each do |operator|
+        ].sample].each do |operator|
           %W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].each do |path|
+          ].sample do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
@@ -159,16 +158,16 @@ RSpec.describe 'GET /things?filter', type: :request do
         end
 
         # multi value mixed operators
-        # %i[
+        # [%i[
         #   lt_any
         #   lteq_all
         #   gt_any
         #   gteq_all
-        # ].each do |operator|
+        # ].sample].each do |operator|
         #   %W[
         #     #{type}(#{operator})
         #     only.#{type}(#{operator})
-        #   ].each do |path|
+        #   ].sample do |path|
         #     context "{ #{path}: }" do
         #       let(:matching_item) { instance_variable_get("@thing_#{id}") }
         #       let(:other_thing) do

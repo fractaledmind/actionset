@@ -21,12 +21,12 @@ module Pagination
                     'aria-label': 'Page navigation'
                   )) do
         safe_join([
-          pagination_first_page_link_for(set),
-          pagination_prev_page_link_for(set),
-          pagination_current_page_description_for(set),
-          pagination_next_page_link_for(set),
-          pagination_last_page_link_for(set)
-        ])
+                    pagination_first_page_link_for(set),
+                    pagination_prev_page_link_for(set),
+                    pagination_current_page_description_for(set),
+                    pagination_next_page_link_for(set),
+                    pagination_last_page_link_for(set)
+                  ])
       end
     end
   end

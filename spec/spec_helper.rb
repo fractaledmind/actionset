@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'simplecov_helper'
 
 require 'bundler'
@@ -6,6 +8,8 @@ Combustion.initialize! :active_record, :action_controller, :action_view
 Bundler.require :default, :development
 
 require 'bundler/setup'
+require 'ostruct'
+require 'csv'
 require 'action_set'
 require 'active_set'
 require 'rspec/rails'
@@ -15,19 +19,12 @@ require 'capybara/rspec'
 Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 
 RSpec.configure do |config|
+  include PathHelpers
+  include FilteringHelpers
+  include SortingHelpers
+
   config.mock_with :rspec
   config.order = 'random'
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
@@ -42,6 +39,29 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
-    FactoryBot.find_definitions
+    begin
+      FactoryBot.find_definitions
+    rescue FactoryBot::DuplicateDefinitionError
+      nil
+    end
+  end
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:all) do
+    DatabaseCleaner.start
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean
   end
 end

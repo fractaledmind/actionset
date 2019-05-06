@@ -12,6 +12,7 @@ module ActionSet
       adapters.reduce(nil) do |_, adapter|
         mayble_value_or_nil = adapter.new(@raw, to).process
         next if mayble_value_or_nil.nil?
+
         return mayble_value_or_nil
       end
 
@@ -32,6 +33,7 @@ module ActionSet
 
       def process
         return @raw if @raw.is_a? @target
+
         possible_values.find { |v| v.is_a? @target }
       end
 
@@ -51,7 +53,7 @@ module ActionSet
 
       def typecast(method_name)
         @raw.send(method_name)
-      rescue
+      rescue StandardError
         nil
       end
     end
@@ -70,6 +72,7 @@ module ActionSet
 
       def process
         return @raw if @raw.is_a? @target
+
         possible_values.find { |v| v.is_a? @target }
       end
 
@@ -90,6 +93,7 @@ module ActionSet
 
       def typecast(to_type, value)
         return to_type.type_cast(value) if to_type.respond_to? :type_cast
+
         to_type.cast(value)
       end
 
@@ -101,7 +105,7 @@ module ActionSet
 
       def init_typecaster(const_name)
         type_class.const_get(const_name).new
-      rescue
+      rescue StandardError
         nil
       end
 
@@ -121,6 +125,7 @@ module ActionSet
       def process
         return if @raw.is_a? @target
         return unless @target.eql?(TrueClass) || @target.eql?(FalseClass)
+
         # ActiveModel::Type::Boolean is too expansive in its casting; will get false positives
         to_bool
       end
@@ -131,6 +136,7 @@ module ActionSet
         return @raw if @raw.is_a?(TrueClass) || @raw.is_a?(FalseClass)
         return true if %w[true yes 1 t].include? @raw.to_s.downcase
         return false if %w[false no 0 f].include? @raw.to_s.downcase
+
         nil
       end
     end
