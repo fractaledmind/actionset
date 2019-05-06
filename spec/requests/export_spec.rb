@@ -8,7 +8,6 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
     @thing_2 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
     @thing_3 = FactoryBot.create(:thing, only: FactoryBot.create(:only))
   end
-  after(:all) { Thing.delete_all; Only.delete_all }
 
   context '.csv' do
     let(:result) { response.body }
