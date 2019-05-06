@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    actionset (0.7.0)
+    actionset (0.8.0)
       activesupport (>= 4.0.2)
       railties
 
@@ -201,7 +201,7 @@ DEPENDENCIES
   actionpack
   actionset!
   activerecord
-  bundler (~> 1.15)
+  bundler
   capybara
   codecov
   combustion
@@ -219,4 +219,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.16.2
+   2.0.1

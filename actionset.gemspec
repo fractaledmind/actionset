@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 Gem::Specification.new do |spec|
   spec.platform      = Gem::Platform::RUBY
   spec.name          = 'actionset'
-  spec.version       = '0.7.0'
+  spec.version       = '0.8.0'
   spec.authors       = ['Stephen Margheim']
   spec.email         = ['stephen.margheim@gmail.com']
 
@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 4.0.2'
   spec.add_dependency 'railties'
 
-  spec.add_development_dependency 'bundler', '~> 1.15'
+  spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'capybara'
   spec.add_development_dependency 'codecov'
   spec.add_development_dependency 'combustion'

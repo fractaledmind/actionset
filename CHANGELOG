@@ -1,3 +1,20 @@
+v 0.8.0
+  - merge ActiveSet and ActionSet into a monorepo
+  - merge and overhaul the specs
+    + run a random subset of request specs to test ActionSet wiring to ActiveSet
+    + polish the ActiveSet specs
+    - update the scopes filtering specs to be more generalized and exhaustive
+  - get all new features/fixes from current ActiveSet
+    + fix a bug where ActiveRecord sorting didn't treat NULL values in the same way as Enumerable sorting
+      * where NULL values are sorted as if larger than any non-null value
+    + fix a bug with ActiveRecord scope filtering
+      * if we try to use a class method scope that returns something other than an ActiveRecord::Relation
+    + fix a bug in Enumerable class method filtering when method returns object, not array
+    + fix a bug transforming Date objects into sortable integers to ensure UTC
+    + fix a bug to allow sorting of computed attributes on sets that include nil values
+    + fix a bug that prevents enumerable sets from being filtered down to empty sets
+  - fix Rubocop offenses (safely)
+  - use Bundler version 2.x
 v 0.7.0
   - overhaul the specs
     + update the data model to be more extensive and expressive
