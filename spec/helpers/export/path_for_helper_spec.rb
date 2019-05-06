@@ -28,7 +28,7 @@ RSpec.describe Export::PathForHelper, type: :helper do
     end
 
     context 'when format is a symbol' do
-      let(:format) { :'csv' }
+      let(:format) { :csv }
 
       it { should eq "/things?transform%5Bformat%5D=#{format}" }
     end

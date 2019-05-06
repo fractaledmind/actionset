@@ -91,7 +91,7 @@ RSpec.describe ActiveSet do
                 FactoryBot.build(:thing,
                                  boolean: !matching_item.boolean,
                                  only: FactoryBot.build(:only,
-                                                       boolean: !matching_item.only.boolean))
+                                                        boolean: !matching_item.only.boolean))
               end
               let(:instruction_multi_value) do
                 [
@@ -132,7 +132,7 @@ RSpec.describe ActiveSet do
                 FactoryBot.build(:thing,
                                  boolean: !matching_item.boolean,
                                  only: FactoryBot.build(:only,
-                                                       boolean: !matching_item.only.boolean))
+                                                        boolean: !matching_item.only.boolean))
               end
               let(:instruction_multi_value) do
                 [

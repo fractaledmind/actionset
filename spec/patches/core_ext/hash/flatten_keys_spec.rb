@@ -84,7 +84,7 @@ RSpec.describe Hash do
         {
           [:a] => 'a',
           %i[b c] => 'c',
-          [:b, :d] => %w[
+          %i[b d] => %w[
             x
             y
             z

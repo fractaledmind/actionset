@@ -65,7 +65,7 @@ class ApplicationRecord < ActiveRecord::Base
   alias computed_symbol symbol
 
   def fields
-    self.attributes.keys
+    attributes.keys
   end
 
   def associations

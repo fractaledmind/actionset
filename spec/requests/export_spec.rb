@@ -47,7 +47,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
             columns: [
               {},
               {}
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -66,7 +67,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
           {
             columns: [
               { key: 'ID' }
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -86,7 +88,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
             columns: [
               { key: 'ID' },
               { key: 'Assoc' }
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -105,7 +108,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
           {
             columns: [
               { value: 'id' }
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -125,7 +129,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
             columns: [
               { value: 'id' },
               { value: 'only.string' }
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -145,7 +150,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
             columns: [
               { key: 'ID',
                 value: 'id' }
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -167,7 +173,8 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
                 value: 'id' },
               { key: 'Assoc',
                 value: 'only.string' }
-            ] }
+            ]
+          }
         end
         let(:expected_csv) do
           ::CSV.generate do |output|
@@ -181,9 +188,9 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
         it { expect(result).to eq expected_csv }
       end
 
-      context "{  }" do
+      context '{  }' do
         let(:instructions) do
-          { }
+          {}
         end
         let(:expected_csv) do
           ::CSV.generate do |output|

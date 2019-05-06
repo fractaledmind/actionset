@@ -65,8 +65,6 @@ RSpec.describe '#transform_to_sortable_numeric' do
 
       it { expect(result).to eq 977_743_800_000 }
     end
-
-    # rubocop:disable Style/DateTime
     context 'DateTime' do
       let(:value) { DateTime.new(2000, 12, 25, 11, 30, 0o0, 0) }
 
