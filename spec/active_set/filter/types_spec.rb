@@ -12,6 +12,18 @@ RSpec.describe ActiveSet do
   describe '#filter' do
     let(:result) { @active_set.filter(instructions) }
 
+    all_possible_paths_for('invalid_field').each do |path|
+      context "{ #{path}: }" do
+        let(:instructions) do
+          {
+            path => filter_value_for(object: matching_item, path: path)
+          }
+        end
+
+        it { expect(result.map(&:id)).to eq [] }
+      end
+    end
+
     ApplicationRecord::FIELD_TYPES.each do |type|
       [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }

@@ -40,10 +40,8 @@ RSpec.describe ActiveSet do
     @active_set = ActiveSet.new(Thing.all)
   end
 
-  SORTABLE_TYPES = ApplicationRecord::FIELD_TYPES + ['string(i)']
-
   describe '#sort' do
-    SORTABLE_TYPES.each do |type|
+    ApplicationRecord::SORTABLE_TYPES.each do |type|
       all_possible_sort_instructions_for(type).each do |instruction|
         context instruction do
           it_should_behave_like 'a sorted collection', instruction do
@@ -53,7 +51,7 @@ RSpec.describe ActiveSet do
       end
     end
 
-    SORTABLE_TYPES.combination(2).each do |type_1, type_2|
+    ApplicationRecord::SORTABLE_TYPES.combination(2).each do |type_1, type_2|
       all_possible_sort_instruction_combinations_for(type_1, type_2).each do |instructions|
         context instructions do
           it_should_behave_like 'a sorted collection', instructions do
