@@ -68,7 +68,6 @@ module ActionSet
       instruction = ActiveSet::AttributeInstruction.new(keypath, value)
       item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
       item_value = instruction.value_for(item: item_with_value)
-p ['typecasting', instruction, set.count, item_with_value, item_value]
       ActionSet::AttributeValue.new(value)
                                .cast(to: item_value.class)
     end
