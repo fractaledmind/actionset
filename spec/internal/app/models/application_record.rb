@@ -21,6 +21,8 @@ class ApplicationRecord < ActiveRecord::Base
     symbol
   ] + DB_FIELD_TYPES).freeze
 
+  SORTABLE_TYPES = ApplicationRecord::FIELD_TYPES + ['string(i)']
+
   DB_FIELD_TYPES.each do |field|
     scope "#{field}_scope_method", ->(v) { where(field => v) }
 
@@ -39,6 +41,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   def method_missing(method_name, *args, &block)
     return super unless method_name.to_s.start_with?('computed')
+    return super unless method_name.to_s.end_with?(*fields, *associations)
 
     field_method = method_name.to_s.remove 'computed_'
     send(field_method, *args, &block)
@@ -46,6 +49,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   def respond_to_missing?(method_name, include_private = false)
     return super unless method_name.to_s.start_with?('computed')
+    return super unless method_name.to_s.end_with?(*fields, *associations)
 
     true
   end
@@ -59,4 +63,12 @@ class ApplicationRecord < ActiveRecord::Base
     string&.to_sym
   end
   alias computed_symbol symbol
+
+  def fields
+    self.attributes.keys
+  end
+
+  def associations
+    self.class.reflections.keys
+  end
 end
