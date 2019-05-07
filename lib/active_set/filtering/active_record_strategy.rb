@@ -70,21 +70,31 @@ class ActiveSet
         @set.eager_load(@attribute_instruction.associations_hash)
       end
 
-      def arel_column
-        attribute_type = attribute_model.columns_hash[@attribute_instruction.attribute].type
+      # ARel helper methods
 
+      def arel_type
+        attribute_model
+          .columns_hash[@attribute_instruction.attribute]
+          .type
+      end
+
+      def arel_table
         # This is to work around an bug in ActiveRecord,
-        # where BINARY fields aren't found properly when using the `arel_table` class method
-        # to build an ARel::Node
-        if attribute_type == :binary
-          Arel::Table.new(attribute_model.table_name)[@attribute_instruction.attribute]
+        # where BINARY fields aren't found properly when using
+        # the `arel_table` class method to build an ARel::Node
+        if arel_type == :binary
+          Arel::Table.new(attribute_model.table_name)
         else
-          attribute_model.arel_table[@attribute_instruction.attribute]
+          attribute_model.arel_table
         end
       end
 
       def arel_operator
         @attribute_instruction.operator || :eq
+      end
+      
+      def arel_column
+        arel_table[@attribute_instruction.attribute]
       end
 
       def attribute_model
