@@ -48,7 +48,7 @@ class ActiveSet
         initial_relation
           .where(
             arel_column.send(
-              @attribute_instruction.operator(default: 'eq'),
+              arel_operator,
               @attribute_instruction.value
             )
           )
@@ -81,6 +81,10 @@ class ActiveSet
         else
           attribute_model.arel_table[@attribute_instruction.attribute]
         end
+      end
+
+      def arel_operator
+        @attribute_instruction.operator || :eq
       end
 
       def attribute_model

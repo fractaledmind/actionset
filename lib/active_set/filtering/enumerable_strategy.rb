@@ -46,7 +46,7 @@ class ActiveSet
         @attribute_instruction
           .value_for(item: item)
           .public_send(
-            @attribute_instruction.operator,
+            (@attribute_instruction.operator || :==),
             @attribute_instruction.value
           )
       end
