@@ -8,7 +8,7 @@ RSpec.shared_examples 'a sorted collection' do |instructions|
         right_value = sort_value_for(path: path, object: right_result)
         sortedness = dir.to_s == 'asc' ? -1 : 1
 
-        expect(left_value <=> right_value).to satisfy { |v| [0, nil, sortedness].include? v }
+        expect([0, nil, sortedness]).to include(left_value <=> right_value)
         break unless left_value == right_value
       end
     end
