@@ -24,10 +24,14 @@ RSpec.describe ActiveSet do
               }
             end
 
-            if path.end_with?('_nil_method')
-              it { expect(result.map(&:id)).to eq [] }
+            if path.end_with?('_collection_method') || path.end_with?('_scope_method')
+              if path.include?('computed_')
+                it { expect(result.map(&:id)).to eq [] }
+              else
+                it { expect(result.map(&:id)).to eq [matching_item.id] }
+              end
             else
-              it { expect(result.map(&:id)).to eq [matching_item.id] }
+              it { expect(result.map(&:id)).to eq Thing.pluck(:id) }
             end
           end
         end
