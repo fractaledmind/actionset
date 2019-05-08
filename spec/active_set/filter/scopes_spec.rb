@@ -24,7 +24,7 @@ RSpec.describe ActiveSet do
               }
             end
 
-            if path.end_with?('_collection_method') || path.end_with?('_scope_method')
+            if path.end_with?('_collection_method', '_scope_method')
               if path.include?('computed_')
                 it { expect(result.map(&:id)).to eq [] }
               else

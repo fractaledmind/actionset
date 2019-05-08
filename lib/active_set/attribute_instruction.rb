@@ -64,7 +64,7 @@ class ActiveSet
     private
 
     def operator_regex
-      %r{\((.*?)\)}
+      /\((.*?)\)/
     end
   end
 end

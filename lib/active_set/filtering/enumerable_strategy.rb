@@ -12,7 +12,7 @@ class ActiveSet
                :attribute_value_for,
                :operator,
                :attribute,
-        to: :@set_instruction
+               to: :@set_instruction
 
       def initialize(set, attribute_instruction)
         @set = set
@@ -68,10 +68,10 @@ class ActiveSet
 
       def intersect_operation
         other_set = attribute_class
-          .public_send(
-            attribute,
-            attribute_value
-          )
+                    .public_send(
+                      attribute,
+                      attribute_value
+                    )
         @set & other_set
       end
     end

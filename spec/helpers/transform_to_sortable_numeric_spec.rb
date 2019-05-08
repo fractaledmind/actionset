@@ -70,7 +70,6 @@ RSpec.describe '#transform_to_sortable_numeric' do
 
       it { expect(result).to eq 977_702_400_000 }
     end
-    # rubocop:enable Style/DateTime
   end
 
   describe 'retains sortability' do

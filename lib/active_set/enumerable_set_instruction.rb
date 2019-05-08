@@ -10,7 +10,7 @@ class ActiveSet
 
     def attribute_value_for(item)
       @attribute_instruction
-                    .value_for(item: item)
+        .value_for(item: item)
     end
 
     def attribute_value

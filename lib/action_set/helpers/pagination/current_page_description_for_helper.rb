@@ -9,7 +9,12 @@ module Pagination
     include Pagination::TotalPagesForHelper
 
     def pagination_current_page_description_for(set)
-      description = "Page&nbsp;<strong>#{pagination_current_page_for(set)}</strong>&nbsp;of&nbsp;<strong>#{pagination_total_pages_for(set)}</strong>".html_safe
+      description = [
+        "Page"
+        "<strong>#{pagination_current_page_for(set)}</strong>"
+        "of"
+        "<strong>#{pagination_total_pages_for(set)}</strong>"
+      ].join('&nbsp;').html_safe
 
       content_tag(:span,
                   description,
