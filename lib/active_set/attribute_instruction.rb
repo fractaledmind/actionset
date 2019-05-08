@@ -28,7 +28,7 @@ class ActiveSet
       return @operator if defined? @operator
 
       attribute_instruction = @keypath.last
-      @operator = attribute_instruction[operator_regex, 1]&.to_sym || default.to_sm
+      @operator = attribute_instruction[operator_regex, 1]&.to_sym || default.to_sym
     end
 
     def associations_array
