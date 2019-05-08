@@ -19,16 +19,12 @@ class ActiveSet
 
     def attribute
       attribute = @keypath.last
-      return attribute.sub(operator_regex, '') if attribute&.match operator_regex
-
+      attribute = attribute&.sub(operator_regex, '')
       attribute
     end
 
     def operator(default: '==')
-      attribute = @keypath.last
-      return attribute[operator_regex, 1] if attribute&.match operator_regex
-
-      default
+      @keypath.last[operator_regex, 1]&.to_sym || default
     end
 
     def associations_array
@@ -68,7 +64,7 @@ class ActiveSet
     private
 
     def operator_regex
-      /\((.*?)\)/
+      %r{\((.*?)\)}
     end
   end
 end
