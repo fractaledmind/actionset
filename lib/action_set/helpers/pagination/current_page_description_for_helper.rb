@@ -10,9 +10,9 @@ module Pagination
 
     def pagination_current_page_description_for(set)
       description = [
-        "Page"
-        "<strong>#{pagination_current_page_for(set)}</strong>"
-        "of"
+        "Page",
+        "<strong>#{pagination_current_page_for(set)}</strong>",
+        "of",
         "<strong>#{pagination_total_pages_for(set)}</strong>"
       ].join('&nbsp;').html_safe
 
