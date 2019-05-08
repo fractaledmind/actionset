@@ -18,31 +18,41 @@ class ActiveSet
     end
 
     def attribute
-      attribute = @keypath.last
-      attribute = attribute&.sub(operator_regex, '')
-      attribute
+      return @attribute if defined? @attribute
+
+      attribute_instruction = @keypath.last
+      @attribute = attribute_instruction&.sub(operator_regex, '')
     end
 
     def operator(default: '==')
-      @keypath.last[operator_regex, 1]&.to_sym || default
+      return @operator if defined? @operator
+
+      attribute_instruction = @keypath.last
+      @operator = attribute_instruction[operator_regex, 1]&.to_sym || default.to_sym
     end
 
     def associations_array
+      return @associations_array if defined? @associations_array
       return [] unless @keypath.any?
 
-      @keypath.slice(0, @keypath.length - 1)
+      @associations_array = @keypath.slice(0, @keypath.length - 1)
     end
 
     def associations_hash
+      return @associations_hash if defined? @associations_hash
       return {} unless @keypath.any?
 
-      associations_array.reverse.reduce({}) do |hash, association|
+      @associations_hash = associations_array.reverse.reduce({}) do |hash, association|
         { association => hash }
       end
     end
 
     def value_for(item:)
-      resource_for(item: item).public_send(attribute)
+      @values_for ||= Hash.new do |h, key|
+        h[key] = resource_for(item: key).public_send(attribute)
+      end
+
+      @values_for[item]
     rescue StandardError
       # :nocov:
       nil
@@ -50,11 +60,15 @@ class ActiveSet
     end
 
     def resource_for(item:)
-      associations_array.reduce(item) do |resource, association|
-        return nil unless resource.respond_to? association
+      @resources_for ||= Hash.new do |h, key|
+        h[key] = associations_array.reduce(key) do |resource, association|
+          break nil unless resource.respond_to? association
 
-        resource.public_send(association)
+          resource.public_send(association)
+        end
       end
+
+      @resources_for[item]
     rescue StandardError
       # :nocov:
       nil
