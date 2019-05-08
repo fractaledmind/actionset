@@ -24,11 +24,11 @@ class ActiveSet
       @attribute = attribute_instruction&.sub(operator_regex, '')
     end
 
-    def operator
+    def operator(default: '==')
       return @operator if defined? @operator
 
       attribute_instruction = @keypath.last
-      @operator = attribute_instruction[operator_regex, 1]&.to_sym
+      @operator = attribute_instruction[operator_regex, 1]&.to_sym || default.to_sm
     end
 
     def associations_array

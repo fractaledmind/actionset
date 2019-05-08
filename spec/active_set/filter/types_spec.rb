@@ -16,15 +16,15 @@ RSpec.describe ActiveSet do
       context "{ #{path}: }" do
         let(:instructions) do
           {
-            path => filter_value_for(object: matching_item, path: path)
+            path => filter_value_for(object: nil, path: path)
           }
         end
 
-        it { expect(result.map(&:id)).to eq [] }
+        it { expect(result.map(&:id)).to eq Thing.pluck(:id) }
       end
     end
 
-    ApplicationRecord::FIELD_TYPES.each do |type|
+    ApplicationRecord::FILTERABLE_TYPES.each do |type|
       [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
@@ -42,7 +42,7 @@ RSpec.describe ActiveSet do
       end
     end
 
-    ApplicationRecord::FIELD_TYPES.combination(2).each do |type_1, type_2|
+    ApplicationRecord::FILTERABLE_TYPES.combination(2).each do |type_1, type_2|
       [1, 2].each do |id|
         context "matching @thing_#{id}" do
           let(:matching_item) { instance_variable_get("@thing_#{id}") }
