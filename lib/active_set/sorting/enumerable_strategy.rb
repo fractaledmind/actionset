@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../helpers/transform_to_sortable_numeric'
+require_relative '../enumerable_set_instruction'
 
 class ActiveSet
   module Sorting
@@ -8,14 +9,17 @@ class ActiveSet
       def initialize(set, attribute_instructions)
         @set = set
         @attribute_instructions = attribute_instructions
+        @set_instructions = attribute_instructions.map do |attribute_instruction|
+          EnumerableSetInstruction.new(attribute_instruction, set)
+        end
       end
 
       def execute
         # http://brandon.dimcheff.com/2009/11/18/rubys-sort-vs-sort-by/
         @set.sort_by do |item|
-          @attribute_instructions.map do |instruction|
-            value_for_comparison = sortable_numeric_for(instruction, item)
-            direction_multiplier = direction_multiplier(instruction.value)
+          @set_instructions.map do |set_instruction|
+            value_for_comparison = sortable_numeric_for(set_instruction, item)
+            direction_multiplier = direction_multiplier(set_instruction.value)
 
             # Force null values to be sorted as if larger than any non-null value
             # ASC => [-2, -1, 1, 2, nil]
@@ -29,21 +33,10 @@ class ActiveSet
         end
       end
 
-      def sortable_numeric_for(instruction, item)
-        value = instruction.value_for(item: item)
-        if value.is_a?(String) || value.is_a?(Symbol)
-          value = if case_insensitive?(instruction, value)
-                    value.to_s.downcase
-                  else
-                    value.to_s
-                  end
-        end
+      def sortable_numeric_for(set_instruction, item)
+        value = set_instruction.attribute_value_for(item)
 
         transform_to_sortable_numeric(value)
-      end
-
-      def case_insensitive?(instruction, _value)
-        instruction.operator.to_s.casecmp('i').zero?
       end
 
       def direction_multiplier(direction)
