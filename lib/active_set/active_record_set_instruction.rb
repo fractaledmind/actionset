@@ -32,7 +32,10 @@ class ActiveSet
     end
 
     def arel_column
-      arel_table[@attribute_instruction.attribute]
+      _arel_column = arel_table[@attribute_instruction.attribute]
+      return _arel_column.lower if case_insensitive_operation?
+
+      _arel_column
     end
 
     def arel_operator
@@ -40,7 +43,14 @@ class ActiveSet
     end
 
     def arel_value
-      @attribute_instruction.value
+      _arel_value = @attribute_instruction.value
+      return _arel_value.downcase if case_insensitive_operation?
+
+      _arel_value
+    end
+
+    def case_insensitive_operation?
+      @attribute_instruction.case_insensitive? && arel_type.presence_in(%i[string text])
     end
 
     def attribute_model
