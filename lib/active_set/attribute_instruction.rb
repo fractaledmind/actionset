@@ -17,18 +17,32 @@ class ActiveSet
       @processed
     end
 
+    def case_insensitive?
+      return false unless options
+
+      options.include? :i
+    end
+
     def attribute
       return @attribute if defined? @attribute
 
-      attribute_instruction = @keypath.last
-      @attribute = attribute_instruction&.sub(operator_regex, '')
+      attribute = @keypath.last
+      attribute = attribute&.sub(operator_regex, '')
+      attribute = attribute&.sub(options_regex, '')
+      @attribute = attribute
     end
 
     def operator(default: '==')
       return @operator if defined? @operator
 
       attribute_instruction = @keypath.last
-      @operator = attribute_instruction[operator_regex, 1]&.to_sym || default.to_sym
+      @operator = (attribute_instruction[operator_regex, 1] || default).to_sym
+    end
+
+    def options
+      return @options if defined? @options
+
+      @options = @keypath.last[options_regex, 1]&.split('')&.map(&:to_sym)
     end
 
     def associations_array
@@ -78,7 +92,11 @@ class ActiveSet
     private
 
     def operator_regex
-      /\((.*?)\)/
+      %r{\((.*?)\)}
+    end
+
+    def options_regex
+      %r{\/(.*?)\/}
     end
   end
 end
