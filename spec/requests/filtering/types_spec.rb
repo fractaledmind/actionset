@@ -19,10 +19,11 @@ RSpec.describe 'GET /things?filter', type: :request do
     end
 
     ApplicationRecord::FIELD_TYPES.each do |type|
-      [[1, 2].sample].each do |id|
+      [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
-        Array(all_possible_paths_for(type).sample).each do |path|
+        paths = all_possible_paths_for(type)
+        paths.shuffle.take(paths.size / 2).each do |path|
           context "{ #{path}: }" do
             let(:instructions) do
               {
@@ -37,11 +38,12 @@ RSpec.describe 'GET /things?filter', type: :request do
     end
 
     ApplicationRecord::FIELD_TYPES.combination(2).each do |type_1, type_2|
-      [[1, 2].sample].each do |id|
+      [1, 2].each do |id|
         context "matching @thing_#{id}" do
           let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
-          [all_possible_path_combinations_for(type_1, type_2).sample].each do |path_1, path_2|
+          paths = all_possible_path_combinations_for(type_1, type_2)
+          paths.shuffle.take(paths.size / 2).each do |path_1, path_2|
             context "{ #{path_1}:, #{path_2} }" do
               let(:instructions) do
                 {

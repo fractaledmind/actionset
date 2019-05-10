@@ -20,7 +20,7 @@ RSpec.describe 'GET /things?filter', type: :request do
     end
 
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
-      [[1, 2].sample].each do |id|
+      [1, 2].each do |id|
         # single value inclusive operators
         [%i[
           eq
