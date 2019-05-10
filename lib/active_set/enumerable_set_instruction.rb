@@ -9,12 +9,22 @@ class ActiveSet
     end
 
     def attribute_value_for(item)
-      @attribute_instruction
-        .value_for(item: item)
+      item_value = @attribute_instruction
+                    .value_for(item: item)
+      item_value = item_value.downcase if case_insensitive_operation_for?(item_value)
+      item_value
     end
 
     def attribute_value
-      @attribute_instruction.value
+      _attribute_value = @attribute_instruction.value
+      _attribute_value = _attribute_value.downcase if case_insensitive_operation_for?(_attribute_value)
+      _attribute_value
+    end
+
+    def case_insensitive_operation_for?(value)
+      return false unless @attribute_instruction.case_insensitive?
+
+      value.is_a?(String) || value.is_a?(Symbol)
     end
 
     def attribute_instance
