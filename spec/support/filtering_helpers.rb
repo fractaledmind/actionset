@@ -18,6 +18,9 @@ module FilteringHelpers
     path = path.remove('_item_method')
     path = path.remove('_nil_method')
 
-    value_for(object: object, path: path)
+    value = value_for(object: object, path: path)
+    return value&.upcase if path.end_with? '/i/'
+
+    value
   end
 end

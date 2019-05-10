@@ -21,8 +21,8 @@ class ApplicationRecord < ActiveRecord::Base
     symbol
   ] + DB_FIELD_TYPES).freeze
 
-  SORTABLE_TYPES = ApplicationRecord::FIELD_TYPES
-  FILTERABLE_TYPES = ApplicationRecord::FIELD_TYPES
+  SORTABLE_TYPES = ApplicationRecord::FIELD_TYPES + ['string/i/', 'text/i/', 'symbol/i/']
+  FILTERABLE_TYPES = ApplicationRecord::FIELD_TYPES + ['string/i/', 'text/i/', 'symbol/i/']
 
   DB_FIELD_TYPES.each do |field|
     scope "#{field}_scope_method", ->(v) { where(field => v) }

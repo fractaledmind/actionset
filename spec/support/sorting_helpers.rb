@@ -20,6 +20,7 @@ module SortingHelpers
   def sort_value_for(object:, path:)
     value = value_for(object: object, path: path)
     return value.to_s if [true, false].include? value
+    return value&.upcase if path.end_with? '/i/'
 
     value
   end
