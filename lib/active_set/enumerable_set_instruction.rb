@@ -10,7 +10,7 @@ class ActiveSet
 
     def attribute_value_for(item)
       item_value = @attribute_instruction
-                    .value_for(item: item)
+                   .value_for(item: item)
       item_value = item_value.downcase if case_insensitive_operation_for?(item_value)
       item_value
     end
