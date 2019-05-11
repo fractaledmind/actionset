@@ -1,3 +1,20 @@
+v 0.8.1
+  - add a case-insensitive filtering/sorting option (`/i/`)
+  - standardize how filtering by class scopes behaves
+    + only collection-returning class methods are handled
+    + scopes defined on computed associations aren't handled
+  - refactor parts of the strategy implemention layer
+    + create generalize "set instruction" classes for ActiveRecord and Enumerable strategies
+    + handle default operators in the strategy layer, not the instruction layer
+  - refactor parts of the instruction implementation layer
+    + memoize instruction getters to avoid recomputing on access
+  - refactor specs
+    + update filtering by data types when using an invalid field test
+    + remove case-insensitive sorting example
+    + simplify the sorted collection expectation
+    + add some helper methods for generating unique factory data
+    + print a detailed report of the state data on spec failure
+    + update the filtering request specs to run more of then, but still running random subsets
 v 0.8.0
   - merge ActiveSet and ActionSet into a monorepo
   - merge and overhaul the specs
