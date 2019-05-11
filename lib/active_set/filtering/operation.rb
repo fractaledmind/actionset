@@ -12,7 +12,6 @@ class ActiveSet
         @instructions_hash = instructions_hash
       end
 
-      # rubocop:disable Metrics/MethodLength
       def execute
         attribute_instructions = flatten_keys_of(@instructions_hash)
                                  .map { |k, v| AttributeInstruction.new(k, v) }
@@ -35,7 +34,6 @@ class ActiveSet
           maybe_set_or_false
         end
       end
-      # rubocop:enable Metrics/MethodLength
 
       def operation_instructions
         @instructions_hash.symbolize_keys
