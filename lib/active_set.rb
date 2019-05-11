@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/hash/reverse_merge'
-require 'patches/core_ext/hash/flatten_keys'
-require 'helpers/throws'
+require 'helpers/flatten_keys_of'
 require 'active_set/attribute_instruction'
 require 'active_set/filtering/operation'
 require 'active_set/sorting/operation'

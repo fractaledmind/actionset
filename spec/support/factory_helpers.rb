@@ -19,7 +19,7 @@ module FactoryHelpers
       h[:float] = obj.float + 1
       h[:integer] = obj.integer + 1
       h[:string] = guaranteed_unique_string_for(obj.string)
-      h[:text] = obj.text.split.map {|w| guaranteed_unique_string_for(w) }.join(' ')
+      h[:text] = obj.text.split.map { |w| guaranteed_unique_string_for(w) }.join(' ')
       h[:time] = obj.time.advance(hours: 1)
     end
   end

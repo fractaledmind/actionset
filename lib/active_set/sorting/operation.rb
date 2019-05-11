@@ -13,8 +13,7 @@ class ActiveSet
       end
 
       def execute
-        attribute_instructions = @instructions_hash
-                                 .flatten_keys
+        attribute_instructions = flatten_keys_of(@instructions_hash)
                                  .map { |k, v| AttributeInstruction.new(k, v) }
 
         activerecord_strategy = ActiveRecordStrategy.new(@set, attribute_instructions)

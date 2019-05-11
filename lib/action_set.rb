@@ -53,7 +53,7 @@ module ActionSet
     private
 
     def filter_instructions_for(set)
-      filter_params.flatten_keys.reject { |_, v| v.try(:empty?) }.each_with_object({}) do |(keypath, value), memo|
+      flatten_keys_of(filter_params).reject { |_, v| v.try(:empty?) }.each_with_object({}) do |(keypath, value), memo|
         typecast_value = if value.respond_to?(:each)
                            value.map { |v| filter_typecasted_value_for(keypath, v, set) }
                          else
