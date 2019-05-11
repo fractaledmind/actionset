@@ -13,8 +13,7 @@ RSpec.describe ActiveSet do
     let(:results) { @active_set.filter(instructions) }
     let(:result_ids) { results.map(&:id) }
 
-    # ApplicationRecord::DB_FIELD_TYPES.each do |type|
-    ['time', 'date', 'datetime'].each do |type|
+    ApplicationRecord::DB_FIELD_TYPES.each do |type|
       [1, 2].each do |id|
         # single value inclusive operators
         %i[
