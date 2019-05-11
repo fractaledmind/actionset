@@ -31,23 +31,27 @@ class ActiveSet
       end
     end
 
+    # rubocop:disable Lint/UnderscorePrefixedVariableName
     def arel_column
       _arel_column = arel_table[@attribute_instruction.attribute]
       return _arel_column.lower if case_insensitive_operation?
 
       _arel_column
     end
+    # rubocop:enable Lint/UnderscorePrefixedVariableName
 
     def arel_operator
       @attribute_instruction.operator(default: :eq)
     end
 
+    # rubocop:disable Lint/UnderscorePrefixedVariableName
     def arel_value
       _arel_value = @attribute_instruction.value
       return _arel_value.downcase if case_insensitive_operation?
 
       _arel_value
     end
+    # rubocop:enable Lint/UnderscorePrefixedVariableName
 
     def case_insensitive_operation?
       @attribute_instruction.case_insensitive? && arel_type.presence_in(%i[string text])

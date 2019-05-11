@@ -13,7 +13,7 @@
 # transform_to_sortable_numeric(Date.new(2000, 12, 25))
 # => 977720400000
 
-# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 def transform_to_sortable_numeric(value)
   # https://www.justinweiss.com/articles/4-simple-memoization-patterns-in-ruby-and-one-gem/#and-what-about-parameters
   @sortable_numeric ||= Hash.new do |h, key|
@@ -35,8 +35,7 @@ def transform_to_sortable_numeric(value)
   end
   @sortable_numeric[value]
 end
-# rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
-# rubocop:enable Style/AsciiComments
+# rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 def string_to_sortable_numeric(string)
   string                                          # 'aB09ü'
@@ -46,6 +45,7 @@ def string_to_sortable_numeric(string)
     .reduce(&:concat)                             # "097.066048057252"
     .to_r                                         # (24266512014313/250000000000)
 end
+# rubocop:enable Style/AsciiComments
 
 def time_to_sortable_numeric(time)
   # https://stackoverflow.com/a/30604935/2884386

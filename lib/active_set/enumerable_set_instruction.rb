@@ -15,11 +15,13 @@ class ActiveSet
       item_value
     end
 
+    # rubocop:disable Lint/UnderscorePrefixedVariableName
     def attribute_value
       _attribute_value = @attribute_instruction.value
       _attribute_value = _attribute_value.downcase if case_insensitive_operation_for?(_attribute_value)
       _attribute_value
     end
+    # rubocop:enable Lint/UnderscorePrefixedVariableName
 
     def case_insensitive_operation_for?(value)
       return false unless @attribute_instruction.case_insensitive?
