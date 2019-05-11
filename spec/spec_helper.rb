@@ -22,6 +22,7 @@ RSpec.configure do |config|
   include PathHelpers
   include FilteringHelpers
   include SortingHelpers
+  include FactoryHelpers
 
   config.mock_with :rspec
   config.order = 'random'

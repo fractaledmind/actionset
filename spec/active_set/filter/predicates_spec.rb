@@ -13,7 +13,8 @@ RSpec.describe ActiveSet do
     let(:results) { @active_set.filter(instructions) }
     let(:result_ids) { results.map(&:id) }
 
-    ApplicationRecord::DB_FIELD_TYPES.each do |type|
+    # ApplicationRecord::DB_FIELD_TYPES.each do |type|
+    ['time', 'date', 'datetime'].each do |type|
       [1, 2].each do |id|
         # single value inclusive operators
         %i[
@@ -88,10 +89,8 @@ RSpec.describe ActiveSet do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
-                FactoryBot.build(:thing,
-                                 boolean: !matching_item.boolean,
-                                 only: FactoryBot.build(:only,
-                                                        boolean: !matching_item.only.boolean))
+                guaranteed_unique_object_for(matching_item,
+                                             only: guaranteed_unique_object_for(matching_item.only))
               end
               let(:instruction_multi_value) do
                 [
@@ -129,10 +128,8 @@ RSpec.describe ActiveSet do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
-                FactoryBot.build(:thing,
-                                 boolean: !matching_item.boolean,
-                                 only: FactoryBot.build(:only,
-                                                        boolean: !matching_item.only.boolean))
+                guaranteed_unique_object_for(matching_item,
+                                             only: guaranteed_unique_object_for(matching_item.only))
               end
               let(:instruction_multi_value) do
                 [

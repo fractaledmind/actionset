@@ -94,10 +94,8 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
-                FactoryBot.build(:thing,
-                                 boolean: !matching_item.boolean,
-                                 only: FactoryBot.build(:only,
-                                                        boolean: !matching_item.only.boolean))
+                guaranteed_unique_object_for(matching_item,
+                                             only: guaranteed_unique_object_for(matching_item.only))
               end
               let(:instruction_multi_value) do
                 [
@@ -135,10 +133,8 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
-                FactoryBot.build(:thing,
-                                 boolean: !matching_item.boolean,
-                                 only: FactoryBot.build(:only,
-                                                        boolean: !matching_item.only.boolean))
+                guaranteed_unique_object_for(matching_item,
+                                             only: guaranteed_unique_object_for(matching_item.only))
               end
               let(:instruction_multi_value) do
                 [
