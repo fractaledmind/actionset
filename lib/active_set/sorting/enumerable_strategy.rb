@@ -21,11 +21,20 @@ class ActiveSet
             value_for_comparison = sortable_numeric_for(set_instruction, item)
             direction_multiplier = direction_multiplier(set_instruction.value)
 
-            # Force null values to be sorted as if larger than any non-null value
+            # When ActiveSet.configuration.on_asc_sort_nils_come == :last
+            # null values to be sorted as if larger than any non-null value.
             # ASC => [-2, -1, 1, 2, nil]
             # DESC => [nil, 2, 1, -1, -2]
+            # Otherwise sort nulls as if smaller than any non-null value.
+            # ASC => [nil, -2, -1, 1, 2]
+            # DESC => [2, 1, -1, -2, nil]
             if value_for_comparison.nil?
-              [direction_multiplier, 0]
+              nil_sorter = if ActiveSet.configuration.on_asc_sort_nils_come == :last
+                             1
+                           else
+                             -1
+                           end
+              [direction_multiplier * nil_sorter, 0]
             else
               [0, value_for_comparison * direction_multiplier]
             end

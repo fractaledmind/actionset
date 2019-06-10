@@ -108,6 +108,32 @@ For pagination, like filtering, we don't enforce any view-layer specifics. You s
 </nav>
 ```
 
+## Configuration
+
+### ActiveSet.configuration.on_asc_sort_nils_come
+
+Example usage in an initializer:
+
+```
+  ActiveSet.configure do |c|
+    c.on_asc_sort_nils_come = first
+  end
+```
+
+When `ActiveSet.configuration.on_asc_sort_nils_come == :last` (this is the default), null values will be sorted as if larger than any non-null value.
+
+```
+ASC => [-2, -1, 1, 2, nil]
+DESC => [nil, 2, 1, -1, -2]
+```
+
+Otherwise sort nulls as if smaller than any non-null value.
+
+```
+ASC => [nil, -2, -1, 1, 2]
+DESC => [2, 1, -1, -2, nil]
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

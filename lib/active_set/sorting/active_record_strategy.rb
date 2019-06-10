@@ -41,15 +41,24 @@ class ActiveSet
       private
 
       # https://stackoverflow.com/a/44912964/2884386
-      # Force null values to be sorted as if larger than any non-null value
+      # When ActiveSet.configuration.on_asc_sort_nils_come == :last
+      # null values to be sorted as if larger than any non-null value.
       # ASC => [-2, -1, 1, 2, nil]
       # DESC => [nil, 2, 1, -1, -2]
+      # Otherwise sort nulls as if smaller than any non-null value.
+      # ASC => [nil, -2, -1, 1, 2]
+      # DESC => [2, 1, -1, -2, nil]
       def order_operation_for(set_instruction)
         attribute_model = set_instruction.attribute_model
 
         arel_column = set_instruction.arel_column
         arel_direction = direction_operator(set_instruction.value)
-        nil_sorter = arel_column.send(arel_direction == :asc ? :eq : :not_eq, nil)
+
+        nil_sorter = if ActiveSet.configuration.on_asc_sort_nils_come == :last
+                       arel_column.send(arel_direction == :asc ? :eq : :not_eq, nil)
+                     else
+                       arel_column.send(arel_direction == :asc ? :not_eq : :eq, nil)
+                     end
 
         attribute_model.order(nil_sorter).order(arel_column.send(arel_direction))
       end
