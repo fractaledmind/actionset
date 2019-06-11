@@ -29,11 +29,6 @@ class ActiveSet
             # ASC => [nil, -2, -1, 1, 2]
             # DESC => [2, 1, -1, -2, nil]
             if value_for_comparison.nil?
-              nil_sorter = if ActiveSet.configuration.on_asc_sort_nils_come == :last
-                             1
-                           else
-                             -1
-                           end
               [direction_multiplier * nil_sorter, 0]
             else
               [0, value_for_comparison * direction_multiplier]
@@ -52,6 +47,12 @@ class ActiveSet
         return -1 if direction.to_s.downcase.start_with? 'desc'
 
         1
+      end
+
+      def nil_sorter
+        return 1 if ActiveSet.configuration.on_asc_sort_nils_come == :last
+
+        -1
       end
     end
   end
