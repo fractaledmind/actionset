@@ -116,7 +116,7 @@ Example usage in an initializer:
 
 ```
   ActiveSet.configure do |c|
-    c.on_asc_sort_nils_come = first
+    c.on_asc_sort_nils_come = :first
   end
 ```
 
