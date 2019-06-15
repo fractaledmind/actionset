@@ -1,3 +1,5 @@
+v 0.8.2
+  - add `ActiveSet.configuration.on_asc_sort_nils_come` configuration
 v 0.8.1
   - add a case-insensitive filtering/sorting option (`/i/`)
   - standardize how filtering by class scopes behaves
