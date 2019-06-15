@@ -11,6 +11,30 @@ require 'active_set/exporting/operation'
 class ActiveSet
   include Enumerable
 
+  class Configuration
+    attr_accessor :on_asc_sort_nils_come
+
+    def initialize
+      @on_asc_sort_nils_come = :last
+    end
+  end
+
+  class << self
+    attr_writer :configuration
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
+  end
+
+  def self.reset_configuration
+    @configuration = Configuration.new
+  end
+
   attr_reader :set, :view, :instructions
 
   def initialize(set, view: nil, instructions: {})

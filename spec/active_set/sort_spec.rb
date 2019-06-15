@@ -40,6 +40,16 @@ RSpec.describe ActiveSet do
     @active_set = ActiveSet.new(Thing.all)
   end
 
+  before(:each) do
+    ActiveSet.configure do |c|
+      c.on_asc_sort_nils_come = %i[first last].sample
+    end
+  end
+
+  after(:each) do
+    ActiveSet.reset_configuration
+  end
+
   describe '#sort' do
     ApplicationRecord::SORTABLE_TYPES.each do |type|
       all_possible_sort_instructions_for(type).each do |instruction|
