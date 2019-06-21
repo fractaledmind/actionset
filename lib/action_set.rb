@@ -18,34 +18,34 @@ module ActionSet
   end
 
   module InstanceMethods
-    def process_set(set)
-      paginate_set(sort_set(filter_set(ensure_active_set(set))))
+    def process_set(set, configuration:{})
+      paginate_set(sort_set(filter_set(ensure_active_set(set, configuration))))
     end
 
-    def filter_set(set)
-      active_set = ensure_active_set(set)
+    def filter_set(set, configuration:{})
+      active_set = ensure_active_set(set, configuration)
       active_set = active_set.filter(filter_instructions_for(set)) if filter_params.any?
       active_set
     end
 
-    def sort_set(set)
-      active_set = ensure_active_set(set)
+    def sort_set(set, configuration:{})
+      active_set = ensure_active_set(set, configuration)
       active_set = active_set.sort(sort_params) if sort_params.any?
       active_set
     end
 
     # TODO: should we move the default value setting to this layer,
     # and have ActiveSet require instructions for pagination?
-    def paginate_set(set)
-      active_set = ensure_active_set(set)
+    def paginate_set(set, configuration:{})
+      active_set = ensure_active_set(set, configuration)
       active_set = active_set.paginate(paginate_instructions)
       active_set
     end
 
-    def export_set(set)
+    def export_set(set, configuration:{})
       return send_file(set, export_set_options(request.format)) if set.is_a?(String) && File.file?(set)
 
-      active_set = ensure_active_set(set)
+      active_set = ensure_active_set(set, configuration)
       exported_data = active_set.export(export_instructions)
       send_data(exported_data, export_set_options(request.format))
     end
@@ -65,11 +65,29 @@ module ActionSet
     end
 
     def filter_typecasted_value_for(keypath, value, set)
-      instruction = ActiveSet::AttributeInstruction.new(keypath, value)
-      item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
-      item_value = instruction.value_for(item: item_with_value)
+      klass = klass_for_keypath(keypath, set)
+      Rails.logger.info "klass is #{klass}"
       ActionSet::AttributeValue.new(value)
-                               .cast(to: item_value.class)
+                               .cast(to: klass)
+    end
+
+    def klass_for_keypath(keypath, set)
+      if klass = set.configuration.dig('types', keypath.join('.'))
+        return klass
+      end
+
+      if set.is_a?(ActiveRecord::Relation) || set.view.is_a?(ActiveRecord::Relation)
+        klass = set.model.columns_hash.fetch(keypath, nil)&.type.class
+      end
+
+      unless klass
+        instruction = ActiveSet::AttributeInstruction.new(keypath, value)
+        item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
+        item_value = instruction.value_for(item: item_with_value)
+        klass = item_value.class
+      end
+
+      klass
     end
 
     def paginate_instructions
@@ -122,10 +140,10 @@ module ActionSet
       end
     end
 
-    def ensure_active_set(set)
+    def ensure_active_set(set, configuration)
       return set if set.is_a?(ActiveSet)
 
-      ActiveSet.new(set)
+      ActiveSet.new(set, configuration: configuration)
     end
   end
 

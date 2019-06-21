@@ -35,12 +35,13 @@ class ActiveSet
     @configuration = Configuration.new
   end
 
-  attr_reader :set, :view, :instructions
+  attr_reader :configuration, :set, :view, :instructions
 
-  def initialize(set, view: nil, instructions: {})
+  def initialize(set, view: nil, instructions: {}, configuration: {})
     @set = set
     @view = view || set
     @instructions = instructions
+    @configuration = configuration
   end
 
   def each(&block)
