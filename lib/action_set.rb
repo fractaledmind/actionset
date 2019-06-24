@@ -66,7 +66,6 @@ module ActionSet
 
     def filter_typecasted_value_for(keypath, value, set)
       klass = klass_for_keypath(keypath, set)
-      Rails.logger.info "klass is #{klass}"
       ActionSet::AttributeValue.new(value)
                                .cast(to: klass)
     end
