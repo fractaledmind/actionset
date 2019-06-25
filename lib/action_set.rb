@@ -71,7 +71,7 @@ module ActionSet
     end
 
     def klass_for_keypath(keypath, set)
-      if klass = set.configuration.dig('types', keypath.join('.'))
+      if klass = set&.configuration&.dig('types', keypath.join('.'))
         return klass
       end
 
