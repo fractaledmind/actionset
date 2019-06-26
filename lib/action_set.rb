@@ -71,8 +71,9 @@ module ActionSet
     end
 
     def klass_for_keypath(keypath, set)
-      if klass = set&.configuration&.dig('types', keypath.join('.'))
-        return klass
+      if set.respond_to?(:configuration)
+        klass = set.configuration&.dig('types', keypath.join('.'))
+        return klass unless klass.nil?
       end
 
       if set.is_a?(ActiveRecord::Relation) || set.view.is_a?(ActiveRecord::Relation)
