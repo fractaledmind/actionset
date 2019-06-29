@@ -1,11 +1,22 @@
 # frozen_string_literal: true
 
 require_relative './set_instruction'
+require 'active_support/core_ext/module/delegation'
 
 class ActiveSet
   module Filtering
     module Enumerable
       class Strategy
+        delegate :attribute_instance,
+                 :attribute_class,
+                 :instruction_value,
+                 :attribute_value_for,
+                 :operator,
+                 :attribute,
+                 :set_item,
+                 :resource_for,
+          to: :@set_instruction
+
         def initialize(set, attribute_instruction)
           @set = set
           @attribute_instruction = attribute_instruction
@@ -33,17 +44,17 @@ class ActiveSet
         private
 
         def execute_filter_operation?
-          return false if not @set_instruction.attribute_instance
-          return false if not @set_instruction.attribute_instance.respond_to?(@set_instruction.attribute)
-          return false if @set_instruction.attribute_instance.method(@set_instruction.attribute).arity.positive?
+          return false unless attribute_instance
+          return false unless attribute_instance.respond_to?(attribute)
+          return false if attribute_instance.method(attribute).arity.positive?
 
           true
         end
 
         def execute_intersect_operation?
-          return false if not @set_instruction.attribute_class
-          return false if not @set_instruction.attribute_class.respond_to?(@set_instruction.attribute)
-          return false if @set_instruction.attribute_class.method(@set_instruction.attribute).arity.zero?
+          return false unless attribute_class
+          return false unless attribute_class.respond_to?(attribute)
+          return false if attribute_class.method(attribute).arity.zero?
 
           true
         end
@@ -55,7 +66,25 @@ class ActiveSet
         end
 
         def intersect_operation
-          @set & @set_instruction.other_set
+          @set & other_set
+        end
+
+        private
+
+        def other_set
+          other_set = attribute_class.public_send(
+                        attribute,
+                        instruction_value
+                      )
+          if attribute_class != set_item.class
+            other_set = begin
+                        @set.select { |item| resource_for(item: item)&.presence_in other_set }
+                      rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
+                        nil
+                      end
+          end
+
+          other_set
         end
       end
     end

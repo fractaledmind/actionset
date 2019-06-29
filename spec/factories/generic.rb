@@ -15,9 +15,9 @@ FactoryBot.define do
     sequence(:boolean, &:even?)
     sequence(:date) do |n|
       [
-        "19#{rand(99).to_s.rjust(2, '0')}",
+        "19#{fit_to_minmax(n, max: 99).to_s.rjust(2, '0')}",
         fit_to_minmax(n, max: 12).to_s.rjust(2, '0'),
-        fit_to_minmax(n, max: 31).to_s.rjust(2, '0')
+        fit_to_minmax(n, max: 28).to_s.rjust(2, '0')
       ].join('-')
     end
     sequence(:datetime) do |n|

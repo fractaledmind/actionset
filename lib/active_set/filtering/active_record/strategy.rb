@@ -14,7 +14,7 @@ class ActiveSet
                  :arel_type,
                  :initial_relation,
                  :attribute,
-                 to: :@set_instruction
+          to: :@set_instruction
 
         def initialize(set, attribute_instruction)
           @set = set
