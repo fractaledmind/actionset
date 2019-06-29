@@ -5,7 +5,7 @@ require 'simplecov'
 require 'simplecov-console'
 require 'codecov'
 
-unless ENV['COVERAGE'] == 'false'
+if ENV['COVERAGE'] == 'true'
   ROOT = File.expand_path('..', __dir__)
 
   # SimpleCov.minimum_coverage 99
