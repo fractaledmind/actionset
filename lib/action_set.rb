@@ -76,6 +76,7 @@ module ActionSet
       paginate_params.transform_values(&:to_i)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def export_instructions
       {}.tap do |struct|
         struct[:format] = export_params[:format] || request.format.symbol
@@ -97,6 +98,7 @@ module ActionSet
                            end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def filter_params
       params.fetch(:filter, {}).to_unsafe_hash
