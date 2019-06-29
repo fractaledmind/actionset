@@ -70,14 +70,14 @@ class ActiveSet
 
       def intersect_operation
         other_set = attribute_class.public_send(
-                      attribute,
-                      attribute_value
-                    )
+          attribute,
+          attribute_value
+        )
         if attribute_class != set_item.class
           other_set = begin
                       @set.select { |item| resource_for(item: item)&.presence_in other_set }
-                    rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
-                      nil
+                      rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
+                        nil
                     end
         end
 
