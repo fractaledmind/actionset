@@ -29,8 +29,11 @@ class ActiveSet
       value.is_a?(String) || value.is_a?(Symbol)
     end
 
+    def set_item
+      @set.find(&:present?)
+    end
+
     def attribute_instance
-      set_item = @set.find(&:present?)
       return set_item if @attribute_instruction.associations_array.empty?
       return @attribute_model if defined? @attribute_model
 

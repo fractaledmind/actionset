@@ -40,10 +40,6 @@ class ActiveSet
     end
     # rubocop:enable Lint/UnderscorePrefixedVariableName
 
-    def arel_operator
-      @attribute_instruction.operator(default: :eq)
-    end
-
     # rubocop:disable Lint/UnderscorePrefixedVariableName
     def arel_value
       _arel_value = @attribute_instruction.value
