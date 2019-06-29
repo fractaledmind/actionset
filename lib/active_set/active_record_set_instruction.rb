@@ -14,23 +14,6 @@ class ActiveSet
       @set.eager_load(@attribute_instruction.associations_hash)
     end
 
-    def arel_type
-      attribute_model
-        .columns_hash[@attribute_instruction.attribute]
-        .type
-    end
-
-    def arel_table
-      # This is to work around an bug in ActiveRecord,
-      # where BINARY fields aren't found properly when using
-      # the `arel_table` class method to build an ARel::Node
-      if arel_type == :binary
-        Arel::Table.new(attribute_model.table_name)
-      else
-        attribute_model.arel_table
-      end
-    end
-
     # rubocop:disable Lint/UnderscorePrefixedVariableName
     def arel_column
       _arel_column = arel_table[@attribute_instruction.attribute]
@@ -53,10 +36,6 @@ class ActiveSet
     end
     # rubocop:enable Lint/UnderscorePrefixedVariableName
 
-    def case_insensitive_operation?
-      @attribute_instruction.case_insensitive? && arel_type.presence_in(%i[string text])
-    end
-
     def attribute_model
       return @set.klass if @attribute_instruction.associations_array.empty?
       return @attribute_model if defined? @attribute_model
@@ -66,6 +45,29 @@ class ActiveSet
                          .reduce(@set) do |obj, assoc|
         obj.reflections[assoc.to_s]&.klass
       end
+    end
+
+    private
+
+    def arel_type
+      attribute_model
+        .columns_hash[@attribute_instruction.attribute]
+        .type
+    end
+
+    def arel_table
+      # This is to work around an bug in ActiveRecord,
+      # where BINARY fields aren't found properly when using
+      # the `arel_table` class method to build an ARel::Node
+      if arel_type == :binary
+        Arel::Table.new(attribute_model.table_name)
+      else
+        attribute_model.arel_table
+      end
+    end
+
+    def case_insensitive_operation?
+      @attribute_instruction.case_insensitive? && arel_type.presence_in(%i[string text])
     end
   end
 end

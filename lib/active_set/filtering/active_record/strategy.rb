@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../active_record_set_instruction'
+require_relative './set_instruction'
 require 'active_support/core_ext/module/delegation'
 
 class ActiveSet
@@ -14,12 +14,12 @@ class ActiveSet
                  :arel_type,
                  :initial_relation,
                  :attribute,
-                 to: :@set_instruction
+          to: :@set_instruction
 
         def initialize(set, attribute_instruction)
           @set = set
           @attribute_instruction = attribute_instruction
-          @set_instruction = ActiveRecordSetInstruction.new(attribute_instruction, set)
+          @set_instruction = SetInstruction.new(attribute_instruction, set)
         end
 
         def execute

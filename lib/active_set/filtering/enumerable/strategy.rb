@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../enumerable_set_instruction'
+require_relative './set_instruction'
 require 'active_support/core_ext/module/delegation'
 
 class ActiveSet
@@ -9,16 +9,16 @@ class ActiveSet
       class Strategy
         delegate :attribute_instance,
                  :attribute_class,
-                 :attribute_value,
+                 :instruction_value,
                  :attribute_value_for,
                  :operator,
                  :attribute,
-                 to: :@set_instruction
+          to: :@set_instruction
 
         def initialize(set, attribute_instruction)
           @set = set
           @attribute_instruction = attribute_instruction
-          @set_instruction = EnumerableSetInstruction.new(attribute_instruction, set)
+          @set_instruction = SetInstruction.new(attribute_instruction, set)
         end
 
         def execute
@@ -62,7 +62,7 @@ class ActiveSet
             attribute_value_for(item)
               .public_send(
                 operator,
-                attribute_value
+                instruction_value
               )
           end
         end
@@ -71,7 +71,7 @@ class ActiveSet
           other_set = attribute_class
                       .public_send(
                         attribute,
-                        attribute_value
+                        instruction_value
                       )
           @set & other_set
         end
