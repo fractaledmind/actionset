@@ -13,6 +13,8 @@ class ActiveSet
                  :attribute_value_for,
                  :operator,
                  :attribute,
+                 :set_item,
+                 :resource_for,
           to: :@set_instruction
 
         def initialize(set, attribute_instruction)
@@ -70,7 +72,7 @@ class ActiveSet
         def intersect_operation
           other_set = attribute_class.public_send(
             attribute,
-            attribute_value
+            instruction_value
           )
           if attribute_class != set_item.class
             other_set = begin
