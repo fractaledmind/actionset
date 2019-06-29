@@ -30,7 +30,6 @@ class ActiveSet
     end
 
     def attribute_instance
-      set_item = @set.find(&:present?)
       return set_item if @attribute_instruction.associations_array.empty?
       return @attribute_model if defined? @attribute_model
 
@@ -39,6 +38,10 @@ class ActiveSet
                          .reduce(set_item) do |obj, assoc|
         obj.public_send(assoc)
       end
+    end
+
+    def set_item
+      @set.find(&:present?)
     end
 
     def attribute_class
