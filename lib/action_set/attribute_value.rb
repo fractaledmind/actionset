@@ -11,7 +11,7 @@ module ActionSet
     def cast(to:)
       adapters.reduce(nil) do |_, adapter|
         mayble_value_or_nil = adapter.new(@raw, to).process
-        next if mayble_value_or_nil.nil?
+        next nil if mayble_value_or_nil.nil?
 
         return mayble_value_or_nil
       end

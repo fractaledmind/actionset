@@ -24,7 +24,7 @@ require 'active_support/core_ext/array/wrap'
 #   => { "key"=>"value", "nested.key"=>"nested_value", "array.0"=>0, "array.1"=>1, "array.2"=>2 }
 
 # refactored from https://stackoverflow.com/a/23861946/2884386
-def flatten_keys_of(input, keys = [], output = {}, flattener: ->(*keys) { keys }, flatten_arrays: false)
+def flatten_keys_of(input, keys = [], output = {}, flattener: ->(*k) { k }, flatten_arrays: false)
   if input.is_a?(Hash)
     input.each do |key, value|
       flatten_keys_of(
