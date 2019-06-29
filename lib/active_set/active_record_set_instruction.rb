@@ -9,32 +9,23 @@ class ActiveSet
     end
 
     def initial_relation
-      return @set if @attribute_instruction.associations_array.empty?
+      return @initial_relation if defined? @initial_relation
 
-      @set.eager_load(@attribute_instruction.associations_hash)
+      @initial_relation = if @attribute_instruction.associations_array.empty?
+                            @set
+                          else
+                            @set.eager_load(@attribute_instruction.associations_hash)
+                          end
     end
 
-    # rubocop:disable Lint/UnderscorePrefixedVariableName
     def arel_column
-      _arel_column = arel_table[@attribute_instruction.attribute]
-      return _arel_column.lower if case_insensitive_operation?
+      return @arel_column if defined? @arel_column
 
-      _arel_column
+      arel_column = arel_table[@attribute_instruction.attribute]
+      arel_column = arel_column.lower if case_insensitive_operation?
+
+      @arel_column = arel_column
     end
-    # rubocop:enable Lint/UnderscorePrefixedVariableName
-
-    def arel_operator
-      @attribute_instruction.operator(default: :eq)
-    end
-
-    # rubocop:disable Lint/UnderscorePrefixedVariableName
-    def arel_value
-      _arel_value = @attribute_instruction.value
-      return _arel_value.downcase if case_insensitive_operation?
-
-      _arel_value
-    end
-    # rubocop:enable Lint/UnderscorePrefixedVariableName
 
     def attribute_model
       return @set.klass if @attribute_instruction.associations_array.empty?
