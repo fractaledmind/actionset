@@ -94,7 +94,9 @@ module ActionSet
                            elsif respond_to?(:export_set_columns, true)
                              send(:export_set_columns)
                            else
+                            # :nocov:
                              [{}]
+                            # :nocov:
                            end
       end
     end
