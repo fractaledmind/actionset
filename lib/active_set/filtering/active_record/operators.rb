@@ -5,6 +5,7 @@ require_relative '../constants'
 class ActiveSet
   module Filtering
     module ActiveRecord
+      # rubocop:disable Metrics/ModuleLength
       module Operators
         PREDICATES = {
           EQ: {
@@ -121,6 +122,7 @@ class ActiveSet
           base_operator_hash.merge(this_operator_hash)
         end
       end
+      # rubocop:enable Metrics/ModuleLength
     end
   end
 end

@@ -2,6 +2,7 @@
 
 class ActiveSet
   module Filtering
+    # rubocop:disable Metrics/ModuleLength
     module Constants
       PREDICATES = {
         EQ: {
@@ -203,6 +204,6 @@ class ActiveSet
         }
       }.freeze
     end
+    # rubocop:enable Metrics/ModuleLength
   end
 end
-

@@ -15,7 +15,7 @@ class ActiveSet
                  :attribute,
                  :set_item,
                  :resource_for,
-          to: :@set_instruction
+                 to: :@set_instruction
 
         def initialize(set, attribute_instruction)
           @set = set
@@ -69,18 +69,16 @@ class ActiveSet
           @set & other_set
         end
 
-        private
-
         def other_set
           other_set = attribute_class.public_send(
-                        attribute,
-                        instruction_value
-                      )
+            attribute,
+            instruction_value
+          )
           if attribute_class != set_item.class
             other_set = begin
                         @set.select { |item| resource_for(item: item)&.presence_in other_set }
-                      rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
-                        nil
+                        rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
+                          nil
                       end
           end
 

@@ -38,11 +38,11 @@ class ActiveSet
         def guarantee_attribute_type(attribute)
           # Booleans don't respond to many operator methods,
           # so we cast them to however the database expects them
-          return attribute if not arel_type == :boolean
+          return attribute if arel_type != :boolean
           return attribute.map { |a| guarantee_attribute_type(a) } if attribute.respond_to?(:each)
 
           sql_value = Arel::Nodes::Casted.new(attribute, arel_column).to_sql
-          sql_value = sql_value[/'(.*?)'/, 1] if sql_value.match? /'.*?'/
+          sql_value = sql_value[/'(.*?)'/, 1] if sql_value.match?(/'.*?'/)
           sql_value
         end
       end

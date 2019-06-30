@@ -8,7 +8,7 @@ class ActiveSet
     module Enumerable
       class SetInstruction < EnumerableSetInstruction
         def item_matches_query?(item)
-          return query_result_for(item, query_attribute_for(instruction_value)) if not operator_hash.key?(:reducer)
+          return query_result_for(item, query_attribute_for(instruction_value)) unless operator_hash.key?(:reducer)
 
           instruction_value.public_send(operator_hash[:reducer]) do |value|
             query_result_for(item, query_attribute_for(value))
@@ -40,18 +40,18 @@ class ActiveSet
 
         def query_result_for(item, value)
           result = if operator_method == :cover? && value.is_a?(Range)
-            value
-              .public_send(
-                operator_method,
-                object_attribute_for(item)
-              )
-          else
-            object_attribute_for(item)
-              .public_send(
-                operator_method,
-                value
-              )
-          end
+                     value
+                       .public_send(
+                         operator_method,
+                         object_attribute_for(item)
+                       )
+                   else
+                     object_attribute_for(item)
+                       .public_send(
+                         operator_method,
+                         value
+                       )
+                   end
 
           return result unless operator_hash.key?(:result_transformer)
 
