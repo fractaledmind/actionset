@@ -3,28 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe ActiveSet do
-  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::PREDICATES
-  INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == false &&
-    o[:behavior] == :inclusive
-  end.map(&:first)
-  EXCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == false &&
-    o[:behavior] == :exclusive
-  end.map(&:first)
-  INCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == true &&
-    o[:behavior] == :inclusive
-  end.map(&:first)
-  EXCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == true &&
-    o[:behavior] == :exclusive
-  end.map(&:first)
-  INCONCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == true &&
-    o[:behavior] == :inconclusive
-  end.map(&:first)
-
   before(:all) do
     @thing_1 = FactoryBot.create(:thing)
     @thing_2 = FactoryBot.create(:thing)
@@ -49,7 +27,7 @@ RSpec.describe ActiveSet do
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:instruction_single_value) do
-                    ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item)
+                    value_for(object: matching_item, path: path)
                   end
                   let(:instructions) do
                     {
@@ -70,7 +48,7 @@ RSpec.describe ActiveSet do
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:instruction_single_value) do
-                    ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item)
+                    value_for(object: matching_item, path: path)
                   end
                   let(:instructions) do
                     {
@@ -94,8 +72,8 @@ RSpec.describe ActiveSet do
                     guaranteed_unique_object_for(matching_item,
                                                  only: guaranteed_unique_object_for(matching_item.only))
                   end
-                  let(:matching_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item) }
-                  let(:other_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing) }
+                  let(:matching_value) { value_for(object: matching_item, path: path) }
+                  let(:other_value) { value_for(object: other_thing, path: path) }
                   let(:instruction_multi_value) do
                     if operator.to_s.include? 'IN_'
                       [ [matching_value], [other_value] ]
@@ -123,8 +101,8 @@ RSpec.describe ActiveSet do
                     guaranteed_unique_object_for(matching_item,
                                                  only: guaranteed_unique_object_for(matching_item.only))
                   end
-                  let(:matching_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item) }
-                  let(:other_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing) }
+                  let(:matching_value) { value_for(object: matching_item, path: path) }
+                  let(:other_value) { value_for(object: other_thing, path: path) }
                   let(:instruction_multi_value) do
                     if operator.to_s.include? 'IN_'
                       [ [matching_value], [other_value] ]
@@ -154,12 +132,10 @@ RSpec.describe ActiveSet do
                                      only: FactoryBot.build(:only,
                                                             boolean: !matching_item.only.boolean))
                   end
-                  let(:matching_value) { value_for(object: matching_item, path: path) }
-                  let(:other_value) { value_for(object: other_thing, path: path) }
                   let(:instruction_multi_value) do
                     [
-                      matching_value,
-                      other_value
+                      value_for(object: matching_item, path: path),
+                      value_for(object: other_thing, path: path)
                     ]
                   end
                   let(:instructions) do
