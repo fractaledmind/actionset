@@ -3,78 +3,203 @@
 class ActiveSet
   module Filtering
     module Constants
-      BASE_PREDICATES = {
+      PREDICATES = {
         EQ: {
           type: :binary,
           compound: false,
           behavior: :inclusive,
-          shorthand: '=='.to_sym
+          shorthand: :'=='
         },
         NOT_EQ: {
           type: :binary,
           compound: false,
           behavior: :exclusive,
-          shorthand: '!='.to_sym
+          shorthand: :'!='
         },
+        EQ_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E=='
+        },
+        EQ_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A=='
+        },
+        NOT_EQ_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E!='
+        },
+        NOT_EQ_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A!='
+        },
+
         IN: {
           type: :binary,
           compound: true,
           behavior: :inclusive,
-          shorthand: '<<'.to_sym
+          shorthand: :'<<'
         },
         NOT_IN: {
           type: :binary,
           compound: true,
           behavior: :exclusive,
-          shorthand: '!<'.to_sym
+          shorthand: :'!<'
         },
+        IN_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E<<'
+        },
+        IN_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A<<'
+        },
+        NOT_IN_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E!<'
+        },
+        NOT_IN_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A!<'
+        },
+
         MATCHES: {
           type: :binary,
           compound: false,
           behavior: :inclusive,
-          shorthand: '=~'.to_sym
+          shorthand: :'=~'
         },
         DOES_NOT_MATCH: {
           type: :binary,
           compound: false,
           behavior: :exclusive,
-          shorthand: '!~'.to_sym
+          shorthand: :'!~'
         },
+        MATCHES_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E=~'
+        },
+        MATCHES_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A=~'
+        },
+        DOES_NOT_MATCH_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E!~'
+        },
+        DOES_NOT_MATCH_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A!~'
+        },
+
         LT: {
           type: :binary,
           compound: false,
           behavior: :exclusive,
-          shorthand: '<'.to_sym
+          shorthand: :'<'
         },
         LTEQ: {
           type: :binary,
           compound: false,
           behavior: :inclusive,
-          shorthand: '<='.to_sym
+          shorthand: :'<='
         },
+        LT_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inconclusive,
+          shorthand: :'E<'
+        },
+        LT_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A<'
+        },
+        LTEQ_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E<='
+        },
+        LTEQ_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :inconclusive,
+          shorthand: :'A<='
+        },
+
         GT: {
           type: :binary,
           compound: false,
           behavior: :exclusive,
-          shorthand: '>'.to_sym
+          shorthand: :'>'
         },
         GTEQ: {
           type: :binary,
           compound: false,
           behavior: :inclusive,
-          shorthand: '>='.to_sym
+          shorthand: :'>='
         },
-        BETWEEN: {
+        GT_ANY: {
           type: :binary,
           compound: true,
           behavior: :inconclusive,
-          shorthand: '..'.to_sym
+          shorthand: :'E>'
+        },
+        GT_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A>'
+        },
+        GTEQ_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E>='
+        },
+        GTEQ_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :inconclusive,
+          shorthand: :'A>='
+        },
+
+        BETWEEN: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'..'
         },
         NOT_BETWEEN: {
           type: :binary,
           compound: true,
-          behavior: :inconclusive,
-          shorthand: '!.'.to_sym
+          behavior: :exclusive,
+          shorthand: :'!.'
         }
       }.freeze
     end
