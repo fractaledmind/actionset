@@ -21,13 +21,7 @@ RSpec.describe 'GET /things?filter', type: :request do
 
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
       [1, 2].each do |id|
-        # single value inclusive operators
-        [%i[
-          eq
-          lteq
-          gteq
-          matches
-        ].sample].each do |operator|
+        [INCLUSIVE_UNARY_OPERATORS.sample].each do |operator|
           [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
@@ -48,13 +42,7 @@ RSpec.describe 'GET /things?filter', type: :request do
           end
         end
 
-        # single value exlusive operators
-        [%i[
-          not_eq
-          lt
-          gt
-          does_not_match
-        ].sample].each do |operator|
+        [EXCLUSIVE_UNARY_OPERATORS.sample].each do |operator|
           [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
@@ -75,18 +63,7 @@ RSpec.describe 'GET /things?filter', type: :request do
           end
         end
 
-        # multi value inclusive operators
-        [%i[
-          eq_any
-          not_eq_any
-          in
-          in_any
-          not_in_any
-          lteq_any
-          gteq_any
-          matches_any
-          does_not_match_any
-        ].sample].each do |operator|
+        [INCLUSIVE_BINARY_OPERATORS.sample].each do |operator|
           [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
@@ -114,18 +91,7 @@ RSpec.describe 'GET /things?filter', type: :request do
           end
         end
 
-        # multi value exclusive operators
-        [%i[
-          eq_all
-          not_eq_all
-          not_in
-          in_all
-          not_in_all
-          lt_all
-          gt_all
-          matches_all
-          does_not_match_all
-        ].sample].each do |operator|
+        [EXCLUSIVE_BINARY_OPERATORS.sample].each do |operator|
           [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})

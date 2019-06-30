@@ -2,43 +2,7 @@
 
 require 'spec_helper'
 
-# PREDICATE_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::PREDICATE_OPERATORS
-# INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
-#   .select do |o|
-#     o[:type] == :unary &&
-#     o[:matching_behavior] == :inclusive
-#   end
-# EXCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
-#   .select do |o|
-#     o[:type] == :unary &&
-#     o[:matching_behavior] == :exclusive
-#   end
-# INCONCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
-#   .select do |o|
-#     o[:type] == :unary &&
-#     o[:matching_behavior] == :inconclusive
-#   end
-
-
 RSpec.describe ActiveSet do
-  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::BASE_PREDICATES
-  INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == false &&
-    o[:behavior] == :inclusive
-  end.map(&:first)
-  EXCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == false &&
-    o[:behavior] == :exclusive
-  end.map(&:first)
-  INCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == true &&
-    o[:behavior] == :inclusive
-  end.map(&:first)
-  EXCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
-    o[:compound] == true &&
-    o[:behavior] == :exclusive
-  end.map(&:first)
-
   before(:all) do
     @thing_1 = FactoryBot.create(:thing)
     @thing_2 = FactoryBot.create(:thing)
