@@ -2,26 +2,8 @@
 
 require 'spec_helper'
 
-# PREDICATE_OPERATORS = ActiveSet::Filtering::ActiveRecord::Constants::PREDICATE_OPERATORS
-# INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
-#   .select do |o|
-#     o[:type] == :unary &&
-#     o[:matching_behavior] == :inclusive
-#   end
-# EXCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
-#   .select do |o|
-#     o[:type] == :unary &&
-#     o[:matching_behavior] == :exclusive
-#   end
-# INCONCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS
-#   .select do |o|
-#     o[:type] == :unary &&
-#     o[:matching_behavior] == :inconclusive
-#   end
-
-
 RSpec.describe ActiveSet do
-  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::BASE_PREDICATES
+  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::PREDICATES
   INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
     o[:compound] == false &&
     o[:behavior] == :inclusive
@@ -108,16 +90,17 @@ RSpec.describe ActiveSet do
                     guaranteed_unique_object_for(matching_item,
                                                  only: guaranteed_unique_object_for(matching_item.only))
                   end
+                  let(:matching_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item) }
+                  let(:other_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing) }
                   let(:instruction_multi_value) do
-                    [
-                      ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item),
-                      ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing)
-                    ]
+                    if operator.to_s.include? 'IN_'
+                      [ [matching_value], [other_value] ]
+                    else
+                      [ matching_value, other_value ]
+                    end
                   end
                   let(:instructions) do
-                    {
-                      path => instruction_multi_value
-                    }
+                    { path => instruction_multi_value }
                   end
 
                   it { expect(result_ids).to include matching_item.id }
@@ -136,16 +119,17 @@ RSpec.describe ActiveSet do
                     guaranteed_unique_object_for(matching_item,
                                                  only: guaranteed_unique_object_for(matching_item.only))
                   end
+                  let(:matching_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item) }
+                  let(:other_value) { ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing) }
                   let(:instruction_multi_value) do
-                    [
-                      ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item),
-                      ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing)
-                    ]
+                    if operator.to_s.include? 'IN_'
+                      [ [matching_value], [other_value] ]
+                    else
+                      [ matching_value, other_value ]
+                    end
                   end
                   let(:instructions) do
-                    {
-                      path => instruction_multi_value
-                    }
+                    { path => instruction_multi_value }
                   end
 
                   it { expect(result_ids).not_to include matching_item.id }
