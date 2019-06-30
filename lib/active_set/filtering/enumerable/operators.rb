@@ -149,10 +149,12 @@ class ActiveSet
           },
 
           IS_TRUE: {
-            operator: :'=='
+            operator: :'==',
+            query_attribute_transformer: proc { |_| 1 }
           },
           IS_FALSE: {
-            operator: :'=='
+            operator: :'==',
+            query_attribute_transformer: proc { |_| 0 }
           },
 
           IS_NULL: {
@@ -164,11 +166,13 @@ class ActiveSet
 
           IS_PRESENT: {
             operator: :'!=',
-            reducer: :all?
+            reducer: :all?,
+            query_attribute_transformer: proc { |_| Constants::BLANK_VALUES }
           },
           IS_BLANK: {
             operator: :'==',
-            reducer: :any?
+            reducer: :any?,
+            query_attribute_transformer: proc { |_| Constants::BLANK_VALUES }
           },
         }.freeze
 

@@ -113,14 +113,16 @@ class ActiveSet
           },
 
           IS_TRUE: {
-            operator: :eq
+            operator: :eq,
+            query_attribute_transformer: proc { |_| true }
           },
           IS_FALSE: {
-            operator: :eq
+            operator: :eq,
+            query_attribute_transformer: proc { |_| false }
           },
 
           IS_NULL: {
-            operator: :eq
+            operator: :eq,
           },
           NOT_NULL: {
             operator: :not_eq

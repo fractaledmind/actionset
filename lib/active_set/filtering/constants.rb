@@ -209,15 +209,13 @@ class ActiveSet
           type: :unary,
           operator: :eq,
           compound: false,
-          behavior: :inconclusive,
-          query_attribute_transformer: proc { |_| true }
+          behavior: :inconclusive
         },
         IS_FALSE: {
           type: :unary,
           operator: :eq,
           compound: false,
-          behavior: :inconclusive,
-          query_attribute_transformer: proc { |_| false }
+          behavior: :inconclusive
         },
 
         IS_NULL: {
@@ -239,15 +237,13 @@ class ActiveSet
           type: :unary,
           operator: :not_eq_all,
           compound: false,
-          behavior: :inclusive,
-          query_attribute_transformer: proc { |_| BLANK_VALUES }
+          behavior: :inclusive
         },
         IS_BLANK: {
           type: :unary,
           operator: :eq_any,
           compound: false,
-          behavior: :exclusive,
-          query_attribute_transformer: proc { |_| BLANK_VALUES }
+          behavior: :exclusive
         },
       }.freeze
     end
