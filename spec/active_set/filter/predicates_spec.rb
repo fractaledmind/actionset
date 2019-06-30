@@ -20,6 +20,10 @@ RSpec.describe ActiveSet do
     o[:compound] == true &&
     o[:behavior] == :exclusive
   end.map(&:first)
+  INCONCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
+    o[:compound] == true &&
+    o[:behavior] == :inconclusive
+  end.map(&:first)
 
   before(:all) do
     @thing_1 = FactoryBot.create(:thing)
@@ -137,44 +141,46 @@ RSpec.describe ActiveSet do
               end
             end
 
-            # multi value mixed operators
-            # %i[
-            #   lt_any
-            #   lteq_all
-            #   gt_any
-            #   gteq_all
-            # ].each do |operator|
-            #   %W[
-            #     #{type}(#{operator})
-            #     only.#{type}(#{operator})
-            #   ].each do |path|
-            #     context "{ #{path}: }" do
-            #       let(:matching_item) { instance_variable_get("@thing_#{id}") }
-            #       let(:other_thing) do
-            #         FactoryBot.build(:thing,
-            #                          boolean: !matching_item.boolean,
-            #                          only: FactoryBot.build(:only,
-            #                                                 boolean: !matching_item.only.boolean))
-            #       end
-            #       let(:instruction_multi_value) do
-            #         [
-            #           ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item),
-            #           ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing)
-            #         ]
-            #       end
-            #       let(:instructions) do
-            #         {
-            #           path => instruction_multi_value
-            #         }
-            #       end
+            INCONCLUSIVE_BINARY_OPERATORS.each do |operator|
+              %W[
+                #{type}(#{operator})
+                only.#{type}(#{operator})
+              ].each do |path|
+                context "{ #{path}: }" do
+                  let(:matching_item) { instance_variable_get("@thing_#{id}") }
+                  let(:other_thing) do
+                    FactoryBot.build(:thing,
+                                     boolean: !matching_item.boolean,
+                                     only: FactoryBot.build(:only,
+                                                            boolean: !matching_item.only.boolean))
+                  end
+                  let(:matching_value) { value_for(object: matching_item, path: path) }
+                  let(:other_value) { value_for(object: other_thing, path: path) }
+                  let(:instruction_multi_value) do
+                    [
+                      matching_value,
+                      other_value
+                    ]
+                  end
+                  let(:instructions) do
+                    {
+                      path => instruction_multi_value
+                    }
+                  end
 
-            #       if type.presence_in(%i[binary datetime decimal float integer]) && operator == :gt_any
-            #         it { expect(result_ids).not_to include matching_item.id }
-            #       else
-            #       end
-            #     end
-            #   end
-            # end
+                  # By default, we expect these operators to return nothing.
+                  # If, however, they do return something, we guarantee it is a logical result
+                  it do
+                    set_instruction = ActiveSet::Filtering::Enumerable::SetInstruction
+                      .new(
+                        ActiveSet::AttributeInstruction.new(path, instruction_multi_value),
+                        @active_set.set)
+
+                    expect(results.map { |obj| set_instruction.item_matches_query?(obj) }).to all( be true )
+                  end
+                end
+              end
+            end
           end
         end
       end
