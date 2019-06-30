@@ -28,10 +28,10 @@ RSpec.describe 'GET /things?filter', type: :request do
           gteq
           matches
         ].sample].each do |operator|
-          %W[
+          [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].sample do |path|
+          ].sample].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
@@ -55,10 +55,10 @@ RSpec.describe 'GET /things?filter', type: :request do
           gt
           does_not_match
         ].sample].each do |operator|
-          %W[
+          [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].sample do |path|
+          ].sample].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
@@ -87,10 +87,10 @@ RSpec.describe 'GET /things?filter', type: :request do
           matches_any
           does_not_match_any
         ].sample].each do |operator|
-          %W[
+          [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].sample do |path|
+          ].sample].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
@@ -126,10 +126,10 @@ RSpec.describe 'GET /things?filter', type: :request do
           matches_all
           does_not_match_all
         ].sample].each do |operator|
-          %W[
+          [%W[
             #{type}(#{operator})
             only.#{type}(#{operator})
-          ].sample do |path|
+          ].sample].each do |path|
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:other_thing) do
@@ -160,10 +160,10 @@ RSpec.describe 'GET /things?filter', type: :request do
         #   gt_any
         #   gteq_all
         # ].sample].each do |operator|
-        #   %W[
+        #   [%W[
         #     #{type}(#{operator})
         #     only.#{type}(#{operator})
-        #   ].sample do |path|
+        #   ].sample].each do |path|
         #     context "{ #{path}: }" do
         #       let(:matching_item) { instance_variable_get("@thing_#{id}") }
         #       let(:other_thing) do
