@@ -26,7 +26,7 @@ class ActiveSet
         def query_attribute_for(value)
           return value unless operator_hash.key?(:query_attribute_transformer)
 
-          operator_hash[:query_attribute_transformer].call(value)
+          operator_hash[:query_attribute_transformer].call(value, arel_type)
         end
 
         def operator_hash

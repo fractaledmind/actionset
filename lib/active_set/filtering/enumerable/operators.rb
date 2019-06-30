@@ -146,7 +146,30 @@ class ActiveSet
             operator: :cover?,
             query_attribute_transformer: ->(query) { Range.new(*query.sort) },
             result_transformer: ->(result) { !result }
-          }
+          },
+
+          IS_TRUE: {
+            operator: :'=='
+          },
+          IS_FALSE: {
+            operator: :'=='
+          },
+
+          IS_NULL: {
+            operator: :'=='
+          },
+          NOT_NULL: {
+            operator: :'!='
+          },
+
+          IS_PRESENT: {
+            operator: :'!=',
+            reducer: :all?
+          },
+          IS_BLANK: {
+            operator: :'==',
+            reducer: :any?
+          },
         }.freeze
 
         def self.get(operator_name)

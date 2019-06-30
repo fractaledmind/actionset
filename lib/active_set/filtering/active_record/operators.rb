@@ -105,12 +105,47 @@ class ActiveSet
 
           BETWEEN: {
             operator: :between,
-            query_attribute_transformer: ->(query) { Range.new(*query.sort) }
+            query_attribute_transformer: ->(query, _) { Range.new(*query.sort) }
           },
           NOT_BETWEEN: {
             operator: :not_between,
-            query_attribute_transformer: ->(query) { Range.new(*query.sort) }
-          }
+            query_attribute_transformer: ->(query, _) { Range.new(*query.sort) }
+          },
+
+          IS_TRUE: {
+            operator: :eq
+          },
+          IS_FALSE: {
+            operator: :eq
+          },
+
+          IS_NULL: {
+            operator: :eq
+          },
+          NOT_NULL: {
+            operator: :not_eq
+          },
+
+          IS_PRESENT: {
+            operator: :not_eq_all,
+            query_attribute_transformer: proc do |_, type|
+              if type.presence_in %i[date float integer]
+                [nil]
+              else
+                Constants::BLANK_VALUES
+              end
+            end
+          },
+          IS_BLANK: {
+            operator: :eq_any,
+            query_attribute_transformer: proc do |_, type|
+              if type.presence_in %i[date float integer]
+                [nil]
+              else
+                Constants::BLANK_VALUES
+              end
+            end
+          },
         }.freeze
 
         def self.get(operator_name)
