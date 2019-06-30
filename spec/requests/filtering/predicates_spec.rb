@@ -157,8 +157,10 @@ RSpec.describe 'GET /things?filter', type: :request do
                   .new(
                     ActiveSet::AttributeInstruction.new(path, instruction_multi_value),
                     @active_set.set)
+                result_objs = Thing.where(id: result_ids)
 
-                expect(results.map { |obj| set_instruction.item_matches_query?(obj) }).to all( be true )
+                expect(result_objs.map { |obj| set_instruction.item_matches_query?(obj) })
+                  .to all( be true )
               end
             end
           end

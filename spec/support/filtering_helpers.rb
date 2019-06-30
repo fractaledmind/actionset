@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FilteringHelpers
-  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::BASE_PREDICATES
+  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::PREDICATES
   INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
     o[:compound] == false &&
     o[:behavior] == :inclusive
