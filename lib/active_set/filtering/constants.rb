@@ -245,6 +245,103 @@ class ActiveSet
           compound: false,
           behavior: :exclusive
         },
+
+        MATCH_START: {
+          type: :binary,
+          compound: false,
+          behavior: :inclusive,
+        },
+        MATCH_START_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+        },
+        MATCH_START_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+        },
+        MATCH_NOT_START: {
+          type: :binary,
+          compound: false,
+          behavior: :exclusive,
+        },
+        MATCH_NOT_START_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+        },
+        MATCH_NOT_START_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+        },
+        MATCH_END: {
+          type: :binary,
+          compound: false,
+          behavior: :inclusive,
+        },
+        MATCH_END_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+        },
+        MATCH_END_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+        },
+        MATCH_NOT_END: {
+          type: :binary,
+          compound: false,
+          behavior: :exclusive,
+        },
+        MATCH_NOT_END_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+        },
+        MATCH_NOT_END_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+        },
+        MATCH_CONTAIN: {
+          type: :binary,
+          compound: false,
+          behavior: :inclusive,
+          shorthand: :'~*'
+        },
+        MATCH_CONTAIN_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E~*'
+        },
+        MATCH_CONTAIN_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A~*'
+        },
+        MATCH_NOT_CONTAIN: {
+          type: :binary,
+          compound: false,
+          behavior: :exclusive,
+          shorthand: :'!*'
+        },
+        MATCH_NOT_CONTAIN_ANY: {
+          type: :binary,
+          compound: true,
+          behavior: :inclusive,
+          shorthand: :'E!*'
+        },
+        MATCH_NOT_CONTAIN_ALL: {
+          type: :binary,
+          compound: true,
+          behavior: :exclusive,
+          shorthand: :'A!*'
+        }
       }.freeze
     end
     # rubocop:enable Metrics/ModuleLength
