@@ -8,9 +8,9 @@ class ActiveSet
     module ActiveRecord
       class Strategy
         delegate :attribute_model,
-                 :arel_column,
+                 :query_column,
                  :arel_operator,
-                 :arel_value,
+                 :query_value,
                  :arel_type,
                  :initial_relation,
                  :attribute,
@@ -61,9 +61,9 @@ class ActiveSet
         def filter_operation
           initial_relation
             .where(
-              arel_column.send(
+              query_column.send(
                 arel_operator,
-                arel_value
+                query_value
               )
             )
         end
@@ -77,7 +77,7 @@ class ActiveSet
             .merge(
               attribute_model.public_send(
                 attribute,
-                arel_value
+                query_value
               )
             )
         end
