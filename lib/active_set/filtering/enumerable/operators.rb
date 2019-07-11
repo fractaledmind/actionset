@@ -7,25 +7,10 @@ class ActiveSet
     module Enumerable
       # rubocop:disable Metrics/ModuleLength
       module Operators
-        RANGE_TRANSFORMER = ->(query) { Range.new(*query.sort) }
         NOT_TRANSFORMER = ->(result) { !result }
-        STRING_TRANSFORMER = ->(attribute) { attribute.to_s }
-        REGEXP_TRANSFORMER = ->(attribute) { /#{Regexp.quote(attribute.to_s)}/ }
-        START_MATCHER_TRANSFORMER = proc do |string_or_strings|
-          next string_or_strings.map { |str| START_MATCHER_TRANSFORMER.call(str) } if string_or_strings.is_a?(Array)
-
-          /#{Regexp.quote(string_or_strings.to_s) + '.*'}/
-        end
-        END_MATCHER_TRANSFORMER = proc do |string_or_strings|
-          next string_or_strings.map { |str| END_MATCHER_TRANSFORMER.call(str) } if string_or_strings.is_a?(Array)
-
-          /#{'.*' + Regexp.quote(string_or_strings.to_s)}/
-        end
-        CONTAIN_MATCHER_TRANSFORMER = proc do |string_or_strings|
-          next string_or_strings.map { |str| CONTAIN_MATCHER_TRANSFORMER.call(str) } if string_or_strings.is_a?(Array)
-
-          /#{'.*' + Regexp.quote(string_or_strings.to_s) + '.*'}/
-        end
+        RANGE_TRANSFORMER = ->(value) { Range.new(*value.sort) }
+        REGEXP_TRANSFORMER = ->(value) { /#{Regexp.quote(value.to_s)}/ }
+        STRING_TRANSFORMER = ->(value) { value.to_s }
 
         PREDICATES = {
           EQ: {
@@ -196,106 +181,115 @@ class ActiveSet
           },
 
           MATCH_START: {
-            operator: :'=~',
+            operator: :'start_with?',
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: START_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_START_ANY: {
-            operator: :'=~',
+            operator: :'start_with?',
             reducer: :any?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: START_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_START_ALL: {
-            operator: :'=~',
+            operator: :'start_with?',
             reducer: :all?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: START_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_NOT_START: {
-            operator: :'!~',
+            operator: :'start_with?',
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: START_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_NOT_START_ANY: {
-            operator: :'!~',
+            operator: :'start_with?',
             reducer: :any?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: START_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_NOT_START_ALL: {
-            operator: :'!~',
+            operator: :'start_with?',
             reducer: :all?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: START_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_END: {
-            operator: :'=~',
+            operator: :'end_with?',
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: END_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_END_ANY: {
-            operator: :'=~',
+            operator: :'end_with?',
             reducer: :any?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: END_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_END_ALL: {
-            operator: :'=~',
+            operator: :'end_with?',
             reducer: :all?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: END_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_NOT_END: {
-            operator: :'!~',
+            operator: :'end_with?',
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: END_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_NOT_END_ANY: {
-            operator: :'!~',
+            operator: :'end_with?',
             reducer: :any?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: END_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_NOT_END_ALL: {
-            operator: :'!~',
+            operator: :'end_with?',
             reducer: :all?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: END_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_CONTAIN: {
-            operator: :'=~',
+            operator: :'include?',
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_CONTAIN_ANY: {
-            operator: :'=~',
+            operator: :'include?',
             reducer: :any?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_CONTAIN_ALL: {
-            operator: :'=~',
+            operator: :'include?',
             reducer: :all?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER
           },
           MATCH_NOT_CONTAIN: {
-            operator: :'!~',
+            operator: :'include?',
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_NOT_CONTAIN_ANY: {
-            operator: :'!~',
+            operator: :'include?',
             reducer: :any?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           },
           MATCH_NOT_CONTAIN_ALL: {
-            operator: :'!~',
+            operator: :'include?',
             reducer: :all?,
             object_attribute_transformer: STRING_TRANSFORMER,
-            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER
+            query_attribute_transformer: STRING_TRANSFORMER,
+            result_transformer: NOT_TRANSFORMER
           }
         }.freeze
 
