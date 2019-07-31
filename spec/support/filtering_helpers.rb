@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 module FilteringHelpers
+  PREDICATE_OPERATORS = ActiveSet::Filtering::Constants::BASE_PREDICATES
+  INCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
+    o[:compound] == false &&
+    o[:behavior] == :inclusive
+  end.map(&:first)
+  EXCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
+    o[:compound] == false &&
+    o[:behavior] == :exclusive
+  end.map(&:first)
+  INCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
+    o[:compound] == true &&
+    o[:behavior] == :inclusive
+  end.map(&:first)
+  EXCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
+    o[:compound] == true &&
+    o[:behavior] == :exclusive
+  end.map(&:first)
+
   def all_possible_scope_paths_for(type)
     %W[
       #{type}_scope_method

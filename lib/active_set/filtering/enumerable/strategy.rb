@@ -61,28 +61,30 @@ class ActiveSet
 
         def filter_operation
           @set.select do |item|
-            attribute_value_for(item)
-              .public_send(
-                operator,
-                instruction_value
-              )
+            @set_instruction.item_matches_query?(item)
           end
         end
 
         def intersect_operation
+          @set & other_set
+        end
+
+        private
+
+        def other_set
           other_set = attribute_class.public_send(
-            attribute,
-            instruction_value
-          )
+                        attribute,
+                        instruction_value
+                      )
           if attribute_class != set_item.class
             other_set = begin
                         @set.select { |item| resource_for(item: item)&.presence_in other_set }
-                        rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
-                          nil
+                      rescue ArgumentError # thrown if other_set is doesn't respond to #include?, like when nil
+                        nil
                       end
           end
 
-          @set & other_set
+          other_set
         end
       end
     end
