@@ -146,7 +146,34 @@ class ActiveSet
             operator: :cover?,
             query_attribute_transformer: ->(query) { Range.new(*query.sort) },
             result_transformer: ->(result) { !result }
-          }
+          },
+
+          IS_TRUE: {
+            operator: :'==',
+            query_attribute_transformer: proc { |_| 1 }
+          },
+          IS_FALSE: {
+            operator: :'==',
+            query_attribute_transformer: proc { |_| 0 }
+          },
+
+          IS_NULL: {
+            operator: :'=='
+          },
+          NOT_NULL: {
+            operator: :'!='
+          },
+
+          IS_PRESENT: {
+            operator: :'!=',
+            reducer: :all?,
+            query_attribute_transformer: proc { |_| Constants::BLANK_VALUES }
+          },
+          IS_BLANK: {
+            operator: :'==',
+            reducer: :any?,
+            query_attribute_transformer: proc { |_| Constants::BLANK_VALUES }
+          },
         }.freeze
 
         def self.get(operator_name)

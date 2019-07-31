@@ -10,6 +10,10 @@ module FilteringHelpers
     o[:compound] == false &&
     o[:behavior] == :exclusive
   end.map(&:first)
+  INCONCLUSIVE_UNARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
+    o[:compound] == false &&
+    o[:behavior] == :inconclusive
+  end.map(&:first)
   INCLUSIVE_BINARY_OPERATORS = PREDICATE_OPERATORS.select do |_, o|
     o[:compound] == true &&
     o[:behavior] == :inclusive

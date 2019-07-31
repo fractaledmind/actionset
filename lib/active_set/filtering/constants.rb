@@ -4,6 +4,8 @@ class ActiveSet
   module Filtering
     # rubocop:disable Metrics/ModuleLength
     module Constants
+      BLANK_VALUES = [nil, ''].freeze
+
       PREDICATES = {
         EQ: {
           type: :binary,
@@ -201,7 +203,48 @@ class ActiveSet
           compound: true,
           behavior: :exclusive,
           shorthand: :'!.'
-        }
+        },
+
+        IS_TRUE: {
+          type: :unary,
+          operator: :eq,
+          compound: false,
+          behavior: :inconclusive
+        },
+        IS_FALSE: {
+          type: :unary,
+          operator: :eq,
+          compound: false,
+          behavior: :inconclusive
+        },
+
+        IS_NULL: {
+          type: :unary,
+          operator: :eq,
+          compound: false,
+          behavior: :exclusive,
+          query_attribute_transformer: proc { |_| nil }
+        },
+        NOT_NULL: {
+          type: :unary,
+          operator: :not_eq,
+          compound: false,
+          behavior: :inclusive,
+          query_attribute_transformer: proc { |_| nil }
+        },
+
+        IS_PRESENT: {
+          type: :unary,
+          operator: :not_eq_all,
+          compound: false,
+          behavior: :inclusive
+        },
+        IS_BLANK: {
+          type: :unary,
+          operator: :eq_any,
+          compound: false,
+          behavior: :exclusive
+        },
       }.freeze
     end
     # rubocop:enable Metrics/ModuleLength

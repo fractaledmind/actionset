@@ -63,6 +63,38 @@ RSpec.describe 'GET /things?filter', type: :request do
           end
         end
 
+        [INCONCLUSIVE_UNARY_OPERATORS.sample].each do |operator|
+          [%W[
+            #{type}(#{operator})
+            only.#{type}(#{operator})
+          ].sample].each do |path|
+            context "{ #{path}: }" do
+              let(:matching_item) { instance_variable_get("@thing_#{id}") }
+              let(:instruction_single_value) do
+                value_for(object: matching_item, path: path)
+              end
+              let(:instructions) do
+                {
+                  path => instruction_single_value
+                }
+              end
+
+              # By default, we expect these operators to return nothing.
+              # If, however, they do return something, we guarantee it is a logical result
+              it do
+                set_instruction = ActiveSet::Filtering::Enumerable::SetInstruction
+                  .new(
+                    ActiveSet::AttributeInstruction.new(path, instruction_single_value),
+                    @active_set.set)
+                result_objs = Thing.where(id: result_ids)
+
+                expect(result_objs.map { |obj| set_instruction.item_matches_query?(obj) })
+                  .to all( be true )
+              end
+            end
+          end
+        end
+
         [INCLUSIVE_BINARY_OPERATORS.sample].each do |operator|
           [%W[
             #{type}(#{operator})

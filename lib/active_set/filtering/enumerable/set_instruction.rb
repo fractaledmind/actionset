@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'active_support/core_ext/array/wrap'
 require_relative '../../enumerable_set_instruction'
 require_relative './operators'
 
@@ -10,7 +11,7 @@ class ActiveSet
         def item_matches_query?(item)
           return query_result_for(item, query_attribute_for(instruction_value)) unless operator_hash.key?(:reducer)
 
-          instruction_value.public_send(operator_hash[:reducer]) do |value|
+          Array.wrap(instruction_value).public_send(operator_hash[:reducer]) do |value|
             query_result_for(item, query_attribute_for(value))
           end
         end
