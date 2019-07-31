@@ -249,62 +249,62 @@ class ActiveSet
         MATCH_START: {
           type: :binary,
           compound: false,
-          behavior: :inclusive,
+          behavior: :inclusive
         },
         MATCH_START_ANY: {
           type: :binary,
           compound: true,
-          behavior: :inclusive,
+          behavior: :inclusive
         },
         MATCH_START_ALL: {
           type: :binary,
           compound: true,
-          behavior: :exclusive,
+          behavior: :exclusive
         },
         MATCH_NOT_START: {
           type: :binary,
           compound: false,
-          behavior: :exclusive,
+          behavior: :exclusive
         },
         MATCH_NOT_START_ANY: {
           type: :binary,
           compound: true,
-          behavior: :inclusive,
+          behavior: :inclusive
         },
         MATCH_NOT_START_ALL: {
           type: :binary,
           compound: true,
-          behavior: :exclusive,
+          behavior: :exclusive
         },
         MATCH_END: {
           type: :binary,
           compound: false,
-          behavior: :inclusive,
+          behavior: :inclusive
         },
         MATCH_END_ANY: {
           type: :binary,
           compound: true,
-          behavior: :inclusive,
+          behavior: :inclusive
         },
         MATCH_END_ALL: {
           type: :binary,
           compound: true,
-          behavior: :exclusive,
+          behavior: :exclusive
         },
         MATCH_NOT_END: {
           type: :binary,
           compound: false,
-          behavior: :exclusive,
+          behavior: :exclusive
         },
         MATCH_NOT_END_ANY: {
           type: :binary,
           compound: true,
-          behavior: :inclusive,
+          behavior: :inclusive
         },
         MATCH_NOT_END_ALL: {
           type: :binary,
           compound: true,
-          behavior: :exclusive,
+          behavior: :exclusive
         },
         MATCH_CONTAIN: {
           type: :binary,

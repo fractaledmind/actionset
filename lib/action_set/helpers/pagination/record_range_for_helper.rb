@@ -12,7 +12,7 @@ module Pagination
       [
         pagination_record_first_for(set),
         '&ndash;',
-        pagination_record_last_for(set),
+        pagination_record_last_for(set)
       ].join('&nbsp;').html_safe
     end
   end
