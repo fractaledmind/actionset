@@ -7,6 +7,51 @@ class ActiveSet
     module ActiveRecord
       # rubocop:disable Metrics/ModuleLength
       module Operators
+        RANGE_TRANSFORMER = proc do |raw:, sql:, type:|
+          if type.presence_in %i[boolean]
+            Range.new(*sql.sort)
+          else
+            Range.new(*raw.sort)
+          end
+        end
+        BLANK_TRANSFORMER = proc do |type:, **ctx|
+          if type.presence_in %i[date float integer]
+            [nil]
+          else
+            Constants::BLANK_VALUES
+          end
+        end
+        MATCHER_TRANSFORMER = proc do |sql:, type:, **ctx|
+          next sql.map { |str| MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
+
+          next sql if not type == :decimal
+          next sql[0..-3] if sql.ends_with?('.0')
+          next sql[0..-4] + '%' if sql.ends_with?('.0%')
+
+          sql
+        end
+        START_MATCHER_TRANSFORMER = proc do |sql:, type:, **ctx|
+          next sql.map { |str| START_MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
+
+          str = MATCHER_TRANSFORMER.call(sql: sql, type: type, **ctx)
+
+          str + '%'
+        end
+        END_MATCHER_TRANSFORMER = proc do |sql:, type:, **ctx|
+          next sql.map { |str| END_MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
+
+          str = MATCHER_TRANSFORMER.call(sql: sql, type: type, **ctx)
+
+          '%' + str
+        end
+        CONTAIN_MATCHER_TRANSFORMER = proc do |sql:, type:, **ctx|
+          next sql.map { |str| CONTAIN_MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
+
+          str = MATCHER_TRANSFORMER.call(sql: sql, type: type, **ctx)
+
+          '%' + str + '%'
+        end
+
         PREDICATES = {
           EQ: {
             operator: :eq
@@ -47,22 +92,28 @@ class ActiveSet
           },
 
           MATCHES: {
-            operator: :matches
+            operator: :matches,
+            query_attribute_transformer: MATCHER_TRANSFORMER
           },
           DOES_NOT_MATCH: {
-            operator: :does_not_match
+            operator: :does_not_match,
+            query_attribute_transformer: MATCHER_TRANSFORMER
           },
           MATCHES_ANY: {
-            operator: :matches_any
+            operator: :matches_any,
+            query_attribute_transformer: MATCHER_TRANSFORMER
           },
           MATCHES_ALL: {
-            operator: :matches_all
+            operator: :matches_all,
+            query_attribute_transformer: MATCHER_TRANSFORMER
           },
           DOES_NOT_MATCH_ANY: {
-            operator: :does_not_match_any
+            operator: :does_not_match_any,
+            query_attribute_transformer: MATCHER_TRANSFORMER
           },
           DOES_NOT_MATCH_ALL: {
-            operator: :does_not_match_all
+            operator: :does_not_match_all,
+            query_attribute_transformer: MATCHER_TRANSFORMER
           },
 
           LT: {
@@ -105,11 +156,11 @@ class ActiveSet
 
           BETWEEN: {
             operator: :between,
-            query_attribute_transformer: ->(query, _) { Range.new(*query.sort) }
+            query_attribute_transformer: RANGE_TRANSFORMER
           },
           NOT_BETWEEN: {
             operator: :not_between,
-            query_attribute_transformer: ->(query, _) { Range.new(*query.sort) }
+            query_attribute_transformer: RANGE_TRANSFORMER
           },
 
           IS_TRUE: {
@@ -130,24 +181,85 @@ class ActiveSet
 
           IS_PRESENT: {
             operator: :not_eq_all,
-            query_attribute_transformer: proc do |_, type|
-              if type.presence_in %i[date float integer]
-                [nil]
-              else
-                Constants::BLANK_VALUES
-              end
-            end
+            query_attribute_transformer: BLANK_TRANSFORMER
           },
           IS_BLANK: {
             operator: :eq_any,
-            query_attribute_transformer: proc do |_, type|
-              if type.presence_in %i[date float integer]
-                [nil]
-              else
-                Constants::BLANK_VALUES
-              end
-            end
+            query_attribute_transformer: BLANK_TRANSFORMER
           },
+
+          MATCH_START: {
+            operator: :matches,
+            query_attribute_transformer: START_MATCHER_TRANSFORMER,
+          },
+          MATCH_START_ANY: {
+            operator: :matches_any,
+            query_attribute_transformer: START_MATCHER_TRANSFORMER,
+          },
+          MATCH_START_ALL: {
+            operator: :matches_all,
+            query_attribute_transformer: START_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_START: {
+            operator: :does_not_match,
+            query_attribute_transformer: START_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_START_ANY: {
+            operator: :does_not_match_any,
+            query_attribute_transformer: START_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_START_ALL: {
+            operator: :does_not_match_all,
+            query_attribute_transformer: START_MATCHER_TRANSFORMER,
+          },
+          MATCH_END: {
+            operator: :matches,
+            query_attribute_transformer: END_MATCHER_TRANSFORMER,
+          },
+          MATCH_END_ANY: {
+            operator: :matches_any,
+            query_attribute_transformer: END_MATCHER_TRANSFORMER,
+          },
+          MATCH_END_ALL: {
+            operator: :matches_all,
+            query_attribute_transformer: END_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_END: {
+            operator: :does_not_match,
+            query_attribute_transformer: END_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_END_ANY: {
+            operator: :does_not_match_any,
+            query_attribute_transformer: END_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_END_ALL: {
+            operator: :does_not_match_all,
+            query_attribute_transformer: END_MATCHER_TRANSFORMER,
+          },
+          MATCH_CONTAIN: {
+            operator: :matches,
+            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER,
+          },
+          MATCH_CONTAIN_ANY: {
+            operator: :matches_any,
+            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER,
+          },
+          MATCH_CONTAIN_ALL: {
+            operator: :matches_all,
+            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_CONTAIN: {
+            operator: :does_not_match,
+            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_CONTAIN_ANY: {
+            operator: :does_not_match_any,
+            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER,
+          },
+          MATCH_NOT_CONTAIN_ALL: {
+            operator: :does_not_match_all,
+            query_attribute_transformer: CONTAIN_MATCHER_TRANSFORMER,
+          }
         }.freeze
 
         def self.get(operator_name)

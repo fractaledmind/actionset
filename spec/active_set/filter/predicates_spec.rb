@@ -105,7 +105,7 @@ RSpec.describe ActiveSet do
                   let(:matching_value) { value_for(object: matching_item, path: path) }
                   let(:other_value) { value_for(object: other_thing, path: path) }
                   let(:instruction_multi_value) do
-                    if operator.to_s.include? 'IN_'
+                    if operator.to_s.split('_').include?('IN') && (operator.to_s.split('_') & %w[ANY ALL]).any?
                       [ [matching_value], [other_value] ]
                     else
                       [ matching_value, other_value ]
@@ -134,7 +134,7 @@ RSpec.describe ActiveSet do
                   let(:matching_value) { value_for(object: matching_item, path: path) }
                   let(:other_value) { value_for(object: other_thing, path: path) }
                   let(:instruction_multi_value) do
-                    if operator.to_s.include? 'IN_'
+                    if operator.to_s.split('_').include?('IN') && (operator.to_s.split('_') & %w[ANY ALL]).any?
                       [ [matching_value], [other_value] ]
                     else
                       [ matching_value, other_value ]
