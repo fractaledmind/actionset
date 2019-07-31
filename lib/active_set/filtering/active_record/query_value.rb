@@ -37,7 +37,7 @@ class ActiveSet
         end
 
         def unwrap_sql_str(sql_str)
-          return sql_str if not sql_str[0] == "'" && sql_str[-1] == "'"
+          return sql_str unless sql_str[0] == "'" && sql_str[-1] == "'"
 
           sql_str[1..-2]
         end
