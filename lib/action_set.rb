@@ -30,7 +30,7 @@ module ActionSet
 
     def sort_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.sort(sort_params) if sort_params.any?
+      active_set = active_set.sort(sort_instructions) if sort_params.any?
       active_set
     end
 
@@ -70,6 +70,14 @@ module ActionSet
       item_value = instruction.value_for(item: item_with_value)
       ActionSet::AttributeValue.new(value)
                                .cast(to: item_value.class)
+    end
+
+    def sort_instructions
+      if sort_params.key?(:attribute) && sort_params.key?(:direction)
+        { sort_params[:attribute] => sort_params[:direction] }
+      else
+        sort_params.transform_values { |v| v.remove('ending') }
+      end
     end
 
     def paginate_instructions
