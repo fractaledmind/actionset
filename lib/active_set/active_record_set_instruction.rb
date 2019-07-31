@@ -42,8 +42,8 @@ class ActiveSet
 
     def arel_type
       attribute_model
-        .columns_hash[@attribute_instruction.attribute]
-        .type
+        &.columns_hash[@attribute_instruction.attribute]
+        &.type
     end
 
     def arel_table

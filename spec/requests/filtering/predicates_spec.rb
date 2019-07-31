@@ -29,8 +29,8 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
-                ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item)
-              end
+                    value_for(object: matching_item, path: path)
+                  end
               let(:instructions) do
                 {
                   path => instruction_single_value
@@ -50,8 +50,8 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
-                ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item)
-              end
+                    value_for(object: matching_item, path: path)
+                  end
               let(:instructions) do
                 {
                   path => instruction_single_value
@@ -74,11 +74,14 @@ RSpec.describe 'GET /things?filter', type: :request do
                 guaranteed_unique_object_for(matching_item,
                                              only: guaranteed_unique_object_for(matching_item.only))
               end
+              let(:matching_value) { value_for(object: matching_item, path: path) }
+              let(:other_value) { value_for(object: other_thing, path: path) }
               let(:instruction_multi_value) do
-                [
-                  ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item),
-                  ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing)
-                ]
+                if operator.to_s.include? 'IN_'
+                  [ [matching_value], [other_value] ]
+                else
+                  [ matching_value, other_value ]
+                end
               end
               let(:instructions) do
                 {
@@ -102,11 +105,14 @@ RSpec.describe 'GET /things?filter', type: :request do
                 guaranteed_unique_object_for(matching_item,
                                              only: guaranteed_unique_object_for(matching_item.only))
               end
+              let(:matching_value) { value_for(object: matching_item, path: path) }
+              let(:other_value) { value_for(object: other_thing, path: path) }
               let(:instruction_multi_value) do
-                [
-                  ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item),
-                  ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing)
-                ]
+                if operator.to_s.include? 'IN_'
+                  [ [matching_value], [other_value] ]
+                else
+                  [ matching_value, other_value ]
+                end
               end
               let(:instructions) do
                 {
@@ -119,44 +125,46 @@ RSpec.describe 'GET /things?filter', type: :request do
           end
         end
 
-        # multi value mixed operators
-        # [%i[
-        #   lt_any
-        #   lteq_all
-        #   gt_any
-        #   gteq_all
-        # ].sample].each do |operator|
-        #   [%W[
-        #     #{type}(#{operator})
-        #     only.#{type}(#{operator})
-        #   ].sample].each do |path|
-        #     context "{ #{path}: }" do
-        #       let(:matching_item) { instance_variable_get("@thing_#{id}") }
-        #       let(:other_thing) do
-        #         FactoryBot.build(:thing,
-        #                          boolean: !matching_item.boolean,
-        #                          only: FactoryBot.build(:only,
-        #                                                 boolean: !matching_item.only.boolean))
-        #       end
-        #       let(:instruction_multi_value) do
-        #         [
-        #           ActiveSet::AttributeInstruction.new(path, nil).value_for(item: matching_item),
-        #           ActiveSet::AttributeInstruction.new(path, nil).value_for(item: other_thing)
-        #         ]
-        #       end
-        #       let(:instructions) do
-        #         {
-        #           path => instruction_multi_value
-        #         }
-        #       end
+        [INCONCLUSIVE_BINARY_OPERATORS.sample].each do |operator|
+          [%W[
+            #{type}(#{operator})
+            only.#{type}(#{operator})
+          ].sample].each do |path|
+            context "{ #{path}: }" do
+              let(:matching_item) { instance_variable_get("@thing_#{id}") }
+              let(:other_thing) do
+                FactoryBot.build(:thing,
+                                 boolean: !matching_item.boolean,
+                                 only: FactoryBot.build(:only,
+                                                        boolean: !matching_item.only.boolean))
+              end
+              let(:instruction_multi_value) do
+                [
+                  value_for(object: matching_item, path: path),
+                  value_for(object: other_thing, path: path)
+                ]
+              end
+              let(:instructions) do
+                {
+                  path => instruction_multi_value
+                }
+              end
 
-        #       if type.presence_in(%i[binary datetime decimal float integer]) && operator == :gt_any
-        #         it { expect(result_ids).not_to include matching_item.id }
-        #       else
-        #       end
-        #     end
-        #   end
-        # end
+              # By default, we expect these operators to return nothing.
+              # If, however, they do return something, we guarantee it is a logical result
+              it do
+                set_instruction = ActiveSet::Filtering::Enumerable::SetInstruction
+                  .new(
+                    ActiveSet::AttributeInstruction.new(path, instruction_multi_value),
+                    @active_set.set)
+                result_objs = Thing.where(id: result_ids)
+
+                expect(result_objs.map { |obj| set_instruction.item_matches_query?(obj) })
+                  .to all( be true )
+              end
+            end
+          end
+        end
       end
     end
   end
