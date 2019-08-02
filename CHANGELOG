@@ -1,3 +1,5 @@
+v 0.9.1
+  - ensure that our RubyGems build is stable, since we had a TravisCI build problem in the last version
 v 0.9.0
   - Add Enumerable support for the base filtering operations
     + EQ, NOT_EQ, EQ_ANY, EQ_ALL, NOT_EQ_ANY, NOT_EQ_ALL
