@@ -48,8 +48,10 @@ RSpec.describe 'GET /things?sort', type: :request do
     end
 
     ApplicationRecord::SORTABLE_TYPES.each do |type|
-      all_possible_sort_instructions_for(type).sample do |instruction|
+      [all_possible_sort_instructions_for(type).sample].each do |instruction|
         context instruction do
+          let(:instructions) { instruction }
+
           it_should_behave_like 'a sorted collection', instruction do
             let(:result) { @active_set.sort(instruction) }
           end
@@ -58,8 +60,10 @@ RSpec.describe 'GET /things?sort', type: :request do
     end
 
     ApplicationRecord::SORTABLE_TYPES.combination(2).each do |type_1, type_2|
-      all_possible_sort_instruction_combinations_for(type_1, type_2).sample do |instructions|
+      [all_possible_sort_instruction_combinations_for(type_1, type_2).sample].each do |instructions|
         context instructions do
+          let(:instructions) { instructions }
+
           it_should_behave_like 'a sorted collection', instructions do
             let(:result) { @active_set.sort(instructions) }
           end
