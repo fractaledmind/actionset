@@ -64,14 +64,6 @@ module ActionSet
       end
     end
 
-    def filter_typecasted_value_for(keypath, value, set)
-      instruction = ActiveSet::AttributeInstruction.new(keypath, value)
-      item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
-      item_value = instruction.value_for(item: item_with_value)
-      ActionSet::AttributeValue.new(value)
-                               .cast(to: item_value.class)
-    end
-
     def sort_instructions
       if sort_params.key?(:attribute) && sort_params.key?(:direction)
         { sort_params[:attribute] => sort_params[:direction] }
@@ -109,6 +101,31 @@ module ActionSet
       end
     end
     # rubocop:enable Metrics/AbcSize
+
+    def filter_typecasted_value_for(keypath, value, set)
+      klass = klass_for_keypath(keypath, value, set)
+      ActionSet::AttributeValue.new(value)
+                               .cast(to: klass)
+    end
+
+    def klass_for_keypath(keypath, value, set)
+      if respond_to?(:filter_set_types, true)
+        type_declarations = public_send(:filter_set_types)
+        types = type_declarations['types'] || type_declarations[:types]
+        klass = types[keypath.join('.')]
+        return klass if klass
+      end
+
+      if set.is_a?(ActiveRecord::Relation) || set.view.is_a?(ActiveRecord::Relation)
+        klass_type = set.model.columns_hash.fetch(keypath, nil)&.type
+        return klass_type.class if klass_type
+      end
+
+      instruction = ActiveSet::AttributeInstruction.new(keypath, value)
+      item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
+      item_value = instruction.value_for(item: item_with_value)
+      item_value.class
+    end
 
     def filter_params
       params.fetch(:filter, {}).to_unsafe_hash
