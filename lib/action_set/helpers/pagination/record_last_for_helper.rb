@@ -18,7 +18,7 @@ module Pagination
       page_size = pagination_page_size_for(set)
       total_pages = pagination_total_pages_for(set)
 
-      return record_size if current_page == total_pages
+      return record_size if current_page >= total_pages
 
       current_page * page_size
     end
