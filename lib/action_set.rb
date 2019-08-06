@@ -53,7 +53,17 @@ module ActionSet
     private
 
     def filter_instructions_for(set)
-      flatten_keys_of(filter_params).reject { |_, v| v.try(:empty?) }.each_with_object({}) do |(keypath, value), memo|
+      instructions_hash = if filter_params.key?(:'0') || filter_params.key?('0')
+                            ordered_instructions = filter_params.sort_by(&:first)
+                            array_of_instructions = ordered_instructions.map {|_, h| ["#{h[:attribute]}(#{h[:operator]})", h[:query]] }
+                            Hash[array_of_instructions]
+                          elsif filter_params.key?(:attribute) || filter_params.key?('attribute')
+                            { "#{filter_params[:attribute]}(#{filter_params[:operator]})" => filter_params[:query] }
+                          else
+                            filter_params
+                          end
+      flattened_instructions = flatten_keys_of(instructions_hash).reject { |_, v| v.try(:empty?) }
+      flattened_instructions.each_with_object({}) do |(keypath, value), memo|
         typecast_value = if value.respond_to?(:each)
                            value.map { |v| filter_typecasted_value_for(keypath, v, set) }
                          else
