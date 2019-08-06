@@ -65,11 +65,17 @@ module ActionSet
     end
 
     def sort_instructions
-      if sort_params.key?(:attribute) && sort_params.key?(:direction)
-        { sort_params[:attribute] => sort_params[:direction] }
-      else
-        sort_params.transform_values { |v| v.remove('ending') }
-      end
+      instructions_hash = if sort_params.key?(:'0') || sort_params.key?('0')
+                            ordered_instructions = sort_params.sort_by(&:first)
+                            array_of_instructions = ordered_instructions.map {|_, h| [h[:attribute], h[:direction]] }
+                            Hash[array_of_instructions]
+                          elsif sort_params.key?(:attribute) && sort_params.key?(:direction)
+                            { sort_params[:attribute] => sort_params[:direction] }
+                          else
+                            sort_params
+                          end
+
+      instructions_hash.transform_values { |v| v.remove('ending') }
     end
 
     def paginate_instructions

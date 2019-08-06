@@ -52,8 +52,34 @@ RSpec.describe 'GET /things?sort', type: :request do
         context instruction do
           let(:instructions) { instruction }
 
-          it_should_behave_like 'a sorted collection', instruction do
-            let(:result) { @active_set.sort(instruction) }
+          it_should_behave_like 'a sorted collection', instruction
+        end
+      end
+
+      [all_possible_paths_for(type).sample].each do |path|
+        [:asc, 'desc'].each do |dir|
+          context "{ 0: { attribute: #{path}, direction: #{dir} } }" do
+            let(:instructions) do
+              {
+                '0': {
+                  attribute: path,
+                  direction: dir
+                }
+              }
+            end
+
+            it_should_behave_like 'a sorted collection', { path => dir }
+          end
+
+          context "{ attribute: #{path}, direction: #{dir} }" do
+            let(:instructions) do
+              {
+                attribute: path,
+                direction: dir
+              }
+            end
+
+            it_should_behave_like 'a sorted collection', { path => dir }
           end
         end
       end
@@ -64,9 +90,26 @@ RSpec.describe 'GET /things?sort', type: :request do
         context instructions do
           let(:instructions) { instructions }
 
-          it_should_behave_like 'a sorted collection', instructions do
-            let(:result) { @active_set.sort(instructions) }
+          it_should_behave_like 'a sorted collection', instructions
+        end
+      end
+
+      [all_possible_path_combinations_for(type_1, type_2).sample].each do |path_1, path_2|
+        context "{ 0: { attribute: #{path_1}, direction: asc }, 1: { attribute: #{path_2}, direction: desc } }" do
+          let(:instructions) do
+            {
+              '0': {
+                attribute: path_1,
+                direction: 'asc'
+              },
+              '1': {
+                attribute: path_2,
+                direction: :desc
+              }
+            }
           end
+
+          it_should_behave_like 'a sorted collection', { path_1 => 'asc', path_2 => :desc }
         end
       end
     end
