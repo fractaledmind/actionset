@@ -1,3 +1,37 @@
+v 0.9.2
+  - allow for form-friendly filter parameters
+    ```
+      {
+        '0': {
+          attribute: :foo,
+          operator: :EQ,
+          query: 'query'
+        },
+        '1': {
+          attribute: :bar,
+          operator: :GT,
+          query: 'value'
+        }
+      }
+
+      { foo: 'query', bar(GT): 'value' }
+    ```
+  - allow for form-friendly sort parameters
+    ```
+      {
+        '0': {
+          attribute: :foo,
+          direction: :desc
+        },
+        '1': {
+          attribute: :bar,
+          direction: :asc
+        }
+      }
+
+      { foo: 'desc', bar: 'asc' }
+    ```
+
 v 0.9.1
   - ensure that our RubyGems build is stable, since we had a TravisCI build problem in the last version
 v 0.9.0
