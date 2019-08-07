@@ -5,7 +5,8 @@ require 'active_support/core_ext/object/blank'
 require 'active_support/lazy_load_hooks'
 require 'active_set'
 
-require_relative './action_set/attribute_value'
+require_relative './action_set/filter_instructions'
+require_relative './action_set/sort_instructions'
 require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
@@ -24,13 +25,13 @@ module ActionSet
 
     def filter_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.filter(filter_instructions_for(set)) if filter_params.any?
+      active_set = active_set.filter(FilterInstructions.new(filter_params, set, self).get) if filter_params.any?
       active_set
     end
 
     def sort_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.sort(sort_instructions) if sort_params.any?
+      active_set = active_set.sort(SortInstructions.new(sort_params, set, self).get) if sort_params.any?
       active_set
     end
 
@@ -51,26 +52,6 @@ module ActionSet
     end
 
     private
-
-    def filter_instructions_for(set)
-      flatten_keys_of(filter_params).reject { |_, v| v.try(:empty?) }.each_with_object({}) do |(keypath, value), memo|
-        typecast_value = if value.respond_to?(:each)
-                           value.map { |v| filter_typecasted_value_for(keypath, v, set) }
-                         else
-                           filter_typecasted_value_for(keypath, value, set)
-                         end
-
-        memo[keypath] = typecast_value
-      end
-    end
-
-    def sort_instructions
-      if sort_params.key?(:attribute) && sort_params.key?(:direction)
-        { sort_params[:attribute] => sort_params[:direction] }
-      else
-        sort_params.transform_values { |v| v.remove('ending') }
-      end
-    end
 
     def paginate_instructions
       paginate_params.transform_values(&:to_i)
@@ -101,31 +82,6 @@ module ActionSet
       end
     end
     # rubocop:enable Metrics/AbcSize
-
-    def filter_typecasted_value_for(keypath, value, set)
-      klass = klass_for_keypath(keypath, value, set)
-      ActionSet::AttributeValue.new(value)
-                               .cast(to: klass)
-    end
-
-    def klass_for_keypath(keypath, value, set)
-      if respond_to?(:filter_set_types, true)
-        type_declarations = public_send(:filter_set_types)
-        types = type_declarations['types'] || type_declarations[:types]
-        klass = types[keypath.join('.')]
-        return klass if klass
-      end
-
-      if set.is_a?(ActiveRecord::Relation) || set.view.is_a?(ActiveRecord::Relation)
-        klass_type = set.model.columns_hash.fetch(keypath, nil)&.type
-        return klass_type.class if klass_type
-      end
-
-      instruction = ActiveSet::AttributeInstruction.new(keypath, value)
-      item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
-      item_value = instruction.value_for(item: item_with_value)
-      item_value.class
-    end
 
     def filter_params
       params.fetch(:filter, {}).to_unsafe_hash

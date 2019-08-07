@@ -27,8 +27,7 @@ RSpec.describe 'GET /things?filter', type: :request do
       [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
-        paths = all_possible_paths_for(type)
-        paths.shuffle.take(paths.size / 2).each do |path|
+        [all_possible_paths_for(type).sample].each do |path|
           context "{ #{path}: }" do
             let(:instructions) do
               {
@@ -49,6 +48,32 @@ RSpec.describe 'GET /things?filter', type: :request do
 
             it { expect(result_ids).to eq [matching_item.id] }
           end
+
+          context "{ 0: { attribute: #{path} } }" do
+            let(:instructions) do
+              {
+                '0': {
+                  attribute: path,
+                  operator: 'EQ',
+                  query: filter_value_for(object: matching_item, path: path)
+                }
+              }
+            end
+
+            it { expect(result_ids).to eq [matching_item.id] }
+          end
+
+          context "{ { attribute: #{path} } }" do
+            let(:instructions) do
+              {
+                attribute: path,
+                operator: 'EQ',
+                query: filter_value_for(object: matching_item, path: path)
+              }
+            end
+
+            it { expect(result_ids).to eq [matching_item.id] }
+          end
         end
       end
     end
@@ -57,8 +82,7 @@ RSpec.describe 'GET /things?filter', type: :request do
       [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
-        paths = all_possible_path_combinations_for(type_1, type_2)
-        paths.shuffle.take(paths.size / 2).each do |path_1, path_2|
+        [all_possible_path_combinations_for(type_1, type_2).sample].each do |path_1, path_2|
           context "{ #{path_1}:, #{path_2} }" do
             let(:instructions) do
               {
@@ -76,6 +100,25 @@ RSpec.describe 'GET /things?filter', type: :request do
               {
                 path_1 => filter_value_for(object: matching_item, path: path_1),
                 path_2 => filter_value_for(object: matching_item, path: path_2)
+              }
+            end
+
+            it { expect(result_ids).to eq [matching_item.id] }
+          end
+
+          context "{ 0: { attribute: #{path_1} }, 1: { attribute: #{path_2} } }" do
+            let(:instructions) do
+              {
+                '0': {
+                  attribute: path_1,
+                  operator: 'EQ',
+                  query: filter_value_for(object: matching_item, path: path_1)
+                },
+                '1': {
+                  attribute: path_2,
+                  operator: 'EQ',
+                  query: filter_value_for(object: matching_item, path: path_2)
+                }
               }
             end
 
