@@ -24,7 +24,7 @@ class ActiveSet
         end
 
         def must_cast_numerical_column?
-          # The LIKE operator can’t be used if the column hosts numeric types.
+          # The LIKE operator can't be used if the column hosts numeric types.
           return false unless arel_type.presence_in(%i[integer float])
 
           arel_operator.to_s.downcase.include?('match')

@@ -55,7 +55,7 @@ module ActionSet
     def filter_instructions_for(set)
       instructions_hash = if filter_params.key?(:'0') || filter_params.key?('0')
                             ordered_instructions = filter_params.sort_by(&:first)
-                            array_of_instructions = ordered_instructions.map {|_, h| ["#{h[:attribute]}(#{h[:operator]})", h[:query]] }
+                            array_of_instructions = ordered_instructions.map { |_, h| ["#{h[:attribute]}(#{h[:operator]})", h[:query]] }
                             Hash[array_of_instructions]
                           elsif filter_params.key?(:attribute) || filter_params.key?('attribute')
                             { "#{filter_params[:attribute]}(#{filter_params[:operator]})" => filter_params[:query] }
@@ -77,7 +77,7 @@ module ActionSet
     def sort_instructions
       instructions_hash = if sort_params.key?(:'0') || sort_params.key?('0')
                             ordered_instructions = sort_params.sort_by(&:first)
-                            array_of_instructions = ordered_instructions.map {|_, h| [h[:attribute], h[:direction]] }
+                            array_of_instructions = ordered_instructions.map { |_, h| [h[:attribute], h[:direction]] }
                             Hash[array_of_instructions]
                           elsif sort_params.key?(:attribute) && sort_params.key?(:direction)
                             { sort_params[:attribute] => sort_params[:direction] }
