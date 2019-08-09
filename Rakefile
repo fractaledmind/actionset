@@ -8,6 +8,7 @@ RSpec::Core::RakeTask.new(:spec)
 task :full_spec do
   ENV['COVERAGE'] = 'true'
   ENV['INSPECT_FAILURE'] = 'true'
+  ENV['LOGICALLY_EXHAUSTIVE_REQUEST_SPECS'] = 'true'
   Rake::Task['spec'].invoke
 end
 
