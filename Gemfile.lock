@@ -77,6 +77,7 @@ GEM
       activesupport (>= 4.2.0)
     faker (1.9.3)
       i18n (>= 0.7)
+    gemika (0.4.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     hirb (0.7.3)
@@ -206,6 +207,7 @@ DEPENDENCIES
   database_cleaner
   factory_bot
   faker
+  gemika
   rails (~> 5.1.0)
   rake
   ransack

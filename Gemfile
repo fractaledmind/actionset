@@ -12,4 +12,5 @@ group :test do
   gem 'activerecord'
   gem 'rspec-rails'
   gem 'sqlite3'
+  gem 'gemika'
 end
