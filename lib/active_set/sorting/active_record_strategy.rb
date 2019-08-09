@@ -65,13 +65,11 @@ class ActiveSet
       end
 
       def nil_sorter_for(column, direction)
-        nil_sorter_operator = if ActiveSet.configuration.on_asc_sort_nils_come == :last
-                                direction == :asc ? :eq : :not_eq
-                              else
-                                direction == :asc ? :not_eq : :eq
-                              end
-
-        column.send(nil_sorter_operator, nil)
+        if ActiveSet.configuration.on_asc_sort_nils_come == :last
+          "CASE WHEN #{column.relation.name}.#{column.name} IS NULL THEN 0 ELSE 1 END"
+        else
+          "CASE WHEN #{column.relation.name}.#{column.name} IS NULL THEN 1 ELSE 0 END"
+        end
       end
     end
   end
