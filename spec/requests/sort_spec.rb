@@ -48,7 +48,7 @@ RSpec.describe 'GET /things?sort', type: :request do
     end
 
     ApplicationRecord::SORTABLE_TYPES.each do |type|
-      [all_possible_sort_instructions_for(type).sample].each do |instruction|
+      all_possible_sort_instructions_for(type).each do |instruction|
         context instruction do
           let(:instructions) { instruction }
 
@@ -56,7 +56,7 @@ RSpec.describe 'GET /things?sort', type: :request do
         end
       end
 
-      [all_possible_paths_for(type).sample].each do |path|
+      all_possible_paths_for(type).each do |path|
         [:asc, 'desc'].each do |dir|
           context "{ 0: { attribute: #{path}, direction: #{dir} } }" do
             let(:instructions) do
@@ -86,7 +86,7 @@ RSpec.describe 'GET /things?sort', type: :request do
     end
 
     ApplicationRecord::SORTABLE_TYPES.combination(2).each do |type_1, type_2|
-      [all_possible_sort_instruction_combinations_for(type_1, type_2).sample].each do |instructions|
+      all_possible_sort_instruction_combinations_for(type_1, type_2).each do |instructions|
         context instructions do
           let(:instructions) { instructions }
 
@@ -94,7 +94,7 @@ RSpec.describe 'GET /things?sort', type: :request do
         end
       end
 
-      [all_possible_path_combinations_for(type_1, type_2).sample].each do |path_1, path_2|
+      all_possible_path_combinations_for(type_1, type_2).each do |path_1, path_2|
         context "{ 0: { attribute: #{path_1}, direction: asc }, 1: { attribute: #{path_2}, direction: desc } }" do
           let(:instructions) do
             {

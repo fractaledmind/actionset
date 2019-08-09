@@ -27,7 +27,7 @@ RSpec.describe 'GET /things?filter', type: :request do
       [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
-        [all_possible_paths_for(type).sample].each do |path|
+        all_possible_paths_for(type).each do |path|
           context "{ #{path}: }" do
             let(:instructions) do
               {
@@ -82,7 +82,7 @@ RSpec.describe 'GET /things?filter', type: :request do
       [1, 2].each do |id|
         let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
-        [all_possible_path_combinations_for(type_1, type_2).sample].each do |path_1, path_2|
+        all_possible_path_combinations_for(type_1, type_2).each do |path_1, path_2|
           context "{ #{path_1}:, #{path_2} }" do
             let(:instructions) do
               {
