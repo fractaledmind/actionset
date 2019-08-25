@@ -1,0 +1,9 @@
+source 'https://rubygems.org'
+
+# Runtime dependencies
+gem 'activerecord', '~> 6.0.0.rc1'
+gem 'mysql2', '~> 0.4.4'
+gem 'gemika'
+
+# Gem under test
+gemspec
