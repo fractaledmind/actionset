@@ -1,7 +1,27 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.4.1
+  - 2.4.6
+  - 2.5.5
+  - 2.6.3
+gemfile:
+  - Gemfile.4.2.mysql2
+  - Gemfile.4.2.pg
+  - Gemfile.4.2.sqlite3
+  - Gemfile.5.2.mysql2
+  - Gemfile.5.2.pg
+  - Gemfile.5.2.sqlite3
+  - Gemfile.6.0.mysql2
+  - Gemfile.6.0.pg
+  - Gemfile.6.0.sqlite3
+matrix:
+  exclude:
+    - rvm: 2.4.6
+      gemfile: Gemfile.6.0.mysql2
+    - rvm: 2.4.6
+      gemfile: Gemfile.6.0.pg
+    - rvm: 2.4.6
+      gemfile: Gemfile.6.0.sqlite3
 before_install:
   - gem install bundler -v 1.15.4
   - export TZ=America/New_York
