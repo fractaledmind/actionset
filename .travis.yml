@@ -31,7 +31,7 @@ before_install:
   - gem install bundler -v 1.15.4
   - export TZ=America/New_York
 before_script:
-  - psql -c 'create database mygem_test;' -U postgres
-  - mysql -e 'create database IF NOT EXISTS mygem_test;'
+  - psql -c 'create database actionset_test;' -U postgres
+  - mysql -e 'create database IF NOT EXISTS actionset_test;'
 after_success:
   - bash < (curl -s https://codecov.io/bash)
