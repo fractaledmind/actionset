@@ -1,0 +1,13 @@
+mysql:
+  database: actionset_test
+  host: localhost
+  username: root
+  password: secret
+
+postgresql:
+  database: actionset_test
+  user:
+  password:
+
+sqlite:
+  database: ":memory:"

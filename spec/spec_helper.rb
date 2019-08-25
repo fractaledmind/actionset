@@ -3,6 +3,7 @@
 require 'simplecov_helper'
 require 'database_cleaner_helper'
 require 'inspect_failure_helper'
+require 'gemika_helper'
 
 require 'bundler'
 require 'combustion'

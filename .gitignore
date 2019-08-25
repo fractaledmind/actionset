@@ -12,3 +12,5 @@
 *.gem
 *.sqlite
 .DS_Store
+
+spec/support/database.yml
