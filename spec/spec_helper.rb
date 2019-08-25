@@ -3,11 +3,9 @@
 require 'simplecov_helper'
 require 'database_cleaner_helper'
 require 'inspect_failure_helper'
-require 'gemika_helper'
+require 'combustion_helper'
 
 require 'bundler'
-require 'combustion'
-Combustion.initialize! :active_record, :action_controller, :action_view
 Bundler.require :default, :development
 
 require 'bundler/setup'
