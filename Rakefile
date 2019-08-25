@@ -14,6 +14,7 @@ RSpec::Core::RakeTask.new(:spec)
 task :custom_default do
   ENV['COVERAGE'] = 'true'
   ENV['INSPECT_FAILURE'] = 'true'
+  ENV['LOGICALLY_EXHAUSTIVE_REQUEST_SPECS'] = 'true'
   Rake::Task['matrix:spec'].invoke
 end
 

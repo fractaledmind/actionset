@@ -19,11 +19,8 @@ RSpec.describe ActiveSet do
 
         ApplicationRecord::DB_FIELD_TYPES.each do |type|
           [1, 2].each do |id|
-            INCLUSIVE_UNARY_OPERATORS.each do |operator|
-              %W[
-                #{type}(#{operator})
-                only.#{type}(#{operator})
-              ].each do |path|
+            inclusive_unary_operators.each do |operator|
+              all_possible_type_operator_paths_for(type, operator).each do |path|
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:instruction_single_value) do
@@ -40,11 +37,8 @@ RSpec.describe ActiveSet do
               end
             end
 
-            EXCLUSIVE_UNARY_OPERATORS.each do |operator|
-              %W[
-                #{type}(#{operator})
-                only.#{type}(#{operator})
-              ].each do |path|
+            exclusive_unary_operators.each do |operator|
+              all_possible_type_operator_paths_for(type, operator).each do |path|
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:instruction_single_value) do
@@ -61,11 +55,8 @@ RSpec.describe ActiveSet do
               end
             end
 
-            INCONCLUSIVE_UNARY_OPERATORS.each do |operator|
-              %W[
-                #{type}(#{operator})
-                only.#{type}(#{operator})
-              ].each do |path|
+            inconclusive_unary_operators.each do |operator|
+              all_possible_type_operator_paths_for(type, operator).each do |path|
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:instruction_single_value) do
@@ -91,11 +82,8 @@ RSpec.describe ActiveSet do
               end
             end
 
-            INCLUSIVE_BINARY_OPERATORS.each do |operator|
-              %W[
-                #{type}(#{operator})
-                only.#{type}(#{operator})
-              ].each do |path|
+            inclusive_binary_operators.each do |operator|
+              all_possible_type_operator_paths_for(type, operator).each do |path|
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:other_thing) do
@@ -120,11 +108,8 @@ RSpec.describe ActiveSet do
               end
             end
 
-            EXCLUSIVE_BINARY_OPERATORS.each do |operator|
-              %W[
-                #{type}(#{operator})
-                only.#{type}(#{operator})
-              ].each do |path|
+            exclusive_binary_operators.each do |operator|
+              all_possible_type_operator_paths_for(type, operator).each do |path|
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:other_thing) do
@@ -149,11 +134,8 @@ RSpec.describe ActiveSet do
               end
             end
 
-            INCONCLUSIVE_BINARY_OPERATORS.each do |operator|
-              %W[
-                #{type}(#{operator})
-                only.#{type}(#{operator})
-              ].each do |path|
+            inconclusive_binary_operators.each do |operator|
+              all_possible_type_operator_paths_for(type, operator).each do |path|
                 context "{ #{path}: }" do
                   let(:matching_item) { instance_variable_get("@thing_#{id}") }
                   let(:other_thing) do
