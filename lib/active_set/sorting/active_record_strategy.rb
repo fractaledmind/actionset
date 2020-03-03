@@ -54,7 +54,9 @@ class ActiveSet
         arel_column = set_instruction.arel_column
         arel_direction = direction_operator(set_instruction.value)
 
-        attribute_model.order(nil_sorter_for(arel_column, arel_direction))
+        attribute_model.order(nil_sorter_for(set_instruction.arel_table,
+                                             set_instruction.arel_column_name,
+                                             arel_direction))
                        .order(arel_column.send(arel_direction))
       end
 
@@ -64,12 +66,16 @@ class ActiveSet
         :asc
       end
 
-      def nil_sorter_for(column, direction)
-        if ActiveSet.configuration.on_asc_sort_nils_come == :last
-          "CASE WHEN #{column.relation.name}.#{column.name} IS NULL THEN 0 ELSE 1 END"
-        else
-          "CASE WHEN #{column.relation.name}.#{column.name} IS NULL THEN 1 ELSE 0 END"
-        end
+      def nil_sorter_for(model, column, direction)
+        first = 'THEN 0 ELSE 1 END'
+        last = 'THEN 1 ELSE 0 END'
+        then_statement = if ActiveSet.configuration.on_asc_sort_nils_come == :last
+                           direction == :asc ? last : first
+                         else
+                           direction == :asc ? first : last
+                         end
+
+        "CASE WHEN #{model.table_name}.#{column} IS NULL #{then_statement}"
       end
     end
   end
