@@ -67,15 +67,21 @@ class ActiveSet
       end
 
       def nil_sorter_for(model, column, direction)
+        "CASE WHEN #{model.table_name}.#{column} IS NULL #{nil_sorter_then_statement(direction)}"
+      end
+
+      def nil_sorter_then_statement(direction)
         first = 'THEN 0 ELSE 1 END'
         last = 'THEN 1 ELSE 0 END'
-        then_statement = if ActiveSet.configuration.on_asc_sort_nils_come == :last
-                           direction == :asc ? last : first
-                         else
-                           direction == :asc ? first : last
-                         end
+        if ActiveSet.configuration.on_asc_sort_nils_come == :last
+          return last if direction == :asc
 
-        "CASE WHEN #{model.table_name}.#{column} IS NULL #{then_statement}"
+          return first
+        else
+          return first if direction == :asc
+
+          return last
+        end
       end
     end
   end
