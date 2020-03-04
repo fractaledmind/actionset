@@ -32,11 +32,11 @@ class ActiveSet
       @attribute = attribute
     end
 
-    def operator(default: '==')
+    def operator
       return @operator if defined? @operator
 
       attribute_instruction = @keypath.last
-      @operator = (attribute_instruction[operator_regex, 1] || default).to_sym
+      @operator = attribute_instruction[operator_regex, 1]&.to_sym
     end
 
     def options

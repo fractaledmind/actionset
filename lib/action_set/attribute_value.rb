@@ -11,7 +11,7 @@ module ActionSet
     def cast(to:)
       adapters.reduce(nil) do |_, adapter|
         mayble_value_or_nil = adapter.new(@raw, to).process
-        next if mayble_value_or_nil.nil?
+        next nil if mayble_value_or_nil.nil?
 
         return mayble_value_or_nil
       end
@@ -62,7 +62,9 @@ module ActionSet
       begin
         require 'active_model/type'
       rescue LoadError
+        # :nocov:
         require 'active_record/type'
+        # :nocov:
       end
 
       def initialize(raw, target)
@@ -106,13 +108,17 @@ module ActionSet
       def init_typecaster(const_name)
         type_class.const_get(const_name).new
       rescue StandardError
+        # :nocov:
         nil
+        # :nocov:
       end
 
       def type_class
         ActiveModel::Type
       rescue NameError
+        # :nocov:
         ActiveRecord::Type
+        # :nocov:
       end
     end
 

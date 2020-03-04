@@ -5,7 +5,8 @@ require 'active_support/core_ext/object/blank'
 require 'active_support/lazy_load_hooks'
 require 'active_set'
 
-require_relative './action_set/attribute_value'
+require_relative './action_set/filter_instructions'
+require_relative './action_set/sort_instructions'
 require_relative './action_set/helpers/helper_methods'
 
 module ActionSet
@@ -24,13 +25,13 @@ module ActionSet
 
     def filter_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.filter(filter_instructions_for(set)) if filter_params.any?
+      active_set = active_set.filter(FilterInstructions.new(filter_params, set, self).get) if filter_params.any?
       active_set
     end
 
     def sort_set(set)
       active_set = ensure_active_set(set)
-      active_set = active_set.sort(sort_params) if sort_params.any?
+      active_set = active_set.sort(SortInstructions.new(sort_params, set, self).get) if sort_params.any?
       active_set
     end
 
@@ -52,30 +53,11 @@ module ActionSet
 
     private
 
-    def filter_instructions_for(set)
-      flatten_keys_of(filter_params).reject { |_, v| v.try(:empty?) }.each_with_object({}) do |(keypath, value), memo|
-        typecast_value = if value.respond_to?(:each)
-                           value.map { |v| filter_typecasted_value_for(keypath, v, set) }
-                         else
-                           filter_typecasted_value_for(keypath, value, set)
-                         end
-
-        memo[keypath] = typecast_value
-      end
-    end
-
-    def filter_typecasted_value_for(keypath, value, set)
-      instruction = ActiveSet::AttributeInstruction.new(keypath, value)
-      item_with_value = set.find { |i| !instruction.value_for(item: i).nil? }
-      item_value = instruction.value_for(item: item_with_value)
-      ActionSet::AttributeValue.new(value)
-                               .cast(to: item_value.class)
-    end
-
     def paginate_instructions
       paginate_params.transform_values(&:to_i)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def export_instructions
       {}.tap do |struct|
         struct[:format] = export_params[:format] || request.format.symbol
@@ -93,10 +75,13 @@ module ActionSet
                            elsif respond_to?(:export_set_columns, true)
                              send(:export_set_columns)
                            else
+                             # :nocov:
                              [{}]
+                             # :nocov:
                            end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def filter_params
       params.fetch(:filter, {}).to_unsafe_hash

@@ -15,16 +15,16 @@ FactoryBot.define do
     sequence(:boolean, &:even?)
     sequence(:date) do |n|
       [
-        "19#{rand(99).to_s.rjust(2, '0')}",
+        "19#{fit_to_minmax(n, max: 99).to_s.rjust(2, '0')}",
         fit_to_minmax(n, max: 12).to_s.rjust(2, '0'),
-        fit_to_minmax(n, max: 31).to_s.rjust(2, '0')
+        fit_to_minmax(n, max: 28).to_s.rjust(2, '0')
       ].join('-')
     end
     sequence(:datetime) do |n|
       "#{date}T#{time}:#{fit_to_minmax(n, max: 60).to_s.rjust(2, '0')}+00:00"
     end
-    sequence(:decimal)  { |n| Faker::Number.decimal(2).to_f + n }
-    sequence(:float)    { |n| Faker::Number.decimal(2).to_f + n }
+    sequence(:decimal)  { |n| (n.to_s + '.' + Faker::Number.number(2)).to_f }
+    sequence(:float)    { |n| (n.to_s + '.' + Faker::Number.number(2)).to_f }
     sequence(:integer, &:to_i)
     sequence(:string) do |n|
       n.hash.abs.to_s.split('').map { |i| ('a'..'z').to_a.shuffle[i.to_i] }.join

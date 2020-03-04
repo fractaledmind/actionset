@@ -1,3 +1,61 @@
+v 0.9.2
+  - allow for form-friendly filter parameters
+    ```
+      {
+        '0': {
+          attribute: :foo,
+          operator: :EQ,
+          query: 'query'
+        },
+        '1': {
+          attribute: :bar,
+          operator: :GT,
+          query: 'value'
+        }
+      }
+
+      { foo: 'query', bar(GT): 'value' }
+    ```
+  - allow for form-friendly sort parameters
+    ```
+      {
+        '0': {
+          attribute: :foo,
+          direction: :desc
+        },
+        '1': {
+          attribute: :bar,
+          direction: :asc
+        }
+      }
+
+      { foo: 'desc', bar: 'asc' }
+    ```
+
+v 0.9.1
+  - ensure that our RubyGems build is stable, since we had a TravisCI build problem in the last version
+v 0.9.0
+  - Add Enumerable support for the base filtering operations
+    + EQ, NOT_EQ, EQ_ANY, EQ_ALL, NOT_EQ_ANY, NOT_EQ_ALL
+    + IN, NOT_IN, IN_ANY, IN_ALL, NOT_IN_ANY, NOT_IN_ALL
+    + MATCHES, DOES_NOT_MATCH, MATCHES_ANY, MATCHES_ALL, DOES_NOT_MATCH_ANY, DOES_NOT_MATCH_ALL
+    + LT, LTEQ, LT_ANY, LT_ALL, LTEQ_ANY, LTEQ_ALL
+    + GT, GTEQ, GT_ANY, GT_ALL, GTEQ_ANY, GTEQ_ALL
+    + BETWEEN, NOT_BETWEEN
+  - Add unary predicate filtering operators, for both ActiveRecord and Enumerable
+    + IS_TRUE, IS_FALSE
+    + IS_NULL, NOT_NULL
+    + IS_PRESENT, IS_BLANK
+  - Add computed matcher filtering operators, for both ActiveRecord and Enumerable
+    + MATCH_START, MATCH_START_ANY, MATCH_START_ALL, MATCH_NOT_START, MATCH_NOT_START_ANY, MATCH_NOT_START_ALL
+    + MATCH_END, MATCH_END_ANY, MATCH_END_ALL, MATCH_NOT_END, MATCH_NOT_END_ANY, MATCH_NOT_END_ALL
+    + MATCH_CONTAIN, MATCH_CONTAIN_ANY, MATCH_CONTAIN_ALL, MATCH_NOT_CONTAIN, MATCH_NOT_CONTAIN_ANY, MATCH_NOT_CONTAIN_ALL
+  - Add view helpers for the range of records shown on the current page
+  - Use ActiveRecord's data dictionary to look up database column types when converting filter params to filter instructions
+  - Allow app to define type hints for filter attributes when converting filter params to filter instructions
+  - Allow sort params to be passed in short or long form
+    + e.g. { attribute: x, direction: x } or { attribute: direction }
+  - Fix enumerable intersection filtering when working across associations
 v 0.8.2
   - add `ActiveSet.configuration.on_asc_sort_nils_come` configuration
 v 0.8.1

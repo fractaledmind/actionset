@@ -9,15 +9,37 @@ class ActiveSet
     end
 
     def initial_relation
-      return @set if @attribute_instruction.associations_array.empty?
+      return @initial_relation if defined? @initial_relation
 
-      @set.eager_load(@attribute_instruction.associations_hash)
+      @initial_relation = if @attribute_instruction.associations_array.empty?
+                            @set
+                          else
+                            @set.eager_load(@attribute_instruction.associations_hash)
+                          end
     end
 
-    def arel_type
-      attribute_model
-        .columns_hash[@attribute_instruction.attribute]
-        .type
+    def arel_column
+      return @arel_column if defined? @arel_column
+
+      arel_column = arel_table[@attribute_instruction.attribute]
+      arel_column = arel_column.lower if case_insensitive_operation?
+
+      @arel_column = arel_column
+    end
+
+    def arel_column_name
+      arel_table[@attribute_instruction.attribute].name
+    end
+
+    def attribute_model
+      return @set.klass if @attribute_instruction.associations_array.empty?
+      return @attribute_model if defined? @attribute_model
+
+      @attribute_model = @attribute_instruction
+                         .associations_array
+                         .reduce(@set) do |obj, assoc|
+        obj.reflections[assoc.to_s]&.klass
+      end
     end
 
     def arel_table
@@ -31,45 +53,16 @@ class ActiveSet
       end
     end
 
-    # rubocop:disable Lint/UnderscorePrefixedVariableName
-    def arel_column
-      _arel_column = arel_table[@attribute_instruction.attribute]
-      return _arel_column.lower if case_insensitive_operation?
+    private
 
-      _arel_column
+    def arel_type
+      attribute_model
+        &.columns_hash[@attribute_instruction.attribute]
+        &.type
     end
-    # rubocop:enable Lint/UnderscorePrefixedVariableName
-
-    def arel_column_name
-      arel_table[@attribute_instruction.attribute].name
-    end
-
-    def arel_operator
-      @attribute_instruction.operator(default: :eq)
-    end
-
-    # rubocop:disable Lint/UnderscorePrefixedVariableName
-    def arel_value
-      _arel_value = @attribute_instruction.value
-      return _arel_value.downcase if case_insensitive_operation?
-
-      _arel_value
-    end
-    # rubocop:enable Lint/UnderscorePrefixedVariableName
 
     def case_insensitive_operation?
       @attribute_instruction.case_insensitive? && arel_type.presence_in(%i[string text])
-    end
-
-    def attribute_model
-      return @set.klass if @attribute_instruction.associations_array.empty?
-      return @attribute_model if defined? @attribute_model
-
-      @attribute_model = @attribute_instruction
-                         .associations_array
-                         .reduce(@set) do |obj, assoc|
-        obj.reflections[assoc.to_s]&.klass
-      end
     end
   end
 end

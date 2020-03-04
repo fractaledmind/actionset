@@ -48,21 +48,68 @@ RSpec.describe 'GET /things?sort', type: :request do
     end
 
     ApplicationRecord::SORTABLE_TYPES.each do |type|
-      all_possible_sort_instructions_for(type).sample do |instruction|
+      all_possible_sort_instructions_for(type).each do |instruction|
         context instruction do
-          it_should_behave_like 'a sorted collection', instruction do
-            let(:result) { @active_set.sort(instruction) }
+          let(:instructions) { instruction }
+
+          it_should_behave_like 'a sorted collection', instruction
+        end
+      end
+
+      all_possible_paths_for(type).each do |path|
+        [:asc, 'desc'].each do |dir|
+          context "{ 0: { attribute: #{path}, direction: #{dir} } }" do
+            let(:instructions) do
+              {
+                '0': {
+                  attribute: path,
+                  direction: dir
+                }
+              }
+            end
+
+            it_should_behave_like 'a sorted collection', { path => dir }
+          end
+
+          context "{ attribute: #{path}, direction: #{dir} }" do
+            let(:instructions) do
+              {
+                attribute: path,
+                direction: dir
+              }
+            end
+
+            it_should_behave_like 'a sorted collection', { path => dir }
           end
         end
       end
     end
 
     ApplicationRecord::SORTABLE_TYPES.combination(2).each do |type_1, type_2|
-      all_possible_sort_instruction_combinations_for(type_1, type_2).sample do |instructions|
+      all_possible_sort_instruction_combinations_for(type_1, type_2).each do |instructions|
         context instructions do
-          it_should_behave_like 'a sorted collection', instructions do
-            let(:result) { @active_set.sort(instructions) }
+          let(:instructions) { instructions }
+
+          it_should_behave_like 'a sorted collection', instructions
+        end
+      end
+
+      all_possible_path_combinations_for(type_1, type_2).each do |path_1, path_2|
+        context "{ 0: { attribute: #{path_1}, direction: asc }, 1: { attribute: #{path_2}, direction: desc } }" do
+          let(:instructions) do
+            {
+              '0': {
+                attribute: path_1,
+                direction: 'asc'
+              },
+              '1': {
+                attribute: path_2,
+                direction: :desc
+              }
+            }
           end
+
+          it_should_behave_like 'a sorted collection', { path_1 => 'asc', path_2 => :desc }
         end
       end
     end
