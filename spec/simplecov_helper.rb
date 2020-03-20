@@ -10,10 +10,10 @@ if ENV['COVERAGE'] == 'true'
 
   # SimpleCov.minimum_coverage 99
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-                                                                   SimpleCov::Formatter::HTMLFormatter,
-                                                                   SimpleCov::Formatter::Console,
-                                                                   SimpleCov::Formatter::Codecov
-                                                                 ])
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::Console,
+    SimpleCov::Formatter::Codecov
+  ])
   SimpleCov.start 'rails' do
     %w[
       lib/active_set/version.rb
