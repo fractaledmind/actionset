@@ -27,6 +27,10 @@ class ActiveSet
       @arel_column = arel_column
     end
 
+    def arel_column_name
+      arel_table[@attribute_instruction.attribute].name
+    end
+
     def attribute_model
       return @set.klass if @attribute_instruction.associations_array.empty?
       return @attribute_model if defined? @attribute_model
@@ -38,14 +42,6 @@ class ActiveSet
       end
     end
 
-    private
-
-    def arel_type
-      attribute_model
-        &.columns_hash[@attribute_instruction.attribute]
-        &.type
-    end
-
     def arel_table
       # This is to work around an bug in ActiveRecord,
       # where BINARY fields aren't found properly when using
@@ -55,6 +51,14 @@ class ActiveSet
       else
         attribute_model.arel_table
       end
+    end
+
+    private
+
+    def arel_type
+      attribute_model
+        &.columns_hash[@attribute_instruction.attribute]
+        &.type
     end
 
     def case_insensitive_operation?
