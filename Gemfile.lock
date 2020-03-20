@@ -63,6 +63,7 @@ GEM
       json
       simplecov
       url
+    colorize (0.8.1)
     combustion (1.1.1)
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
@@ -77,6 +78,9 @@ GEM
       activesupport (>= 4.2.0)
     faker (2.1.2)
       i18n (>= 0.8)
+    fasterer (0.8.2)
+      colorize (~> 0.7)
+      ruby_parser (>= 3.14.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.6.0)
@@ -165,6 +169,9 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
     ruby-progressbar (1.10.1)
+    ruby_parser (3.14.2)
+      sexp_processor (~> 4.9)
+    sexp_processor (4.14.1)
     simplecov (0.17.0)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -210,6 +217,7 @@ DEPENDENCIES
   database_cleaner
   factory_bot
   faker
+  fasterer
   rails (~> 5.1.0)
   rake
   ransack
