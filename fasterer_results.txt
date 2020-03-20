@@ -1,0 +1,27 @@
+spec/active_set/sort_spec.rb:58 Enumerable#sort is slower than Enumerable#sort_by.
+spec/active_set/sort_spec.rb:68 Enumerable#sort is slower than Enumerable#sort_by.
+
+spec/active_set_spec.rb:42 Enumerable#sort is slower than Enumerable#sort_by.
+
+lib/action_set.rb:36 Enumerable#sort is slower than Enumerable#sort_by.
+lib/action_set.rb:109 Hash#fetch with second argument is slower than Hash#fetch with block.
+lib/action_set.rb:113 Hash#fetch with second argument is slower than Hash#fetch with block.
+lib/action_set.rb:117 Hash#fetch with second argument is slower than Hash#fetch with block.
+lib/action_set.rb:121 Hash#fetch with second argument is slower than Hash#fetch with block.
+
+lib/action_set/filter_instructions.rb:62 Hash#fetch with second argument is slower than Hash#fetch with block.
+
+lib/action_set/helpers/params/form_for_object_helper.rb:9 Hash#fetch with second argument is slower than Hash#fetch with block.
+
+lib/active_set/filtering/enumerable/operators.rb:299 Hash#fetch with second argument is slower than Hash#fetch with block.
+lib/active_set/filtering/enumerable/operators.rb:300 Hash#fetch with second argument is slower than Hash#fetch with block.
+
+lib/active_set/filtering/active_record/set_instruction.rb:16 Hash#fetch with second argument is slower than Hash#fetch with block.
+
+lib/active_set/filtering/active_record/operators.rb:268 Hash#fetch with second argument is slower than Hash#fetch with block.
+lib/active_set/filtering/active_record/operators.rb:269 Hash#fetch with second argument is slower than Hash#fetch with block.
+
+lib/helpers/flatten_keys_of.rb:39 Using each_with_index is slower than while loop.
+lib/helpers/flatten_keys_of.rb:49 Hash#merge! with one argument is slower than Hash#[].
+
+108 files inspected, 17 offenses detected
