@@ -9,9 +9,20 @@ if ENV['INSPECT_FAILURE'] == 'true'
 
       let_data = @__memoized.instance_variable_get('@memoized')
       ivar_data = instance_variables
-                  .reject { |v| v.to_s.start_with?('@_') }
-                  .reject { |v| v.presence_in %i[@example @fixture_cache @fixture_connections @connection_subscriber @loaded_fixtures] }
-                  .map { |v| [v, instance_variable_get(v)] }
+                  .reject { |v|
+                    v.to_s.start_with?('@_')
+                  }
+                  .reject { |v|
+                    v.presence_in %i[
+                      @example
+                      @fixture_cache
+                      @fixture_connections
+                      @connection_subscriber
+                      @loaded_fixtures]
+                  }
+                  .map { |v|
+                    [v, instance_variable_get(v)]
+                  }
                   .to_h
 
       # https://www.jvt.me/posts/2019/03/29/pretty-printing-json-ruby/
