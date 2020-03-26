@@ -30,6 +30,7 @@ class ActiveSet
 
         def to_sql_str(value)
           return value.map { |a| to_sql_str(a) } if value.respond_to?(:map)
+          return value if arel_type == :binary
 
           arel_node = Arel::Nodes::Casted.new(value, arel_column)
           sql_value = arel_node.to_sql
