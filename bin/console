@@ -1,13 +1,22 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-ENV['RAILS_ENV'] ||= 'test'
-
 require 'bundler'
 require 'simplecov'
 require 'combustion'
+require 'gemika'
 
-Combustion.initialize! :active_record, :action_controller, :action_view
+Combustion.initialize! :active_record, :action_controller, :action_view do
+  Rails.env = if Gemika::Env.gem?('pg')
+                'postgresql'
+              elsif Gemika::Env.gem?('mysql2')
+                'mysql'
+              else
+                'sqlite'
+              end
+  ENV['RAILS_ENV'] ||= Rails.env
+end
+
 Bundler.require :default, :development
 
 require 'bundler/setup'
@@ -21,7 +30,7 @@ rescue FactoryBot::DuplicateDefinitionError
 end
 
 # (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
+# require 'pry'
 # Pry.start
 
 require 'irb'
