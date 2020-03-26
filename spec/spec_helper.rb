@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'bundler'
+require 'support/combustion_helper'
 Bundler.require :default, :development
 
 require 'bundler/setup'
