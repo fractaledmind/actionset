@@ -178,7 +178,7 @@ DEPENDENCIES
   factory_bot
   faker
   gemika
-  mysql2 (~> 0.3.17)
+  mysql2 (~> 0.3)
   pry
   rake
   ransack
