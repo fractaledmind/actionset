@@ -87,22 +87,25 @@ module ActionSet
       def possible_typecasters
         @possible_typecasters ||= type_class.constants
                                             .map(&:to_s)
-                                            .select { |t| can_typecast?(t) }
                                             .reject { |t| t == 'Time' }
+                                            .select { |t| can_typecast?(t) }
                                             .map { |t| init_typecaster(t) }
                                             .compact
       end
 
       def typecast(to_type, value)
-        return to_type.type_cast(value) if to_type.respond_to? :type_cast
+        return to_type.type_cast(value)           if to_type.respond_to? :type_cast
+        return to_type.type_cast_from_user(value) if to_type.respond_to? :type_cast_from_user
 
         to_type.cast(value)
       end
 
       def can_typecast?(const_name)
         typecasting_class = type_class.const_get(const_name)
+
         typecasting_class.instance_methods.include?(:cast) ||
-          typecasting_class.instance_methods.include?(:type_cast)
+          typecasting_class.instance_methods.include?(:type_cast) ||
+          typecasting_class.instance_methods.include?(:type_cast_from_user)
       end
 
       def init_typecaster(const_name)
