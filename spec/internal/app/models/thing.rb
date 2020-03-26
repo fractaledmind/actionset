@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Thing < ApplicationRecord
+  include Scopes
+
   belongs_to :only
   has_many :alots,
            inverse_of: :thing
