@@ -2,27 +2,28 @@ language: ruby
 sudo: false
 cache: bundler
 rvm:
+  - 2.7.0
+  - 2.6.5
+  - 2.5.7
   - 2.4.9
-  - 2.5.5
-  - 2.6.3
 gemfile:
-  - Gemfile.4.2.mysql2
-  - Gemfile.4.2.pg
-  - Gemfile.4.2.sqlite3
-  - Gemfile.5.2.mysql2
-  - Gemfile.5.2.pg
-  - Gemfile.5.2.sqlite3
-  - Gemfile.6.0.mysql2
-  - Gemfile.6.0.pg
-  - Gemfile.6.0.sqlite3
+  - gemfiles/Gemfile.4.2.mysql2
+  - gemfiles/Gemfile.4.2.pg
+  - gemfiles/Gemfile.4.2.sqlite3
+  - gemfiles/Gemfile.5.2.mysql2
+  - gemfiles/Gemfile.5.2.pg
+  - gemfiles/Gemfile.5.2.sqlite3
+  - gemfiles/Gemfile.6.0.mysql2
+  - gemfiles/Gemfile.6.0.pg
+  - gemfiles/Gemfile.6.0.sqlite3
 matrix:
   exclude:
-    - rvm: 2.4.6
-      gemfile: Gemfile.6.0.mysql2
-    - rvm: 2.4.6
-      gemfile: Gemfile.6.0.pg
-    - rvm: 2.4.6
-      gemfile: Gemfile.6.0.sqlite3
+    - rvm: 2.4.9
+      gemfile: gemfiles/Gemfile.6.0.mysql2
+    - rvm: 2.4.9
+      gemfile: gemfiles/Gemfile.6.0.pg
+    - rvm: 2.4.9
+      gemfile: gemfiles/Gemfile.6.0.sqlite3
 install:
   # Replace default Travis CI bundler script with a version that doesn't
   # explode when lockfile doesn't match recently bumped version

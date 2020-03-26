@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require 'simplecov_helper'
-require 'database_cleaner_helper'
-require 'inspect_failure_helper'
-require 'combustion_helper'
-
 require 'bundler'
 Bundler.require :default, :development
 
@@ -16,6 +11,10 @@ require 'active_set'
 require 'rspec/rails'
 require 'database_cleaner'
 require 'capybara/rspec'
+require 'gemika'
+
+database = Gemika::Database.new(config_folder: 'spec/internal/config')
+database.connect
 
 Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 

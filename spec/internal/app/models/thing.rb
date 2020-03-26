@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Thing < ApplicationRecord
-  belongs_to :only,
-             optional: true
+  belongs_to :only
   has_many :alots,
            inverse_of: :thing
   has_many :relateds,
