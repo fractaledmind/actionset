@@ -38,7 +38,7 @@ module PathHelpers
     relevant_paths_for_testing_given_environment(paths_for_test)
   end
 
-  def value_for(object:, path:)
+  def attr_value_for(object:, path:)
     ActiveSet::AttributeInstruction.new(path, nil).value_for(item: object)
   end
 end
