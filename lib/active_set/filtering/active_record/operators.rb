@@ -15,7 +15,7 @@ class ActiveSet
           end
         end
         BLANK_TRANSFORMER = proc do |type:, **_ctx|
-          if type.presence_in %i[date float integer]
+          if type.presence_in %i[date float integer time datetime boolean]
             [nil]
           else
             Constants::BLANK_VALUES
@@ -34,6 +34,7 @@ class ActiveSet
           next sql.map { |str| START_MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
 
           str = MATCHER_TRANSFORMER.call(sql: sql, type: type, **ctx)
+          next str if ['boolean'].include? type.to_s
 
           str + '%'
         end
@@ -41,6 +42,7 @@ class ActiveSet
           next sql.map { |str| END_MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
 
           str = MATCHER_TRANSFORMER.call(sql: sql, type: type, **ctx)
+          next str if ['boolean'].include? type.to_s
 
           '%' + str
         end
@@ -48,6 +50,7 @@ class ActiveSet
           next sql.map { |str| CONTAIN_MATCHER_TRANSFORMER.call(sql: str, type: type, **ctx) } if sql.respond_to?(:map)
 
           str = MATCHER_TRANSFORMER.call(sql: sql, type: type, **ctx)
+          next str if ['boolean'].include? type.to_s
 
           '%' + str + '%'
         end

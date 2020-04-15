@@ -54,9 +54,9 @@ class ActiveSet
         arel_column = set_instruction.arel_column
         arel_direction = direction_operator(set_instruction.value)
 
-        attribute_model.order(nil_sorter_for(set_instruction.arel_table,
-                                             set_instruction.arel_column_name,
-                                             arel_direction))
+        attribute_model.order(Arel.sql(nil_sorter_for(set_instruction.arel_table,
+                                                      set_instruction.arel_column_name,
+                                                      arel_direction)))
                        .order(arel_column.send(arel_direction))
       end
 
