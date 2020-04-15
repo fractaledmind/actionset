@@ -1,3 +1,8 @@
+v 0.10.0
+  - Bump testing internals to Rails 5.2
+  - Fix deprecation notice on sorts.
+  - Prevent additional types from checking for empty strings in blank queries. These DB types will not support empty strings, so we do not need to check for those values (and doing so corrupts the SQL).
+  - Do not attach wildcards to boolean search values. They have no meaning when searching boolean fields and all get transformed to "true"
 v 0.9.2
   - allow for form-friendly filter parameters
     ```
