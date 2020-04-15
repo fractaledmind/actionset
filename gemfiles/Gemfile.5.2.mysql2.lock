@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    actionset (0.9.2)
+    actionset (0.10.0)
       activesupport
       railties
 
