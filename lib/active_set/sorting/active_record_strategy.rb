@@ -67,7 +67,7 @@ class ActiveSet
       end
 
       def nil_sorter_for(model, column, direction)
-        "CASE WHEN #{model.table_name}.#{column} IS NULL #{nil_sorter_then_statement(direction)}"
+        Arel.sql("CASE WHEN #{model.table_name}.#{column} IS NULL #{nil_sorter_then_statement(direction)}")
       end
 
       def nil_sorter_then_statement(direction)
