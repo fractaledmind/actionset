@@ -13,17 +13,13 @@ class ActiveSet
       def execute
         return false unless @set.respond_to? :to_sql
 
-        x = executable_instructions.reduce(@set) do |set, attribute_instruction|
+        executable_instructions.reduce(@set) do |set, attribute_instruction|
           statement = set.merge(initial_relation_for(attribute_instruction))
           statement = statement.merge(order_operation_for(attribute_instruction))
 
           attribute_instruction.processed = true
           statement
         end
-
-        # require 'pry'; binding.pry
-
-        x
       end
 
       def executable_instructions
@@ -40,6 +36,59 @@ class ActiveSet
       end
 
       private
+
+      def order_operation_for(attribute_instruction)
+        attribute_model = attribute_model_for(attribute_instruction)
+        table_name = attribute_model.table_name
+        column_name = arel_column_name_for(attribute_instruction)
+        direction = direction_operator(attribute_instruction.value)
+        arel_column = arel_column_for(attribute_instruction)
+        arel_type = arel_type_for(attribute_instruction)
+
+        nil_sort_instruction = nil_sorter_for(arel_column,
+                                              direction)
+        col_sort_instruction = if adapter_type.presence_in(%i[mysql mysql2]) && arel_type.presence_in(%i[string text])
+                                 Arel.sql("#{arel_column_to_sql(arel_column)} COLLATE utf8_bin #{direction.to_s.upcase}")
+                               else
+                                 arel_column.send(direction)
+                               end
+
+        attribute_model.order(nil_sort_instruction)
+                       .order(col_sort_instruction)
+      end
+
+      # https://stackoverflow.com/a/44912964/2884386
+      # When ActiveSet.configuration.on_asc_sort_nils_come == :last
+      # null values to be sorted as if larger than any non-null value.
+      # ASC => [-2, -1, 1, 2, nil]
+      # DESC => [nil, 2, 1, -1, -2]
+      # Otherwise sort nulls as if smaller than any non-null value.
+      # ASC => [nil, -2, -1, 1, 2]
+      # DESC => [2, 1, -1, -2, nil]
+      def nil_sorter_for(arel_column, direction)
+        null_as_zero = 'THEN 0 ELSE 1 END'
+        null_as_one = 'THEN 1 ELSE 0 END'
+        then_statement = case [ActiveSet.configuration.on_asc_sort_nils_come, direction]
+                         when %i[last asc]
+                           null_as_one
+                         when %i[last desc]
+                           null_as_zero
+                         when %i[first asc]
+                           null_as_zero
+                         when %i[first desc]
+                           null_as_one
+                         else
+                           null_as_one
+                         end
+
+        Arel.sql("CASE WHEN #{arel_column_to_sql(arel_column)} IS NULL #{then_statement}")
+      end
+
+      def direction_operator(direction)
+        return :desc if direction.to_s.downcase.start_with? 'desc'
+
+        :asc
+      end
 
       def attribute_model_for(attribute_instruction)
         return @set.klass if attribute_instruction.associations_array.empty?
@@ -95,7 +144,7 @@ class ActiveSet
         attribute   =   attribute_instruction.attribute
         is_case_insensitive_operation = begin
           attribute_instruction.case_insensitive? &&
-          arel_type.presence_in(%i[string text])
+            arel_type.presence_in(%i[string text])
         end
 
         arel_column = arel_table[attribute]
@@ -110,59 +159,6 @@ class ActiveSet
                                           .adapter_name
                                           .downcase
                                           .to_sym
-      end
-
-      # https://stackoverflow.com/a/44912964/2884386
-      # When ActiveSet.configuration.on_asc_sort_nils_come == :last
-      # null values to be sorted as if larger than any non-null value.
-      # ASC => [-2, -1, 1, 2, nil]
-      # DESC => [nil, 2, 1, -1, -2]
-      # Otherwise sort nulls as if smaller than any non-null value.
-      # ASC => [nil, -2, -1, 1, 2]
-      # DESC => [2, 1, -1, -2, nil]
-      def order_operation_for(attribute_instruction)
-        attribute_model = attribute_model_for(attribute_instruction)
-        table_name = attribute_model.table_name
-        column_name = arel_column_name_for(attribute_instruction)
-        direction = direction_operator(attribute_instruction.value)
-        arel_column = arel_column_for(attribute_instruction)
-        arel_type = arel_type_for(attribute_instruction)
-
-        nil_sort_instruction = nil_sorter_for(arel_column,
-                                              direction)
-        col_sort_instruction = if adapter_type.presence_in([:mysql, :mysql2]) && arel_type.presence_in([:string, :text])
-                                 Arel.sql("#{arel_column_to_sql(arel_column)} COLLATE utf8_bin #{direction.to_s.upcase}")
-                               else
-                                 arel_column.send(direction)
-                               end
-
-        attribute_model.order(nil_sort_instruction)
-                       .order(col_sort_instruction)
-      end
-
-      def nil_sorter_for(arel_column, direction)
-        null_as_zero = 'THEN 0 ELSE 1 END'
-        null_as_one = 'THEN 1 ELSE 0 END'
-        then_statement = case [ActiveSet.configuration.on_asc_sort_nils_come, direction]
-                         when [:last, :asc]
-                           null_as_one
-                         when [:last, :desc]
-                           null_as_zero
-                         when [:first, :asc]
-                           null_as_zero
-                         when [:first, :desc]
-                           null_as_one
-                         else
-                           null_as_one
-                         end
-
-        Arel.sql("CASE WHEN #{arel_column_to_sql(arel_column)} IS NULL #{then_statement}")
-      end
-
-      def direction_operator(direction)
-        return :desc if direction.to_s.downcase.start_with? 'desc'
-
-        :asc
       end
 
       def arel_column_to_sql(arel_column)
