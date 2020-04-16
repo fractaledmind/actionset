@@ -49,7 +49,7 @@ class Sorter
 
   def process_value(from:, given:)
     return from                     unless from.is_a?(String) || from.is_a?(Symbol)
-    return from.downcase            if not given[:case_sensitive]
+    return from.downcase            unless given[:case_sensitive]
     return normalize(from) + from   if given[:normalized]
     return segment(from)            if given[:natural]
 
@@ -140,13 +140,15 @@ class TestIntegerSorter < Test::Unit::TestCase
   def test_sort_integers_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending).sort(@random_integer_array),
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
   end
 
   def test_sort_integers_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending).sort(@random_integer_array),
-      [9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+      [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+    )
   end
 end
 
@@ -164,25 +166,29 @@ class TestIntegerWithNilsSorter < Test::Unit::TestCase
   def test_sort_integers_in_ascending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :ascending, nils: :small).sort(@random_integer_array_with_nil),
-      [nil, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+      [nil, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
   end
 
   def test_sort_integers_in_ascending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :ascending, nils: :large).sort(@random_integer_array_with_nil),
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, nil])
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, nil]
+    )
   end
 
   def test_sort_integers_in_descending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :descending, nils: :small).sort(@random_integer_array_with_nil),
-      [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, nil])
+      [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, nil]
+    )
   end
 
   def test_sort_integers_in_descending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :descending, nils: :large).sort(@random_integer_array_with_nil),
-      [nil, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+      [nil, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+    )
   end
 end
 
@@ -196,13 +202,15 @@ class TestBooleanSorter < Test::Unit::TestCase
   def test_sort_booleans_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending).sort(@random_boolean_array),
-      [false, true])
+      [false, true]
+    )
   end
 
   def test_sort_booleans_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending).sort(@random_boolean_array),
-      [true, false])
+      [true, false]
+    )
   end
 end
 
@@ -220,35 +228,39 @@ class TestBooleanWithNilsSorter < Test::Unit::TestCase
   def test_sort_booleans_in_ascending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :ascending, nils: :small).sort(@random_boolean_array_with_nil),
-      [nil, false, true])
+      [nil, false, true]
+    )
   end
 
   def test_sort_booleans_in_ascending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :ascending, nils: :large).sort(@random_boolean_array_with_nil),
-      [false, true, nil])
+      [false, true, nil]
+    )
   end
 
   def test_sort_booleans_in_descending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :descending, nils: :small).sort(@random_boolean_array_with_nil),
-      [true, false, nil])
+      [true, false, nil]
+    )
   end
 
   def test_sort_booleans_in_descending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :descending, nils: :large).sort(@random_boolean_array_with_nil),
-      [nil, true, false])
+      [nil, true, false]
+    )
   end
 end
 
 class TestTimeSorter < Test::Unit::TestCase
   def setup
     time_array = [
-      Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0),
-      Time.new(2000, 01, 01, 10, 10, 10, 0),
-      Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-      Time.new(2010, 12, 01, 10, 10, 10, 0)
+      Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0),
+      Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+      Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+      Time.new(2010, 12, 0o1, 10, 10, 10, 0)
     ]
 
     @random_time_array = time_array.shuffle
@@ -258,32 +270,34 @@ class TestTimeSorter < Test::Unit::TestCase
     assert_equal(
       Sorter.new(direction: :ascending).sort(@random_time_array),
       [
-        Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2000, 01, 01, 10, 10, 10, 0),
-        Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2010, 12, 01, 10, 10, 10, 0)
-      ])
+        Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+        Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2010, 12, 0o1, 10, 10, 10, 0)
+      ]
+    )
   end
 
   def test_sort_times_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending).sort(@random_time_array),
       [
-        Time.new(2010, 12, 01, 10, 10, 10, 0),
-        Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2000, 01, 01, 10, 10, 10, 0),
-        Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0)
-      ])
+        Time.new(2010, 12, 0o1, 10, 10, 10, 0),
+        Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+        Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0)
+      ]
+    )
   end
 end
 
 class TestTimeWithNilsSorter < Test::Unit::TestCase
   def setup
     time_array = [
-      Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0),
-      Time.new(2000, 01, 01, 10, 10, 10, 0),
-      Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-      Time.new(2010, 12, 01, 10, 10, 10, 0)
+      Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0),
+      Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+      Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+      Time.new(2010, 12, 0o1, 10, 10, 10, 0)
     ]
     nil_array = [nil]
 
@@ -298,35 +312,38 @@ class TestTimeWithNilsSorter < Test::Unit::TestCase
       Sorter.new(direction: :ascending, nils: :small).sort(@random_time_array_with_nil),
       [
         nil,
-        Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2000, 01, 01, 10, 10, 10, 0),
-        Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2010, 12, 01, 10, 10, 10, 0)
-      ])
+        Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+        Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2010, 12, 0o1, 10, 10, 10, 0)
+      ]
+    )
   end
 
   def test_sort_times_in_ascending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :ascending, nils: :large).sort(@random_time_array_with_nil),
       [
-        Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2000, 01, 01, 10, 10, 10, 0),
-        Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2010, 12, 01, 10, 10, 10, 0),
+        Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+        Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2010, 12, 0o1, 10, 10, 10, 0),
         nil
-      ])
+      ]
+    )
   end
 
   def test_sort_times_in_descending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :descending, nils: :small).sort(@random_time_array_with_nil),
       [
-        Time.new(2010, 12, 01, 10, 10, 10, 0),
-        Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2000, 01, 01, 10, 10, 10, 0),
-        Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0),
+        Time.new(2010, 12, 0o1, 10, 10, 10, 0),
+        Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+        Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0),
         nil
-      ])
+      ]
+    )
   end
 
   def test_sort_times_in_descending_order_with_nils_large
@@ -334,20 +351,21 @@ class TestTimeWithNilsSorter < Test::Unit::TestCase
       Sorter.new(direction: :descending, nils: :large).sort(@random_time_array_with_nil),
       [
         nil,
-        Time.new(2010, 12, 01, 10, 10, 10, 0),
-        Time.new(2010, 12, 01, 0o0, 0o0, 0o0, 0),
-        Time.new(2000, 01, 01, 10, 10, 10, 0),
-        Time.new(2000, 01, 01, 0o0, 0o0, 0o0, 0)
-      ])
+        Time.new(2010, 12, 0o1, 10, 10, 10, 0),
+        Time.new(2010, 12, 0o1, 0o0, 0o0, 0o0, 0),
+        Time.new(2000, 0o1, 0o1, 10, 10, 10, 0),
+        Time.new(2000, 0o1, 0o1, 0o0, 0o0, 0o0, 0)
+      ]
+    )
   end
 end
 
 class TestDateSorter < Test::Unit::TestCase
   def setup
     date_array = [
-      Date.new(2000, 01, 01),
+      Date.new(2000, 0o1, 0o1),
       Date.new(2000, 12, 12),
-      Date.new(2010, 12, 01),
+      Date.new(2010, 12, 0o1),
       Date.new(2010, 12, 12)
     ]
 
@@ -358,11 +376,12 @@ class TestDateSorter < Test::Unit::TestCase
     assert_equal(
       Sorter.new(direction: :ascending).sort(@random_date_array),
       [
-        Date.new(2000, 01, 01),
+        Date.new(2000, 0o1, 0o1),
         Date.new(2000, 12, 12),
-        Date.new(2010, 12, 01),
+        Date.new(2010, 12, 0o1),
         Date.new(2010, 12, 12)
-      ])
+      ]
+    )
   end
 
   def test_sort_dates_in_descending_order
@@ -370,19 +389,20 @@ class TestDateSorter < Test::Unit::TestCase
       Sorter.new(direction: :descending).sort(@random_date_array),
       [
         Date.new(2010, 12, 12),
-        Date.new(2010, 12, 01),
+        Date.new(2010, 12, 0o1),
         Date.new(2000, 12, 12),
-        Date.new(2000, 01, 01)
-      ])
+        Date.new(2000, 0o1, 0o1)
+      ]
+    )
   end
 end
 
 class TestDateWithNilsSorter < Test::Unit::TestCase
   def setup
     date_array = [
-      Date.new(2000, 01, 12),
-      Date.new(2000, 01, 01),
-      Date.new(2010, 12, 01),
+      Date.new(2000, 0o1, 12),
+      Date.new(2000, 0o1, 0o1),
+      Date.new(2010, 12, 0o1),
       Date.new(2010, 12, 12)
     ]
     nil_array = [nil]
@@ -398,23 +418,25 @@ class TestDateWithNilsSorter < Test::Unit::TestCase
       Sorter.new(direction: :ascending, nils: :small).sort(@random_date_array_with_nil),
       [
         nil,
-        Date.new(2000, 01, 01),
-        Date.new(2000, 01, 12),
-        Date.new(2010, 12, 01),
+        Date.new(2000, 0o1, 0o1),
+        Date.new(2000, 0o1, 12),
+        Date.new(2010, 12, 0o1),
         Date.new(2010, 12, 12)
-      ])
+      ]
+    )
   end
 
   def test_sort_dates_in_ascending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :ascending, nils: :large).sort(@random_date_array_with_nil),
       [
-        Date.new(2000, 01, 01),
-        Date.new(2000, 01, 12),
-        Date.new(2010, 12, 01),
+        Date.new(2000, 0o1, 0o1),
+        Date.new(2000, 0o1, 12),
+        Date.new(2010, 12, 0o1),
         Date.new(2010, 12, 12),
         nil
-      ])
+      ]
+    )
   end
 
   def test_sort_dates_in_descending_order_with_nils_small
@@ -422,11 +444,12 @@ class TestDateWithNilsSorter < Test::Unit::TestCase
       Sorter.new(direction: :descending, nils: :small).sort(@random_date_array_with_nil),
       [
         Date.new(2010, 12, 12),
-        Date.new(2010, 12, 01),
-        Date.new(2000, 01, 12),
-        Date.new(2000, 01, 01),
+        Date.new(2010, 12, 0o1),
+        Date.new(2000, 0o1, 12),
+        Date.new(2000, 0o1, 0o1),
         nil
-      ])
+      ]
+    )
   end
 
   def test_sort_dates_in_descending_order_with_nils_large
@@ -435,10 +458,11 @@ class TestDateWithNilsSorter < Test::Unit::TestCase
       [
         nil,
         Date.new(2010, 12, 12),
-        Date.new(2010, 12, 01),
-        Date.new(2000, 01, 12),
-        Date.new(2000, 01, 01)
-      ])
+        Date.new(2010, 12, 0o1),
+        Date.new(2000, 0o1, 12),
+        Date.new(2000, 0o1, 0o1)
+      ]
+    )
   end
 end
 
@@ -452,13 +476,15 @@ class TestStringSorter < Test::Unit::TestCase
   def test_sort_strings_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending).sort(@random_string_array),
-      ["A", "Z", "a", "z"])
+      %w[A Z a z]
+    )
   end
 
   def test_sort_strings_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending).sort(@random_string_array),
-      ["z", "a", "Z", "A"])
+      %w[z a Z A]
+    )
   end
 end
 
@@ -472,13 +498,15 @@ class TestStringInsensitiveSorter < Test::Unit::TestCase
   def test_sort_strings_case_insensitively_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending, case_sensitive: false).sort(@random_string_array),
-      ["a", "A", "z", "Z"])
+      %w[a A z Z]
+    )
   end
 
   def test_sort_strings_case_insensitively_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending, case_sensitive: false).sort(@random_string_array),
-      ["z", "Z", "a", "A"])
+      %w[z Z a A]
+    )
   end
 end
 
@@ -496,25 +524,29 @@ class TestStringWithNilsSorter < Test::Unit::TestCase
   def test_sort_strings_in_ascending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :ascending, nils: :small).sort(@random_string_array_with_nil),
-      [nil, "A", "Z", "a", "z"])
+      [nil, 'A', 'Z', 'a', 'z']
+    )
   end
 
   def test_sort_strings_in_ascending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :ascending, nils: :large).sort(@random_string_array_with_nil),
-      ["A", "Z", "a", "z", nil])
+      ['A', 'Z', 'a', 'z', nil]
+    )
   end
 
   def test_sort_strings_in_descending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :descending, nils: :small).sort(@random_string_array_with_nil),
-      ["z", "a", "Z", "A", nil])
+      ['z', 'a', 'Z', 'A', nil]
+    )
   end
 
   def test_sort_strings_in_descending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :descending, nils: :large).sort(@random_string_array_with_nil),
-      [nil, "z", "a", "Z", "A"])
+      [nil, 'z', 'a', 'Z', 'A']
+    )
   end
 end
 
@@ -532,25 +564,29 @@ class TestStringInsensitiveWithNilsSorter < Test::Unit::TestCase
   def test_sort_strings_case_insensitively_in_ascending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :ascending, nils: :small, case_sensitive: false).sort(@random_string_array_with_nil),
-      [nil, "a", "A", "z", "Z"])
+      [nil, 'a', 'A', 'z', 'Z']
+    )
   end
 
   def test_sort_strings_case_insensitively_in_ascending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :ascending, nils: :large, case_sensitive: false).sort(@random_string_array_with_nil),
-      ["a", "A", "z", "Z", nil])
+      ['a', 'A', 'z', 'Z', nil]
+    )
   end
 
   def test_sort_strings_case_insensitively_in_descending_order_with_nils_small
     assert_equal(
       Sorter.new(direction: :descending, nils: :small, case_sensitive: false).sort(@random_string_array_with_nil),
-      ["z", "Z", "a", "A", nil])
+      ['z', 'Z', 'a', 'A', nil]
+    )
   end
 
   def test_sort_strings_case_insensitively_in_descending_order_with_nils_large
     assert_equal(
       Sorter.new(direction: :descending, nils: :large, case_sensitive: false).sort(@random_string_array_with_nil),
-      [nil, "z", "Z", "a", "A"])
+      [nil, 'z', 'Z', 'a', 'A']
+    )
   end
 end
 
@@ -562,7 +598,8 @@ class TestSimpleObjectSorter < Test::Unit::TestCase
 
     @array_of_tuples_to_array_of_objs_transformer = ->(array) { array.map { |bool, int| obj.new(bool, int) } }
     @random_object_array = @array_of_tuples_to_array_of_objs_transformer.call(
-                             boolean_array.product(integer_array).shuffle)
+      boolean_array.product(integer_array).shuffle
+    )
   end
 
   def test_sort_object_bool_then_int_in_ascending_then_ascending_order
@@ -726,7 +763,8 @@ class TestNestedObjectSorter < Test::Unit::TestCase
 
     @array_of_tuples_to_array_of_objs_transformer = ->(array) { array.map { |bool, int| obj.new(bool, assoc.new(int)) } }
     @random_object_array = @array_of_tuples_to_array_of_objs_transformer.call(
-                             boolean_array.product(integer_array).shuffle)
+      boolean_array.product(integer_array).shuffle
+    )
   end
 
   def test_sort_nested_object_bool_then_int_in_ascending_then_ascending_order
@@ -886,49 +924,57 @@ class TestUnicodeStringSorter < Test::Unit::TestCase
   def test_sort_unicode_unaccented_strings_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending, normalized: true).sort(%w[b a á ä o ó x ö í i c]),
-      ["a", "á", "ä", "b", "c", "i", "í", "o", "ó", "ö", "x"])
+      %w[a á ä b c i í o ó ö x]
+    )
   end
 
   def test_sort_unicode_unaccented_strings_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending, normalized: true).sort(%w[b a á ä o ó x ö í i c]),
-      ["x", "ö", "ó", "o", "í", "i", "c", "b", "ä", "á", "a"])
+      %w[x ö ó o í i c b ä á a]
+    )
   end
 
   def test_sort_unicode_mixed_strings_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending, normalized: true).sort(%w[AA AB ÄA]),
-      ["AA", "ÄA", "AB"])
+      %w[AA ÄA AB]
+    )
   end
 
   def test_sort_unicode_mixed_strings_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending, normalized: true).sort(%w[AA AB ÄA]),
-      ["AB", "ÄA", "AA"])
+      %w[AB ÄA AA]
+    )
   end
 
   def test_sort_unicode_word_strings_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending, normalized: true).sort(%w[hellö hello hellá]),
-      ["hellá", "hello", "hellö"])
+      %w[hellá hello hellö]
+    )
   end
 
   def test_sort_unicode_word_strings_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending, normalized: true).sort(%w[hellö hello hellá]),
-      ["hellö", "hello", "hellá"])
+      %w[hellö hello hellá]
+    )
   end
 
   def test_sort_unicode_ligatures_strings_in_ascending_order
     assert_equal(
       Sorter.new(direction: :ascending, normalized: true).sort(%w[assb aßc assd]),
-      ["assb", "aßc", "assd"])
+      %w[assb aßc assd]
+    )
   end
 
   def test_sort_unicode_ligatures_strings_in_descending_order
     assert_equal(
       Sorter.new(direction: :descending, normalized: true).sort(%w[assb aßc assd]),
-      ["assd", "aßc", "assb"])
+      %w[assd aßc assb]
+    )
   end
 end
 
@@ -936,49 +982,57 @@ class TestNaturalStringSorter < Test::Unit::TestCase
   def test_sort_basic_strings_in_ascending_order_naturally
     assert_equal(
       Sorter.new(direction: :ascending, natural: true).sort(%w[a10 a a20 a1b a1a a2 a0 a1]),
-      %w[a a0 a1 a1a a1b a2 a10 a20])
+      %w[a a0 a1 a1a a1b a2 a10 a20]
+    )
   end
 
   def test_sort_basic_strings_in_descending_order_naturally
     assert_equal(
       Sorter.new(direction: :descending, natural: true).sort(%w[a10 a a20 a1b a1a a2 a0 a1]),
-      %w[a20 a10 a2 a1b a1a a1 a0 a])
+      %w[a20 a10 a2 a1b a1a a1 a0 a]
+    )
   end
 
   def test_sort_multiple_alphanum_segment_strings_in_ascending_order_naturally
     assert_equal(
       Sorter.new(direction: :ascending, natural: true).sort(%w[x2-g8 x8-y8 x2-y7 x2-y08]),
-      %w[x2-g8 x2-y7 x2-y08 x8-y8])
+      %w[x2-g8 x2-y7 x2-y08 x8-y8]
+    )
   end
 
   def test_sort_multiple_alphanum_segment_strings_in_descending_order_naturally
     assert_equal(
       Sorter.new(direction: :descending, natural: true).sort(%w[x2-g8 x8-y8 x2-y7 x2-y08]),
-      %w[x8-y8 x2-y08 x2-y7 x2-g8])
+      %w[x8-y8 x2-y08 x2-y7 x2-g8]
+    )
   end
 
   def test_sort_multiple_numeric_segment_strings_in_ascending_order_naturally
     assert_equal(
       Sorter.new(direction: :ascending, natural: true).sort(%w[1.2.3.2 1.2.3.10 1.2.3.1]),
-      %w[1.2.3.1 1.2.3.2 1.2.3.10])
+      %w[1.2.3.1 1.2.3.2 1.2.3.10]
+    )
   end
 
   def test_sort_multiple_numeric_segment_strings_in_descending_order_naturally
     assert_equal(
       Sorter.new(direction: :descending, natural: true).sort(%w[1.2.3.2 1.2.3.10 1.2.3.1]),
-      %w[1.2.3.10 1.2.3.2 1.2.3.1])
+      %w[1.2.3.10 1.2.3.2 1.2.3.1]
+    )
   end
 
   def test_sort_mixed_segment_strings_in_ascending_order_naturally
     assert_equal(
       Sorter.new(direction: :ascending, natural: true).sort(%w[a 10 a10 10a a10a a10.a a10.A 10.20a 10.20]),
-      %w[10 10.20 10.20a 10a a a10 a10.A a10.a a10a])
+      %w[10 10.20 10.20a 10a a a10 a10.A a10.a a10a]
+    )
   end
 
   def test_sort_mixed_segment_strings_in_descending_order_naturally
     assert_equal(
       Sorter.new(direction: :descending, natural: true).sort(%w[a 10 a10 10a a10a a10.a a10.A 10.20a 10.20]),
-      %w[a10a a10.a a10.A a10 a 10a 10.20a 10.20 10])
+      %w[a10a a10.a a10.A a10 a 10a 10.20a 10.20 10]
+    )
   end
 end
 
