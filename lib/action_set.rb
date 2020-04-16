@@ -12,7 +12,7 @@ require_relative './action_set/helpers/helper_methods'
 module ActionSet
   # Ensure that the HelperMethods are callable from the Rails view-layer
   ActiveSupport.on_load :action_view do
-    ::ActionView::Base.send :include, Helpers::HelperMethods
+    ::ActionView::Base.include Helpers::HelperMethods
   end
 
   module ClassMethods

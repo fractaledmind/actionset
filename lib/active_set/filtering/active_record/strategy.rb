@@ -8,11 +8,11 @@ module Arel
     class PostgreSQL < Arel::Visitors::ToSql
       private
 
-      def visit_Arel_Nodes_Matches o, collector
+      def visit_Arel_Nodes_Matches(o, collector)
         infix_value o, collector, ' LIKE '
       end
 
-      def visit_Arel_Nodes_DoesNotMatch o, collector
+      def visit_Arel_Nodes_DoesNotMatch(o, collector)
         infix_value o, collector, ' NOT LIKE '
       end
     end
