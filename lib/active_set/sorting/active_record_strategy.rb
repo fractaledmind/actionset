@@ -155,10 +155,10 @@ class ActiveSet
       def adapter_type
         return @adapter_type if defined? @adapter_type
 
-        @adapter_type = ActiveRecord::Base.connection
-                                          .adapter_name
-                                          .downcase
-                                          .to_sym
+        @adapter_type = ::ActiveRecord::Base.connection
+                                            .adapter_name
+                                            .downcase
+                                            .to_sym
       end
 
       def arel_column_to_sql(arel_column)

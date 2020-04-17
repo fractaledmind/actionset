@@ -75,7 +75,6 @@ class ActiveSet
         end
 
         def filter_operation
-          # require 'pry'; binding.pry
           initial_relation
             .where(
               query_column.send(

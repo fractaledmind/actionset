@@ -26,6 +26,8 @@ class ActiveSet
         end
 
         def column_cast_as_decimal
+          # https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html
+          # In order to use equality matchers for :float fields in MySQL, we need to cast to :decimal
           Arel::Nodes::NamedFunction.new('CAST', [arel_column.as('DECIMAL(8,2)')])
         end
 
