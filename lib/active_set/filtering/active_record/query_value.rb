@@ -7,14 +7,24 @@ class ActiveSet
         def query_value
           return @query_value if defined? @query_value
 
-          query_value = @attribute_instruction.value
-          query_value = query_attribute_for(query_value)
-          query_value = query_value.downcase if case_insensitive_operation?
-
-          @query_value = query_value
+          @query_value = prepare_query_value(@attribute_instruction.value)
         end
 
         private
+
+        def prepare_query_value(value)
+          return value.map { |v| prepare_query_value(v) } if value.respond_to?(:map) && !arel_operator.to_s.downcase.include?('between')
+
+          value = query_attribute_for(value)
+          value = value.downcase if case_insensitive_operation?
+
+          if arel_type == :time && arel_operator.to_s.downcase.include?('match')
+            value = value.remove('2000-01-01 ')
+            value = value.remove('.000000')
+          end
+
+          value
+        end
 
         def query_attribute_for(value)
           return value unless operator_hash.key?(:query_attribute_transformer)
