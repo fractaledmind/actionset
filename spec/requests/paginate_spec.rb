@@ -14,8 +14,13 @@ RSpec.describe 'GET /things?paginate', type: :request do
     let(:result_ids) { results.map { |f| f['id'] } }
 
     before(:each) do
-      get things_path(format: :json),
-          params: { paginate: instructions }
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :json),
+            params: { paginate: instructions }
+      else
+        get things_path(format: :json),
+            paginate: instructions
+      end
     end
 
     context 'with ActiveRecord collection' do

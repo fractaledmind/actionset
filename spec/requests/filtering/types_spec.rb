@@ -19,8 +19,14 @@ RSpec.describe 'GET /things?filter', type: :request do
         .and_return({
           types: instructions.transform_values(&:class)
         }) if defined?(filter_set_types)
-      get things_path(format: :json),
-          params: { filter: instructions }
+
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :json),
+            params: { filter: instructions }
+      else
+        get things_path(format: :json),
+            filter: instructions
+      end
     end
 
     ApplicationRecord::FIELD_TYPES.each do |type|

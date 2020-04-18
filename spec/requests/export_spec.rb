@@ -13,9 +13,15 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
     let(:result) { response.body }
 
     before(:each) do
-      get things_path(format: :csv),
-          params: { export: instructions },
-          as: :json
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :csv),
+            params: { export: instructions },
+            as: :json
+      else
+        get things_path(format: :csv),
+            export: instructions,
+            as: :json
+      end
     end
 
     context 'with ActiveRecord collection' do

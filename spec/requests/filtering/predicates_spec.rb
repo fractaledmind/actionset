@@ -15,8 +15,13 @@ RSpec.describe 'GET /things?filter', type: :request do
     let(:result_ids) { results.map { |f| f['id'] } }
 
     before(:each) do
-      get things_path(format: :json),
-          params: { filter: instructions }
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :json),
+            params: { filter: instructions }
+      else
+        get things_path(format: :json),
+            filter: instructions
+      end
     end
 
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
