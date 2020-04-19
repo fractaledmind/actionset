@@ -86,23 +86,27 @@ class ActiveSet
           arel_type_is_string_or_text_or_binary = arel_type.presence_in(%i[string text binary])
           arel_operator_is_between_type = arel_operator.to_s.downcase.include?('between')
 
-          activerecord_result_encoding_info = ::ActiveRecord::Base.connection.exec_query(<<~SQL)
-            SELECT character_set_name, collation_name
-            FROM information_schema.`COLUMNS`
-            WHERE table_schema = '#{::ActiveRecord::Base.connection.current_database}'
-            AND table_name = '#{attribute_model.table_name}'
-            AND column_name = '#{arel_column_name}'
-          SQL
-          encoding_info = activerecord_result_encoding_info.to_a.first
-          # "character_set_name", "collation_name"
-          encoding_to_comparison_collation_mapping = {
-            'utf8mb4' => 'utf8mb4_bin',
-            'utf8' => 'utf8_bin',
-            'latin1' => 'latin1_bin'
-          }
-          character_set = encoding_info['character_set_name']
-          comparison_collation = encoding_to_comparison_collation_mapping[character_set]
-          arel_column_collation_is_not_comparable = encoding_info['collation_name'] != comparison_collation
+          if adapter_is_mysql
+            activerecord_result_encoding_info = ::ActiveRecord::Base.connection.exec_query(<<~SQL)
+              SELECT character_set_name, collation_name
+              FROM information_schema.`COLUMNS`
+              WHERE table_schema = '#{::ActiveRecord::Base.connection.current_database}'
+              AND table_name = '#{attribute_model.table_name}'
+              AND column_name = '#{arel_column_name}'
+            SQL
+            encoding_info = activerecord_result_encoding_info.to_a.first
+            # "character_set_name", "collation_name"
+            encoding_to_comparison_collation_mapping = {
+              'utf8mb4' => 'utf8mb4_bin',
+              'utf8' => 'utf8_bin',
+              'latin1' => 'latin1_bin'
+            }
+            character_set = encoding_info['character_set_name']
+            comparison_collation = encoding_to_comparison_collation_mapping[character_set]
+            arel_column_collation_is_not_comparable = encoding_info['collation_name'] != comparison_collation
+          else
+            arel_column_collation_is_not_comparable = false
+          end
 
           @query_column = if arel_type_integer_or_float && arel_operator_is_match_type
                             # In order to use LIKE, we must CAST the column as a CHAR column.
