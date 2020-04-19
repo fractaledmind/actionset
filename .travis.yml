@@ -34,5 +34,8 @@ before_install:
 before_script:
   - psql -c 'create database actionset_test;' -U postgres
   - mysql -e 'create database IF NOT EXISTS actionset_test;'
+services:
+  - mysql
+  - postgresql
 after_success:
   - bash < (curl -s https://codecov.io/bash)
