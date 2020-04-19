@@ -7,7 +7,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
@@ -102,7 +102,7 @@ ActiveRecord::Schema.define do
     t.date        :date
     t.datetime    :datetime
     t.decimal     :decimal, precision: 8, scale: 2
-    t.float       :float
+    t.float       :float, precision: 8, scale: 2
     t.integer     :integer
     t.string      :string
     t.text        :text
