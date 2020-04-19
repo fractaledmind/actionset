@@ -1,7 +1,7 @@
 group :development, :test do
   gem 'byebug'
   gem 'factory_bot'
-  gem 'faker', require: false
+  gem 'faker'
   gem 'rake'
   gem 'rubocop'
   gem 'pry'
@@ -14,9 +14,8 @@ group :test do
   gem 'capybara'
   gem 'codecov'
   gem 'combustion'
-  gem 'database_cleaner', require: false
-
+  gem 'database_cleaner'
   gem 'rspec-rails'
-  gem 'simplecov', require: false
+  gem 'simplecov'
   gem 'simplecov-console'
 end
