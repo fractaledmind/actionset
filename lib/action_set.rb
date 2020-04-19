@@ -59,9 +59,10 @@ module ActionSet
 
     # rubocop:disable Metrics/AbcSize
     def export_instructions
+      instructions = export_params.deep_symbolize_keys
       {}.tap do |struct|
-        struct[:format] = export_params[:format] || request.format.symbol
-        columns_params = export_params[:columns]&.map do |column|
+        struct[:format] = instructions[:format] || request.format.symbol
+        columns_params = instructions[:columns]&.map do |column|
           Hash[column&.map do |k, v|
             is_literal_value = ->(key) { key.to_s == 'value*' }
             key = is_literal_value.call(k) ? 'value' : k
