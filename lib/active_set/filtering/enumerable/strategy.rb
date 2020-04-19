@@ -61,6 +61,7 @@ class ActiveSet
 
         def filter_operation
           @set.select do |item|
+            item = item.reload if item.respond_to?(:reload)
             @set_instruction.item_matches_query?(item)
           end
         end

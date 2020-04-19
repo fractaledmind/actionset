@@ -134,6 +134,14 @@ ASC => [nil, -2, -1, 1, 2]
 DESC => [2, 1, -1, -2, nil]
 ```
 
+## Edge-Cases
+
+If you are using MySQL as your database engine, you may run into various possible edge-cases:
+
+- ensure your `float` and `decimal` columns have an appropriate `precision` and `scale` set (it appears the default is (5,2))
+  + if, for example, you create a `float` column without any `precision` or `scale` defined, and you set a value to `12345.67`, the database will return `12345.7`. Similarly, if you set the value to `123456.78`, you will get back `123457.0`
+-
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
