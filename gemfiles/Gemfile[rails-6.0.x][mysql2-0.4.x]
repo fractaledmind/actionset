@@ -1,0 +1,13 @@
+source 'https://rubygems.org'
+
+# Runtime dependencies
+gem 'activerecord', '~> 6.0'
+gem 'actionpack', '~> 6.0'
+gem 'mysql2', '~> 0.4'
+
+# Gem under test
+gem 'actionset', path: '..'
+
+# test/dev dependencies
+gem 'gemika', group: :test
+eval_gemfile './Gemfile.test'

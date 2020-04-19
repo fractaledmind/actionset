@@ -1,0 +1,14 @@
+source 'https://rubygems.org'
+
+# Runtime dependencies
+gem 'activerecord', '~> 4.2'
+gem 'actionpack', '~> 4.2'
+gem 'sqlite3', '~> 1.3', '< 1.4'
+gem 'bigdecimal', '1.3.5'
+
+# Gem under test
+gem 'actionset', path: '..'
+
+# test/dev dependencies
+gem 'gemika', group: :test
+eval_gemfile './Gemfile.test'

@@ -7,23 +7,23 @@ rvm:
   - 2.5.7
   - 2.4.9
 gemfile:
-  - gemfiles/Gemfile.4.2.mysql2
-  - gemfiles/Gemfile.4.2.pg
-  - gemfiles/Gemfile.4.2.sqlite3
-  - gemfiles/Gemfile.5.2.mysql2
-  - gemfiles/Gemfile.5.2.pg
-  - gemfiles/Gemfile.5.2.sqlite3
-  - gemfiles/Gemfile.6.0.mysql2
-  - gemfiles/Gemfile.6.0.pg
-  - gemfiles/Gemfile.6.0.sqlite3
+  - gemfiles/Gemfile[rails-4.2.x][mysql2-0.3.x]
+  - gemfiles/Gemfile[rails-4.2.x][pg-0.11.x]
+  - gemfiles/Gemfile[rails-4.2.x][sqlite3-1.3.x]
+  - gemfiles/Gemfile[rails-5.2.x][mysql2-0.4.x]
+  - gemfiles/Gemfile[rails-5.2.x][pg-0.18.x]
+  - gemfiles/Gemfile[rails-5.2.x][sqlite3-1.4.x]
+  - gemfiles/Gemfile[rails-6.0.x][mysql2-0.4.x]
+  - gemfiles/Gemfile[rails-6.0.x][pg-0.18.x]
+  - gemfiles/Gemfile[rails-6.0.x][sqlite3-1.4.x]
 matrix:
   exclude:
     - rvm: 2.4.9
-      gemfile: gemfiles/Gemfile.6.0.mysql2
+      gemfile: gemfiles/Gemfile[rails-6.0.x][mysql2-0.4.x]
     - rvm: 2.4.9
-      gemfile: gemfiles/Gemfile.6.0.pg
+      gemfile: gemfiles/Gemfile[rails-6.0.x][pg-0.18.x]
     - rvm: 2.4.9
-      gemfile: gemfiles/Gemfile.6.0.sqlite3
+      gemfile: gemfiles/Gemfile[rails-6.0.x][sqlite3-1.4.x]
 install:
   # Replace default Travis CI bundler script with a version that doesn't
   # explode when lockfile doesn't match recently bumped version
