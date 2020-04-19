@@ -23,6 +23,7 @@ Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 deprecation_warnings_to_silence = [
   /attempted to assign a value which is not explicitly `true` or `false`/,
   /`#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?/,
+  /warning: BigDecimal.new is deprecated; use BigDecimal() method instead./,
 ]
 
 ActiveSupport::Deprecation.behavior = lambda do |message, callstack|
