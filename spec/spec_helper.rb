@@ -24,6 +24,8 @@ deprecation_warnings_to_silence = [
   /attempted to assign a value which is not explicitly `true` or `false`/,
   /`#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?/,
   /warning: BigDecimal.new is deprecated; use BigDecimal() method instead./,
+  /rb_check_safe_obj will be removed in Ruby 3.0/,
+  /Capturing the given block using Proc.new is deprecated/,
 ]
 
 ActiveSupport::Deprecation.behavior = lambda do |message, callstack|
