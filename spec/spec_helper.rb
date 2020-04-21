@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+$VERBOSE = nil
 
 require 'bundler'
 require 'support/combustion_helper'
