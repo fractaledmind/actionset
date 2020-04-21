@@ -39,6 +39,13 @@ module PathHelpers
   end
 
   def attr_value_for(object:, path:)
+    # MySQL :float columns are truncated after a precision of 6.
+    # This means the Ruby in-memory value and the value returned from
+    # the database will be out-of-sync for values >= 10000.00
+    if path.include?('computed_') || path.downcase.include?('match')
+      object.reload if object.respond_to?(:reload)
+    end
+
     ActiveSet::AttributeInstruction.new(path, nil).value_for(item: object)
   end
 end
