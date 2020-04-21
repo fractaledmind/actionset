@@ -26,7 +26,7 @@ RSpec.describe ActiveSet do
 
     ApplicationRecord::FILTERABLE_TYPES.each do |type|
       [1, 2].each do |id|
-        let(:matching_item) { instance_variable_get("@thing_#{id}").reload }
+        let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
         all_possible_paths_for(type).each do |path|
           context "{ #{path}: }" do
@@ -44,7 +44,7 @@ RSpec.describe ActiveSet do
 
     ApplicationRecord::FILTERABLE_TYPES.combination(2).each do |type_1, type_2|
       [1, 2].each do |id|
-        let(:matching_item) { instance_variable_get("@thing_#{id}").reload }
+        let(:matching_item) { instance_variable_get("@thing_#{id}") }
 
         all_possible_path_combinations_for(type_1, type_2).each do |path_1, path_2|
           context "{ #{path_1}:, #{path_2} }" do
