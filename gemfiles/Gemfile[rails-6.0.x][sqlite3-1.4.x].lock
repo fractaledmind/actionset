@@ -36,6 +36,7 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     ansi (1.5.0)
     ast (2.4.0)
+    bigdecimal (1.4.4)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     builder (3.2.4)
@@ -175,6 +176,7 @@ DEPENDENCIES
   actionpack (~> 6.0)
   actionset!
   activerecord (~> 6.0)
+  bigdecimal (~> 1.4.x)
   byebug
   capybara
   codecov
