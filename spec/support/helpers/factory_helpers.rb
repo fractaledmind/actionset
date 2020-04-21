@@ -18,13 +18,18 @@ module FactoryHelpers
       h[:decimal] = obj.decimal + 1
       h[:float] = obj.float + 1
       h[:integer] = obj.integer + 1
-      h[:string] = guaranteed_unique_string_for(obj.string) # '{'
+      h[:string] = guaranteed_unique_string_for(obj.string)
       h[:text] = obj.text.split.map { |w| guaranteed_unique_string_for(w) }.join(' ')
       h[:time] = obj.time.to_time.advance(hours: 1)
     end
   end
 
   def guaranteed_unique_string_for(string)
-    string.codepoints.map(&:next).pack('U*')
+    # 'z' and 'Z' will transform into '{' and '[',
+    # which did occasionally cause problems with the tests
+    string          # 'qwerty'
+      .codepoints   # [113, 119, 101, 114, 116, 121]
+      .map(&:next)  # [114, 120, 102, 115, 117, 122]
+      .pack('U*')   # 'rxfsuz'
   end
 end

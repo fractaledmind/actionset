@@ -1,6 +1,6 @@
 sqlite:
   adapter: sqlite3
-  database: ":memory:"
+  database: db/actionset_test.sqlite
   timeout: 500
 
 mysql:

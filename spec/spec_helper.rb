@@ -2,7 +2,7 @@
 $VERBOSE = nil
 
 require 'bundler'
-require 'support/combustion_helper'
+require 'support/initializers/combustion'
 Bundler.require :default, :development
 
 require 'bundler/setup'
@@ -20,7 +20,6 @@ database.connect
 
 Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 
-# "DEPRECATION WARNING: You attempted to assign a value which is not explicitly `true` or `false` () to a boolean column. Currently this value casts to `false`. This will change to match Ruby's semantics, and will cast to `true` in Rails 5. If you would like to maintain the current behavior, you should explicitly handle the values you would like cast to `false`. (called from typecast at /Users/margheim/Dropbox/gems/actionset/lib/action_set/attribute_value.rb:98)
 deprecation_warnings_to_silence = [
   /attempted to assign a value which is not explicitly `true` or `false`/,
   /`#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?/,
@@ -28,7 +27,6 @@ deprecation_warnings_to_silence = [
   /rb_check_safe_obj will be removed in Ruby 3.0/,
   /Capturing the given block using Proc.new is deprecated/,
 ]
-
 ActiveSupport::Deprecation.behavior = lambda do |message, callstack|
   unless message =~ Regexp.new(deprecation_warnings_to_silence.join('|'))
     ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(message, callstack)
