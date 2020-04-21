@@ -3,13 +3,13 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  # float is a major PITA, so taking it out for now
   DB_FIELD_TYPES = %w[
     binary
     boolean
     date
     datetime
     decimal
-    float
     integer
     string
     text
