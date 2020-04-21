@@ -40,6 +40,7 @@ class ActiveSet
 
         def execute
           return false unless @set.respond_to? :to_sql
+          return @set if @set.empty?
 
           if execute_filter_operation?
             statement = filter_operation

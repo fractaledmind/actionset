@@ -25,6 +25,7 @@ class ActiveSet
 
         def execute
           return false unless @set.respond_to? :select
+          return @set if @set.empty?
 
           if execute_filter_operation?
             set = filter_operation
