@@ -19,7 +19,7 @@ gemfile:
 matrix:
   exclude:
     - rvm: 2.4.9
-      gemfile: gemfiles/Gemfile[rails-6.0.x][mysql2-0.4.x]
+      gemfile: gemfiles/Gemfile[rails-6.0.x][mysql2-0.5.x]
     - rvm: 2.4.9
       gemfile: gemfiles/Gemfile[rails-6.0.x][pg-0.18.x]
     - rvm: 2.4.9
