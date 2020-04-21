@@ -22,15 +22,18 @@ if ENV['INSPECT_FAILURE'] == 'true'
                   }
                   .map { |v|
                     object = instance_variable_get(v)
-                    data = object.as_json(include: { only: { methods: [:symbol] } }, methods: [:symbol])
-                    [v, data]
+                    if object.is_a?(Thing)
+                      [[v, object], [v.to_s + '_only', object.only]]
+                    else
+                      [v, object]
+                    end
                   }
+                  .flatten
+                  .each_slice(2)
                   .to_h
 
       # https://www.jvt.me/posts/2019/03/29/pretty-printing-json-ruby/
       jj let_data.merge(ivar_data).transform_values(&:inspect)
-
-      # byebug
     end
   end
 end
