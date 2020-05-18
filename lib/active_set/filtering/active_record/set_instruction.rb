@@ -112,7 +112,11 @@ class ActiveSet
                             # In order to use LIKE, we must CAST the column as a CHAR column.
                             # NOTE: this is can be quite inefficient, as it forces the DB engine to perform that cast on all rows.
                             # https://www.ryadel.com/en/like-operator-equivalent-integer-numeric-columns-sql-t-sql-database/
-                            Arel::Nodes::NamedFunction.new('CAST', [arel_column.as('CHAR')])
+                            if adapter_type == :postgresql
+                              Arel::Nodes::NamedFunction.new('CAST', [arel_column.as('TEXT')])
+                            else
+                              Arel::Nodes::NamedFunction.new('CAST', [arel_column.as('CHAR')])
+                            end
                           elsif adapter_is_mysql && arel_type_is_float && (query_value_is_numeric || query_value_is_collection_of_numerics || query_value_is_range_of_numerics)
                             # In order to use equality matchers for :float fields in MySQL, we need to cast to :decimal
                             # https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html
