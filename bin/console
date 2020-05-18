@@ -1,27 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+$VERBOSE = nil
 
 require 'bundler'
-require 'simplecov'
-require 'combustion'
-require 'gemika'
-
-Combustion.initialize! :active_record, :action_controller, :action_view do
-  Rails.env = if Gemika::Env.gem?('pg')
-                'postgresql'
-              elsif Gemika::Env.gem?('mysql2')
-                'mysql'
-              else
-                'sqlite'
-              end
-  ENV['RAILS_ENV'] ||= Rails.env
-end
-
+require_relative '../spec/support/initializers/combustion'
 Bundler.require :default, :development
 
 require 'bundler/setup'
 require 'active_set'
 require 'ostruct'
+
+database = Gemika::Database.new(config_folder: 'spec/internal/config')
+database.connect
 
 begin
   FactoryBot.find_definitions
