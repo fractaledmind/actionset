@@ -1,0 +1,31 @@
+> Only.create(float: 1.23456789)
+#<Only id: 3, float: 1.23456789>
+> Only.create(float: 12.3456789)
+#<Only id: 4, float: 12.3456789>
+> Only.create(float: 123.456789)
+#<Only id: 5, float: 123.456789>
+> Only.create(float: 1234.56789)
+#<Only id: 6, float: 1234.56789>
+> Only.create(float: 12345.6789)
+#<Only id: 7, float: 12345.6789>
+> Only.create(float: 123456.789)
+#<Only id: 8, float: 123456.789>
+> Only.create(float: 1234567.89)
+#<Only id: 9, float: 1234567.89>
+> Only.create(float: 12345678.9)
+#<Only id: 10, float: 12345678.9>
+> Only.create(float: 123456789.0)
+#<Only id: 11, float: 123456789.0>
+> Only.pluck(:float)
+[1.23457, 12.3457, 123.457, 1234.57, 12345.7, 123457.0, 1234570.0, 12345700.0, 123457000.0]
+
+Precision(6)
+
+1.23456789 => 1.23457
+12.3456789 => 12.3457
+123.456789 => 123.457
+1234.56789 => 1234.57
+12345.6789 => 12345.7
+123456.789 => 123457.0
+1234567.89 => 1234570.0
+12345678.9 => 12345700.0
