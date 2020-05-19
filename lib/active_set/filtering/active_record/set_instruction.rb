@@ -123,6 +123,8 @@ class ActiveSet
                             Arel::Nodes::NamedFunction.new('CAST', [arel_column.as('DECIMAL(8,2)')])
                           elsif arel_type_is_string_or_text_or_binary && arel_operator_is_between_type && arel_column_collation_is_not_comparable
                             Arel.sql("#{arel_column_to_sql(arel_column)} COLLATE #{comparison_collation}")
+                          elsif adapter_type == :postgresql && arel_type == :boolean
+                            Arel::Nodes::NamedFunction.new('CAST', [arel_column.as('TEXT')])
                           else
                             arel_column
                           end
