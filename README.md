@@ -140,6 +140,10 @@ If you are using MySQL as your database engine, you may run into various possibl
 
 - ensure your `float` and `decimal` columns have an appropriate `precision` and `scale` set (it appears the default is (5,2))
   + if, for example, you create a `float` column without any `precision` or `scale` defined, and you set a value to `12345.67`, the database will return `12345.7`. Similarly, if you set the value to `123456.78`, you will get back `123457.0`
+  + https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html
+  + https://jibai31.wordpress.com/2017/05/04/how-to-choose-your-mysql-encoding-and-collation/
+  + https://dev.mysql.com/doc/refman/8.0/en/charset-collate.html
+  + https://api.rubyonrails.org/v3.1.1/classes/ActiveRecord/ConnectionAdapters/TableDefinition.html#method-i-column
 -
 
 ## Development
