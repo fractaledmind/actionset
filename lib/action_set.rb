@@ -12,7 +12,7 @@ require_relative './action_set/helpers/helper_methods'
 module ActionSet
   # Ensure that the HelperMethods are callable from the Rails view-layer
   ActiveSupport.on_load :action_view do
-    ::ActionView::Base.send :include, Helpers::HelperMethods
+    ::ActionView::Base.include Helpers::HelperMethods
   end
 
   module ClassMethods
@@ -59,9 +59,10 @@ module ActionSet
 
     # rubocop:disable Metrics/AbcSize
     def export_instructions
+      instructions = export_params.deep_symbolize_keys
       {}.tap do |struct|
-        struct[:format] = export_params[:format] || request.format.symbol
-        columns_params = export_params[:columns]&.map do |column|
+        struct[:format] = instructions[:format] || request.format.symbol
+        columns_params = instructions[:columns]&.map do |column|
           Hash[column&.map do |k, v|
             is_literal_value = ->(key) { key.to_s == 'value*' }
             key = is_literal_value.call(k) ? 'value' : k

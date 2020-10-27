@@ -15,8 +15,13 @@ RSpec.describe 'GET /things?filter', type: :request do
     let(:result_ids) { results.map { |f| f['id'] } }
 
     before(:each) do
-      get things_path(format: :json),
-          params: { filter: instructions }
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :json),
+            params: { filter: instructions }
+      else
+        get things_path(format: :json),
+            filter: instructions
+      end
     end
 
     ApplicationRecord::DB_FIELD_TYPES.each do |type|
@@ -26,7 +31,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
-                    value_for(object: matching_item, path: path)
+                    attr_value_for(object: matching_item, path: path)
                   end
               let(:instructions) do
                 {
@@ -44,7 +49,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
-                    value_for(object: matching_item, path: path)
+                    attr_value_for(object: matching_item, path: path)
                   end
               let(:instructions) do
                 {
@@ -62,7 +67,7 @@ RSpec.describe 'GET /things?filter', type: :request do
             context "{ #{path}: }" do
               let(:matching_item) { instance_variable_get("@thing_#{id}") }
               let(:instruction_single_value) do
-                value_for(object: matching_item, path: path)
+                attr_value_for(object: matching_item, path: path)
               end
               let(:instructions) do
                 {
@@ -94,8 +99,8 @@ RSpec.describe 'GET /things?filter', type: :request do
                 guaranteed_unique_object_for(matching_item,
                                              only: guaranteed_unique_object_for(matching_item.only))
               end
-              let(:matching_value) { value_for(object: matching_item, path: path) }
-              let(:other_value) { value_for(object: other_thing, path: path) }
+              let(:matching_value) { attr_value_for(object: matching_item, path: path) }
+              let(:other_value) { attr_value_for(object: other_thing, path: path) }
               let(:instruction_multi_value) do
                 if operator.to_s.split('_').include?('IN') && (operator.to_s.split('_') & %w[ANY ALL]).any?
                   [ [matching_value], [other_value] ]
@@ -122,8 +127,8 @@ RSpec.describe 'GET /things?filter', type: :request do
                 guaranteed_unique_object_for(matching_item,
                                              only: guaranteed_unique_object_for(matching_item.only))
               end
-              let(:matching_value) { value_for(object: matching_item, path: path) }
-              let(:other_value) { value_for(object: other_thing, path: path) }
+              let(:matching_value) { attr_value_for(object: matching_item, path: path) }
+              let(:other_value) { attr_value_for(object: other_thing, path: path) }
               let(:instruction_multi_value) do
                 if operator.to_s.split('_').include?('IN') && (operator.to_s.split('_') & %w[ANY ALL]).any?
                   [ [matching_value], [other_value] ]
@@ -154,8 +159,8 @@ RSpec.describe 'GET /things?filter', type: :request do
               end
               let(:instruction_multi_value) do
                 [
-                  value_for(object: matching_item, path: path),
-                  value_for(object: other_thing, path: path)
+                  attr_value_for(object: matching_item, path: path),
+                  attr_value_for(object: other_thing, path: path)
                 ]
               end
               let(:instructions) do

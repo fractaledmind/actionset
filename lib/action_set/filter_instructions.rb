@@ -5,7 +5,7 @@ require_relative './attribute_value'
 module ActionSet
   class FilterInstructions
     def initialize(params, set, controller)
-      @params = params
+      @params = params.deep_symbolize_keys
       @set = set
       @controller = controller
     end

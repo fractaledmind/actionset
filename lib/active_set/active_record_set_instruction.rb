@@ -53,8 +53,6 @@ class ActiveSet
       end
     end
 
-    private
-
     def arel_type
       attribute_model
         &.columns_hash[@attribute_instruction.attribute]

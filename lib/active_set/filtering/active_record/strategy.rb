@@ -3,6 +3,22 @@
 require_relative './set_instruction'
 require 'active_support/core_ext/module/delegation'
 
+module Arel
+  module Visitors
+    class PostgreSQL < Arel::Visitors::ToSql
+      private
+
+      def visit_Arel_Nodes_Matches(o, collector)
+        infix_value o, collector, ' LIKE '
+      end
+
+      def visit_Arel_Nodes_DoesNotMatch(o, collector)
+        infix_value o, collector, ' NOT LIKE '
+      end
+    end
+  end
+end
+
 class ActiveSet
   module Filtering
     module ActiveRecord
@@ -24,6 +40,7 @@ class ActiveSet
 
         def execute
           return false unless @set.respond_to? :to_sql
+          return @set if @set.empty?
 
           if execute_filter_operation?
             statement = filter_operation

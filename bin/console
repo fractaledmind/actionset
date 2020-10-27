@@ -1,18 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
-
-ENV['RAILS_ENV'] ||= 'test'
+$VERBOSE = nil
 
 require 'bundler'
-require 'simplecov'
-require 'combustion'
-
-Combustion.initialize! :active_record, :action_controller, :action_view
+require_relative '../spec/support/initializers/combustion'
 Bundler.require :default, :development
 
 require 'bundler/setup'
 require 'active_set'
 require 'ostruct'
+
+database = Gemika::Database.new(config_folder: 'spec/internal/config')
+database.connect
 
 begin
   FactoryBot.find_definitions
@@ -21,7 +20,7 @@ rescue FactoryBot::DuplicateDefinitionError
 end
 
 # (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
+# require 'pry'
 # Pry.start
 
 require 'irb'

@@ -15,7 +15,7 @@ class ActiveSet
           end
         end
         BLANK_TRANSFORMER = proc do |type:, **_ctx|
-          if type.presence_in %i[date float integer time datetime boolean]
+          if type.presence_in %i[boolean date datetime decimal float integer time]
             [nil]
           else
             Constants::BLANK_VALUES

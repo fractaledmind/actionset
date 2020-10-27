@@ -3,13 +3,13 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  # float is a major PITA, so taking it out for now
   DB_FIELD_TYPES = %w[
     binary
     boolean
     date
     datetime
     decimal
-    float
     integer
     string
     text
@@ -23,22 +23,6 @@ class ApplicationRecord < ActiveRecord::Base
 
   SORTABLE_TYPES = ApplicationRecord::FIELD_TYPES + ['string/i/', 'text/i/', 'symbol/i/']
   FILTERABLE_TYPES = ApplicationRecord::FIELD_TYPES + ['string/i/', 'text/i/', 'symbol/i/']
-
-  DB_FIELD_TYPES.each do |field|
-    scope "#{field}_scope_method", ->(v) { where(field => v) }
-
-    define_singleton_method("#{field}_collection_method") do |v|
-      where(field => v)
-    end
-
-    define_singleton_method("#{field}_item_method") do |v|
-      find_by(field => v)
-    end
-
-    define_singleton_method("#{field}_nil_method") do |_v|
-      nil
-    end
-  end
 
   def method_missing(method_name, *args, &block)
     return super unless method_name.to_s.start_with?('computed')

@@ -1,0 +1,16 @@
+sqlite:
+  adapter: sqlite3
+  database: db/actionset_test.sqlite
+  timeout: 500
+
+mysql:
+  adapter: mysql2
+  database: actionset_test
+  username: travis
+  encoding: utf8
+
+postgresql:
+  adapter: postgresql
+  database: actionset_test
+  user: postgres
+  password:

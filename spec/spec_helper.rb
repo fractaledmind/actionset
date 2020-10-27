@@ -1,17 +1,8 @@
 # frozen_string_literal: true
-
-require 'simplecov_helper'
-require 'database_cleaner_helper'
-require 'inspect_failure_helper'
+$VERBOSE = nil
 
 require 'bundler'
-require 'combustion'
-Combustion.initialize! :active_record, :action_controller, :action_view do
-  if ActiveRecord::VERSION::MAJOR < 6 &&
-      config.active_record.sqlite3.respond_to?(:represent_boolean_as_integer)
-    config.active_record.sqlite3.represent_boolean_as_integer = true
-  end
-end
+require 'support/initializers/combustion'
 Bundler.require :default, :development
 
 require 'bundler/setup'
@@ -22,8 +13,25 @@ require 'active_set'
 require 'rspec/rails'
 require 'database_cleaner'
 require 'capybara/rspec'
+require 'gemika'
+
+database = Gemika::Database.new(config_folder: 'spec/internal/config')
+database.connect
 
 Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
+
+deprecation_warnings_to_silence = [
+  /attempted to assign a value which is not explicitly `true` or `false`/,
+  /`#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?/,
+  /warning: BigDecimal.new is deprecated; use BigDecimal() method instead./,
+  /rb_check_safe_obj will be removed in Ruby 3.0/,
+  /Capturing the given block using Proc.new is deprecated/,
+]
+ActiveSupport::Deprecation.behavior = lambda do |message, callstack|
+  unless message =~ Regexp.new(deprecation_warnings_to_silence.join('|'))
+    ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(message, callstack)
+  end
+end
 
 RSpec.configure do |config|
   include PathHelpers

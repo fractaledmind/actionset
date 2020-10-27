@@ -3,7 +3,7 @@
 module ActionSet
   class SortInstructions
     def initialize(params, set, controller)
-      @params = params
+      @params = params.deep_symbolize_keys
       @set = set
       @controller = controller
     end

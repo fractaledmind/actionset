@@ -9,7 +9,7 @@ RSpec.describe ActionSet::AttributeValue do
 
   describe '#cast' do
     ApplicationRecord::FIELD_TYPES.each do |type|
-      it do
+      it "casts into #{type} when passed type class" do
         type_value = @thing.public_send(type)
         string_value = type_value.to_s
         attribute_value = ActionSet::AttributeValue.new(string_value)
@@ -18,7 +18,7 @@ RSpec.describe ActionSet::AttributeValue do
         expect(cast_value).to eql type_value
       end
 
-      it do
+      it "casts into #{type} when passed no type class" do
         type_value = @thing.public_send(type)
         string_value = type_value.to_s
         attribute_value = ActionSet::AttributeValue.new(string_value)

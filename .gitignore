@@ -12,3 +12,6 @@
 *.gem
 *.sqlite
 .DS_Store
+
+spec/support/database.yml
+/.byebug_history

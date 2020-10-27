@@ -6,7 +6,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define do
     t.boolean     :boolean
     t.date        :date
     t.datetime    :datetime
-    t.decimal     :decimal
+    t.decimal     :decimal, precision: 8, scale: 2
     t.float       :float
     t.integer     :integer
     t.string      :string

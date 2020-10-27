@@ -1,0 +1,13 @@
+source 'https://rubygems.org'
+
+# Runtime dependencies
+gem 'activerecord', '~> 4.2'
+gem 'actionpack', '~> 4.2'
+gem 'pg', '~> 0.11'
+
+# Gem under test
+gem 'actionset', path: '..'
+
+# test/dev dependencies
+gem 'gemika', group: :test
+eval_gemfile './Gemfile.test'

@@ -43,8 +43,13 @@ RSpec.describe 'GET /things?sort', type: :request do
     let(:result) { JSON.parse(response.body) }
 
     before(:each) do
-      get things_path(format: :json),
-          params: { sort: instructions }
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :json),
+            params: { sort: instructions }
+      else
+        get things_path(format: :json),
+            sort: instructions
+      end
     end
 
     ApplicationRecord::SORTABLE_TYPES.each do |type|

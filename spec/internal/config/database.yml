@@ -1,3 +1,16 @@
-test:
+sqlite:
   adapter:  sqlite3
-  database: db/combustion_test.sqlite
+  database: db/actionset_test.sqlite
+
+mysql:
+  adapter: mysql2
+  database: actionset_test
+  host: localhost
+  username: root
+  password:
+
+postgresql:
+  adapter: postgresql
+  database: actionset_test
+  user:
+  password:

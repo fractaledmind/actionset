@@ -13,19 +13,25 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
     let(:result) { response.body }
 
     before(:each) do
-      get things_path(format: :csv),
-          params: { export: instructions },
-          as: :json
+      if Gemika::Env.gem?('rspec', '>= 4')
+        get things_path(format: :csv),
+            params: { export: instructions },
+            as: :json
+      else
+        get things_path(format: :csv),
+            export: instructions,
+            as: :json
+      end
     end
 
     context 'with ActiveRecord collection' do
       before(:all) { @active_set = ActiveSet.new(Thing.all) }
 
-      context '{ columns: [{}] }' do
+      context "{ columns: [{meaningless: 'value'}] }" do
         let(:instructions) do
           {
             columns: [
-              {}
+              {meaningless: 'value'}
             ]
           }
         end
@@ -34,27 +40,6 @@ RSpec.describe 'GET /things with EXPORTING', type: :request do
             output << ['']
             @active_set.each do |_|
               output << %w[—]
-            end
-          end
-        end
-
-        it { expect(result).to eq expected_csv }
-      end
-
-      context '{ columns: [{}, {}] }' do
-        let(:instructions) do
-          {
-            columns: [
-              {},
-              {}
-            ]
-          }
-        end
-        let(:expected_csv) do
-          ::CSV.generate do |output|
-            output << ['', '']
-            @active_set.each do |_|
-              output << %w[— —]
             end
           end
         end

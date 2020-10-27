@@ -1,15 +1,15 @@
-# frozen_string_literal: true
-
 source 'https://rubygems.org'
 
-git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+ruby '>= 2.6'
 
-# Specify your gem's dependencies in actionset.gemspec
-gemspec
+# Runtime dependencies
+gem 'activerecord', '~> 6.0'
+gem 'actionpack', '~> 6.0'
+gem 'sqlite3', '~> 1.4'
 
-group :test do
-  gem 'actionpack'
-  gem 'activerecord'
-  gem 'rspec-rails'
-  gem 'sqlite3'
-end
+# Gem under test
+gem 'actionset', path: '.'
+
+# test/dev dependencies
+gem 'gemika', group: [:development, :test]
+eval_gemfile './gemfiles/Gemfile.test'
