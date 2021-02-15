@@ -54,12 +54,12 @@ module ActionSet
       if @controller.respond_to?(:filter_set_types, true)
         type_declarations = @controller.public_send(:filter_set_types)
         types = type_declarations['types'] || type_declarations[:types]
-        klass = types[keypath.join('.')]
+        klass = types.fetch(keypath.join('.'), nil)
         return klass if klass
       end
 
       if set.is_a?(ActiveRecord::Relation) || set.view.is_a?(ActiveRecord::Relation)
-        klass_type = set.model.columns_hash.fetch(keypath, nil)&.type
+        klass_type = set.model.columns_hash.fetch(keypath.join('.'), nil)&.type
         return klass_type.class if klass_type
       end
 
