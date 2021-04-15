@@ -10,8 +10,6 @@ class ActiveSet
 
       def execute
         return false unless @set.respond_to? :to_sql
-        return @set.none if @set.size <= @operation_instructions[:size] &&
-                            @operation_instructions[:page] > 1
 
         @set.limit(@operation_instructions[:size]).offset(page_offset)
       end
