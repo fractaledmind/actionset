@@ -73,6 +73,15 @@ RSpec.describe ActiveSet do
 
         it { expect(result.map(&:id)).to eq [] }
       end
+
+      describe "the ActiveRecord_Relation's loaded state" do
+        let(:relation) { Thing.all }
+        let(:active_set) { ActiveSet.new(relation)}
+
+        before { active_set.paginate(page: 1, size: 1) }
+
+        it { expect(relation.loaded?).to be false }
+      end
     end
 
     context 'with Enumerable collection' do
