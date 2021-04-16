@@ -1,3 +1,5 @@
+v 0.11.0
+  - Don't eager load collection into memory to check pagination condition
 v 0.10.0
   - Bump testing internals to Rails 5.2
   - Fix deprecation notice on sorts.
