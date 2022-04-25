@@ -25,7 +25,7 @@ class ActiveSet
             type: arel_type
           }
 
-          operator_hash[:query_attribute_transformer].call(context)
+          operator_hash[:query_attribute_transformer].call(**context)
         end
 
         def to_sql_str(value)
