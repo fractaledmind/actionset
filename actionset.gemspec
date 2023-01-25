@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'database_cleaner'
   spec.add_development_dependency 'factory_bot'
   spec.add_development_dependency 'faker'
-  spec.add_development_dependency 'rails', '~> 5.2.0'
+  spec.add_development_dependency 'rails', '~> 7.0.4'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'ransack'
   spec.add_development_dependency 'rspec'
